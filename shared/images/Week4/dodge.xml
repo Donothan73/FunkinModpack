@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="dodge.png">
+	<!-- Created with Adobe Animate version 24.0.3.19 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="dodge0000" x="5" y="5" width="861" height="289" frameX="-8" frameY="-20" frameWidth="871" frameHeight="316"/>
+	<SubTexture name="dodge0001" x="5" y="296" width="861" height="316" frameX="-8" frameY="0" frameWidth="871" frameHeight="316"/>
+	<SubTexture name="dodge0002" x="5" y="614" width="871" height="316"/>
+	<SubTexture name="dodge0003" x="5" y="5" width="861" height="289" frameX="-8" frameY="-20" frameWidth="871" frameHeight="316"/>
+	<SubTexture name="dodge0004" x="5" y="5" width="861" height="289" frameX="-8" frameY="-20" frameWidth="871" frameHeight="316"/>
+	<SubTexture name="dodge0005" x="5" y="5" width="861" height="289" frameX="-8" frameY="-20" frameWidth="871" frameHeight="316"/>
+	<SubTexture name="dodge0006" x="5" y="5" width="861" height="289" frameX="-8" frameY="-20" frameWidth="871" frameHeight="316"/>
+	<SubTexture name="dodge0007" x="5" y="5" width="861" height="289" frameX="-8" frameY="-20" frameWidth="871" frameHeight="316"/>
+	<SubTexture name="dodge0008" x="5" y="5" width="861" height="289" frameX="-8" frameY="-20" frameWidth="871" frameHeight="316"/>
+	<SubTexture name="dodge0009" x="5" y="5" width="861" height="289" frameX="-8" frameY="-20" frameWidth="871" frameHeight="316"/>
+	<SubTexture name="dodge0010" x="5" y="5" width="861" height="289" frameX="-8" frameY="-20" frameWidth="871" frameHeight="316"/>
+	<SubTexture name="dodge0011" x="5" y="5" width="861" height="289" frameX="-8" frameY="-20" frameWidth="871" frameHeight="316"/>
+	<SubTexture name="dodge0012" x="5" y="5" width="861" height="289" frameX="-8" frameY="-20" frameWidth="871" frameHeight="316"/>
+	<SubTexture name="dodge0013" x="5" y="5" width="861" height="289" frameX="-8" frameY="-20" frameWidth="871" frameHeight="316"/>
+	<SubTexture name="dodge0014" x="5" y="5" width="861" height="289" frameX="-8" frameY="-20" frameWidth="871" frameHeight="316"/>
+	<SubTexture name="dodge0015" x="5" y="5" width="0" height="0" frameX="-8" frameY="-20" frameWidth="871" frameHeight="316"/>
+</TextureAtlas>

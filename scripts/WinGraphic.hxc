@@ -1,0 +1,108 @@
+import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.math.FlxBasePoint;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
+import funkin.modding.module.Module;
+import flixel.util.FlxTimer;
+import funkin.audio.FunkinSound;
+import funkin.Conductor;
+import flixel.math.FlxPoint;
+import funkin.graphics.adobeanimate.FlxAtlasSprite;
+import funkin.graphics.FunkinSprite;
+import funkin.modding.base.ScriptedFlxAtlasSprite;
+import funkin.Paths;
+import funkin.play.cutscene.CutsceneType;
+import funkin.play.cutscene.VideoCutscene;
+import funkin.play.GameOverSubState;
+import funkin.play.PlayState;
+import funkin.play.PlayStatePlaylist;
+import funkin.play.song.Song;
+import funkin.play.stage.StageProp;
+import funkin.save.Save;
+import funkin.graphics.adobeanimate.FlxAtlasSprite;
+import funkin.Paths;
+import flixel.math.FlxPoint;
+import flixel.FlxSprite;
+import funkin.graphics.FunkinSprite;
+import funkin.play.PlayState;
+import flixel.FlxG;
+
+class WinGraphicModule extends Module
+{
+	var hasPlayedCutscene:Bool = false;
+
+	function new()
+	{
+		super('WinGraphic');
+
+		hasPlayedCutscene = false;
+		var win:FlxAtlasSprite;
+	}
+
+	function onSongStart(event:ScriptEvent):Void {
+		super.onSongStart(event);
+
+		//startCutscene();
+		hasPlayedCutscene = false;
+		}
+
+	public override function onSongEnd(event:CountdownScriptEvent):Void {
+		super.onSongEnd(event);
+		//PlayState.instance.isInCutscene = true;
+		//startCutscene();
+}
+
+	//function onBeatHit(event:SongTimeScriptEvent)
+	//{
+		//startCutscene();
+	//}
+
+	//function startCutscene(){
+	
+	//if (PlayState.instance.isInCutscene = false)
+	//{
+		//if (hasPlayedCutscene == false)
+		//{
+		//PlayState.instance.isInCutscene = true;
+		//hasPlayedCutscene = true;
+
+		//FunkinSound.playOnce(Paths.sound('good'), 1);
+		//PlayState.instance.currentStage.getGirlfriend().animation.play('combo200');
+		//PlayState.instance.currentStage.getBoyfriend().animation.play('hey');
+
+		//win = ScriptedFlxAtlasSprite.init('WinAtlasSprite', 0, 0);
+		//win.x = 300;
+		//win.y = 225;
+		//win.zIndex = 1000;
+		//win.playAnimation("");
+		//PlayState.instance.currentStage.add(win);
+		//win.visible = true;
+    		//win.cameras = [PlayState.instance.camCutscene];
+			//new FlxTimer().start(3, function(tmr)
+			//{
+			//PlayState.instance.endSong(true);
+			});
+		//}
+	//}
+//}
+
+	function onUpdate(event:UpdateScriptEvent)
+	{
+		super.onUpdate(event);
+			if(FlxG.keys.justPressed.SPACE)
+			{
+				startCutscene();
+			}
+	}
+
+	/**
+   * Replay the cutscene after leaving the song.
+   */
+  function onCreate(event:ScriptEvent):Void
+  {
+    super.onCreate(event);
+
+    hasPlayedCutscene = false;
+  }
+}

@@ -1,0 +1,144 @@
+import flixel.tweens.FlxEase;
+import funkin.graphics.FunkinSprite;
+import flixel.tweens.FlxTween;
+import funkin.Paths;
+import funkin.play.cutscene.dialogue.DialogueBox;
+import funkin.play.PlayState;
+import flixel.sound.FlxSound;
+import funkin.play.PlayStatePlaylist;
+import funkin.play.song.Song;
+import flixel.addons.display.FlxBackdrop;
+import flixel.FlxG;
+import funkin.ui.MusicBeatSubState;
+import funkin.play.PlayState;
+import funkin.play.stage.Stage;
+import funkin.play.PlayStatePlaylist;
+import funkin.play.song.Song;
+import funkin.audio.FunkinSound;
+import flixel.FlxSprite;
+import flixel.util.FlxTimer;
+
+import funkin.effects.RetroCameraFade;
+
+class SenpaiSong extends Song {
+  var hasPlayedCutscene:Bool;
+
+	public function new() {
+		super('senpai');
+
+	}
+
+  public override function onCountdownStart(event:CountdownScriptEvent):Void {
+		super.onCountdownStart(event);
+		trace(PlayState.instance.currentVariation);
+		if (PlayState.instance.currentVariation != 'erect')
+		{
+			PlayState.instance.currentStage.getNamedProp('freaks').visible = false;
+		}
+
+    if (!PlayStatePlaylist.isStoryMode) hasPlayedCutscene = true;
+
+    if (!hasPlayedCutscene) {
+      trace('Pausing countdown to play cutscene.');
+
+      hasPlayedCutscene = true;
+
+      event.cancel(); // CANCEL THE COUNTDOWN!
+
+      PlayState.instance.currentStage.pause();
+
+      transitionToDialogue();
+    }
+	}
+
+  function transitionToDialogue() {
+    trace('Transitioning to dialogue.');
+
+    PlayState.instance.camCutscene.visible = true;
+
+    var black:FlxSprite = new FunkinSprite(-20, -20).makeSolidColor(FlxG.width * 1.5, FlxG.height * 1.5, 0xFF000000);
+    black.cameras = [PlayState.instance.camCutscene];
+    black.zIndex = 1000000;
+    PlayState.instance.add(black);
+
+    black.alpha = 1.0;
+
+    var tweenFunction = function(x) {
+      var xSnapped = Math.floor(x * 8) / 8;
+      // black.alpha = 1.0 - xSnapped;
+    };
+
+    new FlxTimer().start(0.25, _ -> {
+      PlayState.instance.remove(black);
+      RetroCameraFade.fadeBlack(PlayState.instance.camGame, 12, 2);
+    });
+
+    FlxTween.num(0.0, 1.0, 2.0, {
+      ease: FlxEase.linear,
+      startDelay: 0.25,
+      onComplete: function (input) {
+
+        // black.visible = false;
+        startDialogue();
+      }
+    }, tweenFunction);
+  }
+
+  function startDialogue() {
+    PlayState.instance.startConversation('senpai');
+  }
+
+  /**
+   * Don't replay the cutscene between restarts.
+   */
+  function onSongRetry(event:ScriptEvent)
+  {
+    super.onSongRetry(event);
+
+    hasPlayedCutscene = true;
+  }
+
+  /**
+   * Replay the cutscene after leaving the song.
+   */
+  function onCreate(event:ScriptEvent):Void
+  {
+    super.onCreate(event);
+
+    hasPlayedCutscene = false;
+  }
+
+  public override function onDialogueEnd() {
+    // We may need to wait for the outro to play.
+    PlayState.instance.currentStage.resume();
+    Countdown.performCountdown();
+    PlayState.instance.currentStage.getNamedProp('freaks').visible = false;
+  }
+
+
+	public override function onBeatHit(event:SongTimeScriptEvent):Void {
+		super.onBeatHit(event);
+			if (event.beat == 32 && (PlayState.instance.currentVariation != 'erect'))
+   		//if PlayState.instance.currentVariation != 'default' = true;
+		{
+			// only play this on erect..
+     		FunkinSound.playOnce(Paths.sound('freaksAppear'), 2.0);
+		PlayState.instance.currentStage.getNamedProp('freaks').visible = true;
+      		PlayState.instance.currentStage.getNamedProp('freaks').alpha = 0;
+		fadeFreaks();
+		}
+
+  		function fadeFreaks():Void {
+		new FlxTimer().start(0.2, function(timer:FlxTimer) {
+      		PlayState.instance.currentStage.getNamedProp('freaks').alpha += 0.2;
+		
+		if (PlayState.instance.currentStage.getNamedProp('freaks').alpha < 1)
+		{
+		timer.reset();
+      		} else {
+      		PlayState.instance.currentStage.getNamedProp('freaks').alpha = 1;
+		}
+      		});
+		}
+	}
+}

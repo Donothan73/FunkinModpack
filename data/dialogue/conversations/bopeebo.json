@@ -1,0 +1,61 @@
+{
+  "version": "1.0.0",
+
+  "backdrop": {
+    "type": "solid",
+    "fadeTime": 1.0,
+    "color": "#BFB3DFD8"
+  },
+
+  "music": {
+    "asset": "Lunchbox",
+    "fadeTime": 2.0,
+    "looped": true
+  },
+
+  "outro": {
+    "type": "fade",
+    "fadeTime": 1.0
+  },
+
+  "dialogue": [
+    {
+      "speaker": "enterLOUD",
+      "speakerAnimation": "talk",
+      "box": "Week1",
+      "boxAnimation": "enterLOUD",
+
+      "text": ["HEY!"]
+    },
+    {
+      "speaker": "senpai-angry",
+      "speakerAnimation": "talk",
+      "box": "Week1",
+      "boxAnimation": "idle",
+
+      "text": [
+        "You think you can just sing with my daughter like that?"
+      ]
+    },
+    {
+      "speaker": "senpai-angry",
+      "speakerAnimation": "talk",
+      "box": "Week1",
+      "boxAnimation": "speakingAngry",
+
+      "text": [
+        "If you want to date her..."
+      ]
+    },
+    {
+      "speaker": "senpai-angry",
+      "speakerAnimation": "talk",
+      "box": "Week1",
+      "boxAnimation": "speakingAngry",
+
+      "text": [
+        "You're going to have to go through ME first!"
+      ]
+    }
+  ]
+}

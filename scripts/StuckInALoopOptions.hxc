@@ -1,0 +1,47 @@
+import funkin.modding.module.Module;
+import funkin.ui.options.PreferencesMenu;
+import funkin.ui.options.OptionsState;
+import funkin.input.Controls;
+import flixel.FlxG;
+import flixel.util.FlxSave;
+import Std;
+
+
+class StuckInALoopOptions extends Module {
+
+    var pagename = OptionsState.PageName;
+    var save:FlxSave = new FlxSave();
+
+    function new (){
+        super("StuckInALoopOptions", 20);
+        save = new FlxSave();
+        save.bind("StuckInALoop", "Donothan73");
+
+        if (save.data.dodge == null)
+        {
+            save.data.dodge = true;
+            save.data.tunlessopponents = false;
+        }
+    }
+
+    function onStateChangeEnd(event)
+    {
+        super.onStateChangeEnd(event);
+        if (Std.isOfType(event.targetState, OptionsState))
+        {
+            var preferences = event.targetState.pages.get("preferences");
+
+
+            preferences.createPrefItemCheckbox('Lamp Post Dodging', 'Toggles the mechanic in Week 4 Erect that triggers a dodge event.', function(value:Bool):Void {
+            save.data.dodge = value; }, save.data.dodge);
+
+            preferences.createPrefItemCheckbox('Tunless opponents', 'Toggles your opponents ability to sing.', function(value:Bool):Void {
+            save.data.tunlessopponents = value; }, save.data.tunlessopponents);
+
+
+            save.flush();
+        }
+    }
+
+
+}

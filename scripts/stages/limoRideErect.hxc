@@ -1,0 +1,590 @@
+import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.util.FlxTimer;
+import funkin.Paths;
+import funkin.audio.FunkinSound;
+import funkin.play.stage.Stage;
+import funkin.play.PlayState;
+import funkin.graphics.shaders.OverlayBlend;
+import funkin.graphics.shaders.AdjustColorShader;
+import flixel.addons.display.FlxBackdrop;
+import flixel.tweens.FlxTween;
+import flixel.tweens.FlxEase;
+import funkin.graphics.FunkinSprite;
+import funkin.input.Controls;
+import funkin.modding.base.ScriptedFlxAtlasSprite;
+import funkin.graphics.adobeanimate.FlxAtlasSprite;
+import flixel.util.FlxSave;
+import funkin.data.song.SongRegistry;
+import flixel.text.FlxText;
+import flixel.text.FlxTextBorderStyle;
+import Std;
+import funkin.util.tools.StringTools;
+import funkin.modding.module.Module;
+
+class LimoRideErectStage extends Stage
+{
+	function new()
+	{
+		super('limoRideErect');
+		var fuckMan:FlxAtlasSprite;
+     		save = new FlxSave();
+      		save.bind("StuckInALoop", "Donothan73");
+	}
+
+  var colorShader:AdjustColorShader;
+	var mist1:FlxBackdrop;
+	var mist2:FlxBackdrop;
+	var mist3:FlxBackdrop;
+	var mist4:FlxBackdrop;
+	var mist5:FlxBackdrop;
+
+    	var save:FlxSave = new FlxSave();
+
+	var shootingStarBeat:Int = 0;
+	var henchmendead:Int = 0;
+	var shootingStarOffset:Int = 2;
+
+	function buildStage()
+	{
+		super.buildStage();
+		
+		getNamedProp('stupidBlood1').visible = false;
+		getNamedProp('dodgeSprite').visible = false;
+		getNamedProp('stupidBlood2').visible = false;
+		getNamedProp('stupidBlood3').visible = false;
+		getNamedProp('stupidBlood4').visible = false;
+
+        	FlxG.sound.cache(Paths.sound("dancerdeath"));
+
+		// Apply sky shader.
+		var skyOverlay:OverlayBlend = new OverlayBlend();
+		var sunOverlay:FlxSprite = new FlxSprite().loadGraphic(Paths.image('limo/limoOverlay'));
+		sunOverlay.setGraphicSize(Std.int(sunOverlay.width * 2));
+		sunOverlay.updateHitbox();
+		skyOverlay.funnyShit.input = sunOverlay.pixels;
+		var limoSunset:FlxSprite = getNamedProp('limoSunset');
+		if (limoSunset == null) {
+			trace('[WARN] Could not retrieve limoSunset');
+		} else {
+			//limoSunset.shader = skyOverlay;
+		}
+
+		// There's some commented-out shader BS in the original code.
+		// I don't know what it's for, but it's not used in the game.
+		// If you want to re-add it, go find it in version control.
+
+    colorShader = new AdjustColorShader();
+
+    mist1 = new FlxBackdrop(Paths.image('limo/erect/mistMid'), 0x01);
+		mist1.setPosition(-650, -100);
+		mist1.scrollFactor.set(1.1, 1.1);
+		mist1.zIndex = 400;
+    mist1.blend = 0;
+		mist1.color = 0xFFc6bfde;
+		mist1.alpha = 0.4;
+		mist1.velocity.x = 1700;
+
+		PlayState.instance.currentStage.add(mist1);
+		PlayState.instance.currentStage.refresh(); // Apply z-index.
+
+		mist2 = new FlxBackdrop(Paths.image('limo/erect/mistBack'), 0x01);
+		mist2.setPosition(-650, -100);
+		mist2.scrollFactor.set(1.2, 1.2);
+		mist2.zIndex = 401;
+    mist2.blend = 0;
+		mist2.color = 0xFF6a4da1;
+		mist2.alpha = 1;
+		mist2.velocity.x = 2100;
+		mist1.scale.set(1.3, 1.3);
+
+		PlayState.instance.currentStage.add(mist2);
+		PlayState.instance.currentStage.refresh(); // Apply z-index.
+
+		mist3 = new FlxBackdrop(Paths.image('limo/erect/mistMid'), 0x01);
+		mist3.setPosition(-650, -100);
+		mist3.scrollFactor.set(0.8, 0.8);
+		mist3.zIndex = 99;
+   	mist3.blend = 0;
+		mist3.color = 0xFFa7d9be;
+		mist3.alpha = 0.5;
+		mist3.velocity.x = 900;
+		mist3.scale.set(1.5, 1.5);
+
+		PlayState.instance.currentStage.add(mist3);
+		PlayState.instance.currentStage.refresh(); // Apply z-index.
+
+
+		mist4 = new FlxBackdrop(Paths.image('limo/erect/mistBack'), 0x01);
+		mist4.setPosition(-650, -380);
+		mist4.scrollFactor.set(0.6, 0.6);
+		mist4.zIndex = 98;
+    mist4.blend = 0;
+		mist4.color = 0xFF9c77c7;
+		mist4.alpha = 1;
+		mist4.velocity.x = 700;
+		mist4.scale.set(1.5, 1.5);
+
+		PlayState.instance.currentStage.add(mist4);
+		PlayState.instance.currentStage.refresh(); // Apply z-index.
+
+		mist5 = new FlxBackdrop(Paths.image('limo/erect/mistMid'), 0x01);
+		mist5.setPosition(-650, -400);
+		mist5.scrollFactor.set(0.2, 0.2);
+		mist5.zIndex = 15;
+   	mist5.blend = 0;
+		mist5.color = 0xFFE7A480;
+		mist5.alpha = 1;
+		mist5.velocity.x = 100;
+		mist5.scale.set(1.5, 1.5);
+
+		PlayState.instance.currentStage.add(mist5);
+		PlayState.instance.currentStage.refresh(); // Apply z-index.
+
+		getNamedProp('shootingStar').blend = 0;
+
+		resetFastCar();
+
+		getNamedProp('city').alpha = .5;
+	}
+
+	var _timer:Float = 0;
+	var needstododge = false;
+	var bfDead = false;
+	//var fastCar = getNamedProp('fastCar');
+	//var truck = getNamedProp('truck');
+
+
+  function onUpdate(event:UpdateScriptEvent):Void
+	{
+		super.onUpdate(event);
+
+		_timer += event.elapsed;
+		mist1.y = 100 + (Math.sin(_timer)*200);
+		mist2.y = 0 + (Math.sin(_timer*0.8)*100);
+		mist3.y = -20 + (Math.sin(_timer*0.5)*200);
+		mist4.y = -180 + (Math.sin(_timer*0.4)*300);
+		mist5.y = -450 + (Math.sin(_timer*0.2)*150);
+		//trace(mist1.y);
+
+			if(FlxG.keys.justPressed.SPACE) { 	//CHANGE THIS IF YOU WANNA HAVE A DIFFERENT INPUT!
+				attemptDodge();
+			}
+		
+
+    if(PlayState.instance.currentStage.getBoyfriend() != null && PlayState.instance.currentStage.getBoyfriend().shader == null){
+      PlayState.instance.currentStage.getBoyfriend().shader = colorShader;
+		  PlayState.instance.currentStage.getGirlfriend().shader = colorShader;
+		  PlayState.instance.currentStage.getDad().shader = colorShader;
+		  getNamedProp('limoDancer1').shader = colorShader;
+      getNamedProp('limoDancer2').shader = colorShader;
+  	  getNamedProp('limoDancer3').shader = colorShader;
+      getNamedProp('limoDancer4').shader = colorShader;
+      getNamedProp('limoDancer5').shader = colorShader;
+      getNamedProp('fastCar').shader = colorShader;
+      getNamedProp('stupidBlood1').shader = colorShader;
+      getNamedProp('stupidBlood2').shader = colorShader;
+      getNamedProp('stupidBlood3').shader = colorShader;
+      getNamedProp('stupidBlood4').shader = colorShader;
+
+			// PlayState.instance.currentStage.getBoyfriend().visible = false;
+		  // PlayState.instance.currentStage.getGirlfriend().visible = false;
+		  //PlayState.instance.currentStage.getDad().visible = false;
+		 	// getNamedProp('limo').visible = false;
+			// getNamedProp('limoDancer1').visible = false;
+      // getNamedProp('limoDancer2').visible = false;
+  	  // getNamedProp('limoDancer3').visible = false;
+      // getNamedProp('limoDancer4').visible = false;
+      // getNamedProp('limoDancer5').visible = false;
+      // getNamedProp('fastCar').visible = false;
+			// getNamedProp('bgLimo').visible = false;
+			// getNamedProp('limoSunset').visible = false;
+			// getNamedProp('shootingStar').visible = false;
+
+		getNamedProp('lamp').active = true;
+		getNamedProp('lamppole').active = true;	
+
+		  colorShader.hue = -30;
+		  colorShader.saturation = -20;
+		  colorShader.contrast = 0;
+		  colorShader.brightness = -30;
+    }
+  }
+
+	function doShootingStar(beat:Int):Void
+	{
+		getNamedProp('shootingStar').x = FlxG.random.int(50,900);
+		getNamedProp('shootingStar').y = FlxG.random.int(-10,20);
+		getNamedProp('shootingStar').flipX = FlxG.random.bool(50);
+		getNamedProp('shootingStar').animation.play('shooting star');
+
+		shootingStarBeat = beat;
+		shootingStarOffset = FlxG.random.int(4, 8);
+
+	}
+
+	function onBeatHit(event:SongTimeScriptEvent)
+	{
+		// When overriding onBeatHit, make sure to call super.onBeatHit,
+		// otherwise boppers will not work.
+		super.onBeatHit(event);
+
+		if (FlxG.random.bool(10) && fastCarCanDrive)
+		{
+			fastCarDrive();
+		}
+
+		if (FlxG.random.bool(10) && event.beat > (shootingStarBeat + shootingStarOffset))
+		{
+			doShootingStar(event.beat);
+		}
+		if(henchmendead == 0 && FlxG.random.bool(10) && event.beat > (shootingStarBeat + shootingStarOffset)){
+			if(save.data.dodge){
+			henchmenDie();
+		}
+		}else{
+			return;
+		}
+	}
+
+	var fastCarCanDrive:Bool = false;
+
+	function resetFastCar():Void
+	{
+		var fastCar = getNamedProp('fastCar');
+		var truck = getNamedProp('truck');
+
+		if (fastCar == null)
+			return;
+
+		// Props are inactive by default.
+		// Set active to true so position is calculated based on velocity.
+		fastCar.active = true;
+		truck.active = true;
+
+		truck.x = -12600;
+		fastCar.x = -12600;
+
+		fastCar.y = FlxG.random.int(140, 250);
+
+		fastCar.velocity.x = 0;
+		truck.velocity.x = 0;
+
+		fastCarCanDrive = true;
+	}
+
+	function fastCarDrive():Void
+	{
+		FunkinSound.playOnce(Paths.soundRandom('carPass', 0, 1), 0.7);
+
+		var fastCar = getNamedProp('fastCar');
+		var truck = getNamedProp('truck');
+
+		if (FlxG.random.bool(80)){
+
+		fastCar.velocity.x = (FlxG.random.int(170, 220) / FlxG.elapsed) * 3;
+		fastCarCanDrive = false;
+
+		}else{
+
+		truck.velocity.x = (FlxG.random.int(170, 220) / FlxG.elapsed) * 3;
+		fastCarCanDrive = false;
+		}
+		new FlxTimer().start(2, function(tmr:FlxTimer)
+		{
+			resetFastCar();
+		});
+	}
+
+	/**
+	 * If your stage uses additional assets not specified in the JSON,
+	 * make sure to specify them like this, or they won't get cached in the loading screen.
+	 */
+	function fetchAssetPaths():Array<String>
+	{
+		var results:Array<String> = super.fetchAssetPaths();
+
+		// This graphic is applied by shader to the background, so it's not included in the default stage function.
+		results.push(Paths.image('limo/limoOverlay'));
+		results.push(Paths.sound('carPass0'));
+		results.push(Paths.sound('carPass1'));
+
+		return results;
+	}
+
+	/**
+	 * Make sure the fast car is reset when the song restarts.
+	 */
+	function onSongRetry(event:ScriptEvent) {
+		super.onSongRetry(event);
+		resetFastCar();
+		shootingStarBeat = 0;
+		shootingStarOffset = 2;
+		henchmendead = 0;
+		henchmenReset();
+		needstododge = false;
+		getNamedProp('lamp').velocity.x = (FlxG.random.int(5, 5) / FlxG.elapsed) * 0;
+		getNamedProp('lamppole').velocity.x = (FlxG.random.int(5, 5) / FlxG.elapsed) * 0;
+	}
+
+	function attemptDodge():Void {
+	if(needstododge == true){
+	PlayState.instance.currentStage.getBoyfriend().animation.play('dodge');
+	PlayState.instance.currentStage.getBoyfriend().danceEvery = '0';
+	needstododge = false;
+	}else{
+	}
+	}
+
+	function Dodge():Void {
+
+		skipText = new FlxText(936, 618, 0, 'DODGE', 40);
+    skipText.setFormat(Paths.font('vcr.ttf'), 40, 0xFFFFFFFF, "right", FlxTextBorderStyle.OUTLINE, 0xFF000000);
+    skipText.scrollFactor.set();
+		skipText.borderSize = 6;
+		skipText.alpha = 1;
+    //add(skipText);
+	getNamedProp('dodgeSprite').cameras = [PlayState.instance.camCutscene];
+	getNamedProp('dodgeSprite').visible = true;
+	getNamedProp('dodgeSprite').animation.play('anim');
+		henchmendead = 1;
+    skipText.cameras = [PlayState.instance.camCutscene];
+
+	}
+
+	function DodgeFail():Void {	
+
+	PlayState.instance.currentStage.getBoyfriend().danceEvery = '0';
+	PlayState.instance.currentStage.getBoyfriend().animation.play('hit');
+	PlayState.instance.currentStage.getGirlfriend().animation.play('drop70');
+	new FlxTimer().start(.25, function(tmr:FlxTimer)
+		{
+		PlayState.instance.currentStage.getBoyfriend().animation.play('hit');
+	    PlayState.instance.health = 0;
+            trace("died");
+		bfDead = true;
+
+
+		});
+	}
+
+	/**
+	 * Make sure the fast car is reset when the song restarts.
+	 */
+	function onCountdownStart(event:ScriptEvent) {
+		super.onCountdownStart(event);
+		resetFastCar();
+		henchmendead = 1;
+		henchmenReset();
+		paused = false;
+		getNamedProp('lamp').velocity.x = (FlxG.random.int(5, 5) / FlxG.elapsed) * 0;
+		getNamedProp('lamppole').velocity.x = (FlxG.random.int(5, 5) / FlxG.elapsed) * 0;
+		needstododge = false;
+	new FlxTimer().start(5, function(tmr:FlxTimer)
+		{
+		henchmendead = 0;
+		});
+
+		fuckMan = ScriptedFlxAtlasSprite.init('HenchmenDeath', 0, 0);
+		fuckMan.x = 0;
+		fuckMan.y = 0;
+		fuckMan.zIndex = 1000;
+		fuckMan.playAnimation("");
+		PlayState.instance.currentStage.add(fuckMan);
+		fuckMan.visible = false;
+	}
+
+	function lamppost():Void {
+	getNamedProp('lamppole').x = -470;
+	getNamedProp('lamp').x = -670;
+	getNamedProp('lamp').velocity.x = (FlxG.random.int(5, 5) / FlxG.elapsed) * 6;
+	getNamedProp('lamppole').velocity.x = (FlxG.random.int(5, 5) / FlxG.elapsed) * 6;
+	}
+
+	function henchmenDie():Void {
+		if (henchmendead == 0)
+		henchmendead = 1;
+     	FunkinSound.playOnce(Paths.sound('comboSound'), 1.0);
+		lamppost();
+
+		Dodge();
+	needstododge = true;
+	new FlxTimer().start(1.5, function(tmr:FlxTimer)
+		{
+			if(needstododge == true){
+			DodgeFail();
+		}
+		});
+	PlayState.instance.currentStage.getGirlfriend().animation.play('duck');
+	//PlayState.instance.currentStage.getGirlfriend().y = 714;
+
+		PlayState.instance.currentStage.getBoyfriend().danceEvery = '1';
+		//PlayState.instance.currentStage.getGirlfriend().animation.play('idle');
+		//PlayState.instance.currentStage.getGirlfriend().y = 779;
+		skipText.alpha = 0;
+		new FlxTimer().start(.05, function(tmr:FlxTimer)
+		{
+     	FunkinSound.playOnce(Paths.sound('dancerdeath'), 1.0);
+		henchmendead = 1;
+	getNamedProp('limoDancer1').animation.play('hit1');
+		getNamedProp('limoDancer1').danceEvery = '0';
+	getNamedProp('limoDancer2').animation.play('hit1');
+		getNamedProp('limoDancer2').danceEvery = '0';
+	getNamedProp('limoDancer3').animation.play('hit1');
+		getNamedProp('limoDancer3').danceEvery = '0';
+	getNamedProp('limoDancer4').animation.play('hit1');
+		getNamedProp('limoDancer4').danceEvery = '0';
+	getNamedProp('limoDancer5').animation.play('hit1');
+		getNamedProp('limoDancer5').danceEvery = '0';
+	PlayState.instance.currentStage.getBoyfriend().animation.play('dodge');
+	PlayState.instance.currentStage.getGirlfriend().animation.play('duck');
+	//PlayState.instance.currentStage.getGirlfriend().y = 779;
+
+		new FlxTimer().start(.05, function(tmr:FlxTimer)
+		{
+	getNamedProp('limoDancer1').animation.play('hit2');
+	getNamedProp('limoDancer2').animation.play('hit2');
+	getNamedProp('limoDancer3').animation.play('hit2');
+	getNamedProp('limoDancer4').animation.play('hit2');
+	getNamedProp('limoDancer5').animation.play('hit2');
+		getNamedProp('stupidBlood1').visible = true;
+			getNamedProp('stupidBlood1').animation.play('shoot');
+		getNamedProp('stupidBlood2').visible = true;
+			getNamedProp('stupidBlood2').animation.play('shoot');
+		getNamedProp('stupidBlood3').visible = true;
+			getNamedProp('stupidBlood3').animation.play('shoot');
+		getNamedProp('stupidBlood4').visible = true;
+			getNamedProp('stupidBlood4').animation.play('shoot');
+		});
+
+		new FlxTimer().start(.05, function(tmr:FlxTimer)
+		{
+	getNamedProp('limoDancer1').animation.play('hit3');
+		getNamedProp('limoDancer1').velocity.x = (FlxG.random.int(5, 5) / FlxG.elapsed) * 2.5;
+	getNamedProp('limoDancer2').animation.play('hit3');
+		getNamedProp('limoDancer2').velocity.x = (FlxG.random.int(5, 5) / FlxG.elapsed) * 2.5;
+	getNamedProp('limoDancer3').animation.play('hit3');
+		getNamedProp('limoDancer3').velocity.x = (FlxG.random.int(5, 5) / FlxG.elapsed) * 2.5;
+	getNamedProp('limoDancer4').animation.play('hit3');
+		getNamedProp('limoDancer4').velocity.x = (FlxG.random.int(5, 5) / FlxG.elapsed) * 2.5;
+	getNamedProp('limoDancer5').animation.play('hit3');
+		getNamedProp('limoDancer5').velocity.x = (FlxG.random.int(5, 5) / FlxG.elapsed) * 2.5;
+		});
+		new FlxTimer().start(.1, function(tmr:FlxTimer)
+		{
+		getNamedProp('limoDancer1').velocity.x = (FlxG.random.int(5, 5) / FlxG.elapsed) * 4;
+		//DodgeFail();
+		});
+
+		new FlxTimer().start(.9, function(tmr:FlxTimer)
+		{
+		getNamedProp('bgLimo').velocity.x = (FlxG.random.int(3, 3) / FlxG.elapsed) * 1.5;
+
+			if(bfDead == true){
+			return;
+			}else{
+			}
+	PlayState.instance.currentStage.getBoyfriend().danceEvery = '1';
+	PlayState.instance.currentStage.getBoyfriend().animation.play('idle');
+		});
+		new FlxTimer().start(7, function(tmr:FlxTimer)
+		{
+	henchmenReset();
+		});
+		});
+	}
+
+	function henchmenResetHard():Void {
+		getNamedProp('limoDancer1').velocity.x = (FlxG.random.int(5, 5) / FlxG.elapsed) * 0;
+		getNamedProp('limoDancer2').velocity.x = (FlxG.random.int(5, 5) / FlxG.elapsed) * 0;
+		getNamedProp('limoDancer3').velocity.x = (FlxG.random.int(5, 5) / FlxG.elapsed) * 0;
+		getNamedProp('limoDancer4').velocity.x = (FlxG.random.int(5, 5) / FlxG.elapsed) * 0;
+		getNamedProp('limoDancer5').velocity.x = (FlxG.random.int(5, 5) / FlxG.elapsed) * 0;
+
+		getNamedProp('bgLimo').velocity.x = (FlxG.random.int(5, 5) / FlxG.elapsed) * 0;
+
+			getNamedProp('limoDancer1').danceEvery = '1';
+			getNamedProp('limoDancer2').danceEvery = '1';
+			getNamedProp('limoDancer3').danceEvery = '1';
+			getNamedProp('limoDancer4').danceEvery = '1';
+			getNamedProp('limoDancer5').danceEvery = '1';
+		getNamedProp('limoDancer1').animation.play('hench dancing');
+		getNamedProp('limoDancer2').animation.play('hench dancing');
+		getNamedProp('limoDancer3').animation.play('hench dancing');
+		getNamedProp('limoDancer4').animation.play('hench dancing');
+		getNamedProp('limoDancer5').animation.play('hench dancing');
+	
+	}
+
+	function henchmenReset():Void {
+		getNamedProp('limoDancer1').velocity.x = (FlxG.random.int(5, 5) / FlxG.elapsed) * 0;
+		getNamedProp('limoDancer2').velocity.x = (FlxG.random.int(5, 5) / FlxG.elapsed) * 0;
+		getNamedProp('limoDancer3').velocity.x = (FlxG.random.int(5, 5) / FlxG.elapsed) * 0;
+		getNamedProp('limoDancer4').velocity.x = (FlxG.random.int(5, 5) / FlxG.elapsed) * 0;
+		getNamedProp('limoDancer5').velocity.x = (FlxG.random.int(5, 5) / FlxG.elapsed) * 0;
+		getNamedProp('bgLimo').velocity.x = (FlxG.random.int(5, 5) / FlxG.elapsed) * 0;
+			getNamedProp('limoDancer1').danceEvery = '1';
+			getNamedProp('limoDancer2').danceEvery = '1';
+			getNamedProp('limoDancer3').danceEvery = '1';
+			getNamedProp('limoDancer4').danceEvery = '1';
+			getNamedProp('limoDancer5').danceEvery = '1';
+		getNamedProp('limoDancer1').animation.play('hench dancing');
+		getNamedProp('limoDancer2').animation.play('hench dancing');
+		getNamedProp('limoDancer3').animation.play('hench dancing');
+		getNamedProp('limoDancer4').animation.play('hench dancing');
+		getNamedProp('limoDancer5').animation.play('hench dancing');
+
+		getNamedProp('limoDancer1').x = 2100;
+		getNamedProp('limoDancer2').x = 2400;
+		getNamedProp('limoDancer3').x = 2700;
+		getNamedProp('limoDancer4').x = 3000;
+		getNamedProp('limoDancer5').x = 3300;
+		getNamedProp('bgLimo').x = 1700;
+
+		new FlxTimer().start(2, function(tmr:FlxTimer)
+		{
+	
+			FlxTween.tween(getNamedProp('bgLimo'), { x: -200, y: 480 }, 1.5,
+	        	{ 
+            			//ease:       FlxEase.quadInOut
+	        	}
+			);
+
+			FlxTween.tween(getNamedProp('limoDancer1'), { x: 100, y: 100 }, 1.5,
+	        	{ 
+            			//ease:       FlxEase.quadInOut
+	        	}
+			);
+
+			FlxTween.tween(getNamedProp('limoDancer2'), { x: 400, y: 100 }, 1.5,
+	        	{ 
+            			//ease:       FlxEase.quadInOut
+	        	}
+			);
+
+			FlxTween.tween(getNamedProp('limoDancer3'), { x: 700, y: 100 }, 1.5,
+	        	{ 
+            			//ease:       FlxEase.quadInOut
+	        	}
+			);
+
+			FlxTween.tween(getNamedProp('limoDancer4'), { x: 1000, y: 100 }, 1.5,
+	        	{ 
+            			//ease:       FlxEase.quadInOut
+	        	}
+			);
+
+			FlxTween.tween(getNamedProp('limoDancer5'), { x: 1300, y: 100 }, 1.5,
+	        	{ 
+            			//ease:       FlxEase.quadInOut
+	        	}
+			);
+			henchmendead = 1;
+			new FlxTimer().start(15, function(tmr:FlxTimer)
+			{
+			henchmendead = 1;
+			henchmendead = 0;	
+			});
+		});
+	}
+}

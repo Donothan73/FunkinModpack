@@ -1,0 +1,78 @@
+{
+  "version": "1.1.0",
+  "name": "Week1",
+  "assetPath": "speech_bubble",
+  "isPixel": false,
+  "flipX": false,
+  "flipY": false,
+  "offsets": [-20, 20],
+  "scale": 1,
+
+  "text": {
+    "offsets": [225, 450],
+    "width": 800,
+    "color": "#3F2021",
+    "fontFamily": "Pixel Arial 11 Bold",
+    "shadowColor": "#D89494",
+    "shadowWidth": 2
+  },
+
+  "animations": [
+    {
+      "name": "enter",
+      "prefix": "Speech Bubble Middle Open",
+      "offsets": [0, 0],
+      "frameRate": 24
+    },
+    {
+      "name": "enterLOUD",
+      "prefix": "speech bubble loud open",
+      "offsets": [0, 0],
+      "frameRate": 24
+    },
+    {
+      "name": "speaking",
+      "prefix": "speech bubble middle",
+      "looped": true,
+      "offsets": [0, 0]
+    },
+    {
+      "name": "speakingAngry",
+      "prefix": "AHH Speech Bubble middle",
+      "looped": true,
+      "offsets": [0, 0]
+    },
+    {
+      "name": "sentenceEnd",
+      "prefix": "speech bubble normal",
+      "offsets": [0, 0]
+    },
+    {
+      "name": "idle",
+      "prefix": "speech bubble normal",
+      "looped": true,
+      "offsets": [0, 0]
+    },
+    {
+      "name": "exit",
+      "prefix": "Speech Bubble Middle Open",
+      "offsets": [0, 0],
+      "frameIndices": [3, 2, 1, 0],
+      "frameRate": 24
+    },
+    {
+      "name": "exitAngry",
+      "prefix": "speech bubble loud open",
+      "offsets": [0, 0],
+      "frameIndices": [3, 2, 1, 0],
+      "frameRate": 24
+    },
+    {
+      "name": "angry",
+      "prefix": "AHH speech bubble",
+      "offsets": [0, 0],
+      "looped": true,
+      "frameRate": 24
+    }
+  ]
+}

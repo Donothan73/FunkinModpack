@@ -1,0 +1,78 @@
+{
+	"version": "1.0.0",
+	"name": "Tankman (Playable)",
+	"renderType": "multisparrow",
+	"assetPath": "characters/tankmanPlayable",
+	"healthIcon": { 
+		"id": "tankman" 
+	},
+	"death": {
+    "cameraOffsets": [200, 0]
+  },
+	"cameraOffsets": [0, 30],
+	"flipX": true,
+	"animations": [
+		{
+			"name": "idle",
+			"prefix": "Tankman Idle Dance",
+			"offsets": [0, 30]
+		},
+		{
+			"name": "singRIGHT",
+			"prefix": "Tankman Right Note0",
+			"offsets": [-29, 18]
+		},
+		{
+			"name": "singDOWN",
+			"prefix": "Tankman DOWN note0",
+			"offsets": [78, -75]
+		},
+		{
+			"name": "singUP",
+			"prefix": "Tankman UP note0",
+			"offsets": [17, 76]
+		},
+		{
+			"name": "singLEFT",
+			"prefix": "Tankman Note Left0",
+			"offsets": [93, 0]
+		},
+		{
+			"name": "singRIGHTmiss",
+			"prefix": "Tankman Right Note MISS0",
+			"offsets": [-20, 47]
+		},
+		{
+			"name": "singDOWNmiss",
+			"prefix": "Tankman DOWN note MISS0",
+			"offsets": [78, -10]
+		},
+		{
+			"name": "singUPmiss",
+			"prefix": "Tankman UP note MISS0",
+			"offsets": [17, 110]
+		},
+		{
+			"name": "singLEFTmiss",
+			"prefix": "Tankman Note Left MISS0",
+			"offsets": [95, 34]
+		},
+		{
+      "name": "firstDeath",
+      "prefix": "tankman got fucking SHOT???",
+      "assetPath": "characters/tankman_shot"
+    },
+		{
+      "name": "deathLoop",
+      "prefix": "tankman got fucking SHOT???",
+      "assetPath": "characters/tankman_shot",
+			"frameIndices": [26, 27, 28, 29, 30]
+    },
+		{
+      "name": "deathConfirm",
+      "prefix": "tankman got fucking SHOT???",
+      "assetPath": "characters/tankman_shot",
+			"frameIndices": [26, 27, 28, 29, 30]
+    }
+	]
+}

@@ -1,0 +1,117 @@
+import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.util.FlxTimer;
+import flixel.addons.display.FlxRuntimeShader;
+import flixel.sound.FlxSound;
+import funkin.Conductor;
+import funkin.Paths;
+import funkin.modding.base.ScriptedFlxRuntimeShader;
+import funkin.graphics.shaders.AdjustColorShader;
+import funkin.play.PlayState;
+import funkin.play.stage.Stage;
+import funkin.graphics.adobeanimate.FlxAtlasSprite;
+import funkin.modding.base.ScriptedFlxAtlasSprite;
+import funkin.play.character.BaseCharacter;
+import funkin.play.character.CharacterDataParser;
+import funkin.play.character.CharacterType;
+import funkin.input.Controls;
+
+class MainStageErectStage extends Stage
+{
+	function new()
+	{
+		super('mainStageErect');
+	}
+
+  var colorShaderBf:AdjustColorShader;
+  var colorShaderDad:AdjustColorShader;
+  var colorShaderGf:AdjustColorShader;
+  var colorShaderGuy:AdjustColorShader;
+
+	public override function onCountdownStart(event:CountdownScriptEvent):Void {
+		super.onCountdownStart(event);
+	}
+
+	function buildStage()
+	{
+		super.buildStage();
+
+	if (FlxG.random.bool(100) == true){
+		getNamedProp('big fucking idiot').visible = true;
+		}else{
+		getNamedProp('big fucking idiot').visible = false;
+		}
+	
+
+    colorShaderBf = new AdjustColorShader();
+    colorShaderDad = new AdjustColorShader();
+
+    colorShaderGf = new AdjustColorShader();
+    colorShaderGuy = new AdjustColorShader();
+
+
+    colorShaderBf.brightness = -23;
+    colorShaderBf.hue = 12;
+    colorShaderBf.contrast = 7;
+    colorShaderBf.saturation = 0;
+
+    colorShaderGuy.brightness = -23;
+    colorShaderGuy.hue = 12;
+    colorShaderGuy.contrast = 7;
+		colorShaderGuy.saturation = 0;
+
+    colorShaderGf.brightness = -30;
+    colorShaderGf.hue = -9;
+    colorShaderGf.contrast = -4;
+		colorShaderGf.saturation = 0;
+
+    colorShaderDad.brightness = -33;
+    colorShaderDad.hue = -32;
+    colorShaderDad.contrast = -23;
+		colorShaderDad.saturation = 0;
+
+    getNamedProp('brightLightSmall').blend = 0;
+    getNamedProp('orangeLight').blend = 0;
+    getNamedProp('lightgreen').blend = 0;
+    getNamedProp('lightred').blend = 0;
+    getNamedProp('lightAbove').blend = 0;
+
+    getNamedProp('big fucking idiot').shader = colorShaderGuy;
+
+	}
+
+	function onUpdate(event:UpdateScriptEvent):Void
+	{
+		super.onUpdate(event);
+
+    if(PlayState.instance.currentStage.getBoyfriend() != null && PlayState.instance.currentStage.getBoyfriend().shader == null){
+      PlayState.instance.currentStage.getBoyfriend().shader = colorShaderBf;
+			PlayState.instance.currentStage.getGirlfriend().shader = colorShaderGf;
+			PlayState.instance.currentStage.getDad().shader = colorShaderDad;
+    }
+			if(FlxG.keys.justPressed.SPACE) { 	//CHANGE THIS IF YOU WANNA HAVE A DIFFERENT INPUT!
+				PlayState.instance.currentStage.getBoyfriend().animation.play('preAttack');
+					new FlxTimer().start(.5, function(tmr:FlxTimer)
+					{
+					PlayState.instance.currentStage.getBoyfriend().animation.play('attack');
+					PlayState.instance.currentStage.getDad().animation.play('hit');
+						new FlxTimer().start(.75, function(tmr:FlxTimer)
+						{
+						PlayState.instance.currentStage.getBoyfriend().animation.play('hit');
+						PlayState.instance.currentStage.getDad().animation.play('kick');
+						PlayState.instance.currentStage.getGirlfriend().animation.play('sad');
+						});
+					});
+			}
+	}
+
+	function onBeatHit(event:SongTimeScriptEvent):Void
+	{
+		super.onBeatHit(event);
+	}
+
+  function onStepHit(event:SongTimeScriptEvent):Void
+	{
+		super.onStepHit(event);
+	}
+}

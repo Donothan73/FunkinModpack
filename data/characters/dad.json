@@ -1,0 +1,248 @@
+{
+	"version": "1.0.0",
+	"renderType": "sparrow",
+	"offsets": [
+		0,
+		0
+	],
+	"danceEvery": 1,
+	"scale": 1,
+	"name": "Daddy Dearest",
+	"cameraOffsets": [
+		0,
+		0
+	],
+	"flipX": false,
+	"singTime": 8,
+	"startingAnimation": "idle",
+	"isPixel": false,
+	"assetPath": "characters/Dad_assets",
+	"healthIcon": {
+		"isPixel": false,
+		"offsets": [
+			0,
+			0
+		],
+		"scale": 1,
+		"id": "dad",
+		"flipX": false
+	},
+	"animations": [
+		{
+			"offsets": [
+				0,
+				0
+			],
+			"flipY": false,
+			"frameRate": 24,
+			"prefix": "Dad idle dance instance 1",
+			"name": "idle",
+			"looped": false,
+			"flipX": false
+		},
+		{
+			"offsets": [
+				3,
+				-35
+			],
+			"flipY": false,
+			"frameRate": 24,
+			"prefix": "dad kick attack prep instance 1",
+			"name": "prep",
+			"looped": false,
+			"flipX": false
+		},
+		{
+			"offsets": [
+				78,
+				-31
+			],
+			"flipY": false,
+			"frameRate": 24,
+			"prefix": "Dad HURT instance 1",
+			"name": "hurt",
+			"looped": false,
+			"flipX": false
+		},
+		{
+			"offsets": [
+				6,
+				-29
+			],
+			"flipY": false,
+			"frameRate": 24,
+			"prefix": "dad kick attack instance 1",
+			"name": "kick",
+			"looped": false,
+			"flipX": false
+		},
+		{
+			"offsets": [
+				-4,
+				0
+			],
+			"flipY": false,
+			"frameRate": 24,
+			"frameIndices": [
+				11,
+				12
+			],
+			"prefix": "Dad idle dance instance 1",
+			"looped": true,
+			"name": "idle-hold",
+			"flipX": false
+		},
+		{
+			"offsets": [
+				7,
+				2
+			],
+			"flipY": false,
+			"frameRate": 24,
+			"prefix": "dad sing note right instance 1",
+			"name": "singLEFT",
+			"looped": false,
+			"flipX": false
+		},
+		{
+			"offsets": [
+				7,
+				1
+			],
+			"flipY": false,
+			"frameRate": 24,
+			"frameIndices": [
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13,
+				14
+			],
+			"prefix": "dad sing note right instance 1",
+			"looped": true,
+			"name": "singLEFT-hold",
+			"flipX": false
+		},
+		{
+			"offsets": [
+				0,
+				-30
+			],
+			"flipY": false,
+			"frameRate": 24,
+			"prefix": "Dad Sing Note DOWN instance 1",
+			"name": "singDOWN",
+			"looped": false,
+			"flipX": false
+		},
+		{
+			"offsets": [
+				0,
+				-30
+			],
+			"flipY": false,
+			"frameRate": 24,
+			"frameIndices": [
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13,
+				14
+			],
+			"prefix": "sDad Sing Note DOWN instance 1",
+			"looped": true,
+			"name": "singDOWN-hold",
+			"flipX": false
+		},
+		{
+			"offsets": [
+				-6,
+				50
+			],
+			"flipY": false,
+			"frameRate": 24,
+			"prefix": "Dad Sing note UP instance 1",
+			"name": "singUP",
+			"looped": false,
+			"flipX": false
+		},
+		{
+			"offsets": [
+				-6,
+				50
+			],
+			"flipY": false,
+			"frameRate": 24,
+			"frameIndices": [
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13,
+				14
+			],
+			"prefix": "Dad Sing note UP instance 1",
+			"looped": true,
+			"name": "singUP-hold",
+			"flipX": false
+		},
+		{
+			"offsets": [
+				2,
+				27
+			],
+			"flipY": false,
+			"frameRate": 24,
+			"prefix": "Dad Sing Note LEFT instance 1",
+			"name": "singRIGHT",
+			"looped": false,
+			"flipX": false
+		},
+		{
+			"offsets": [
+				9,
+				15
+			],
+			"flipY": false,
+			"frameRate": 24,
+			"frameIndices": [
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13,
+				14
+			],
+			"prefix": "Dad Sing Note LEFT instance 1",
+			"looped": true,
+			"name": "singRIGHT-hold",
+			"flipX": false
+		}
+	]
+}

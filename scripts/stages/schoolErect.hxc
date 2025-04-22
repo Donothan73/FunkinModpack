@@ -1,0 +1,131 @@
+import funkin.play.PlayState;
+import funkin.play.stage.Stage;
+import funkin.graphics.shaders.AdjustColorShader;
+import funkin.graphics.shaders.MosaicEffect;
+import funkin.graphics.FunkinCamera;
+import flixel.FlxCamera;
+import funkin.graphics.shaders.OverlayBlend;
+import funkin.play.character.BaseCharacter;
+import funkin.play.character.CharacterDataParser;
+import funkin.play.character.CharacterType;
+import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.util.FlxTimer;
+import flixel.addons.display.FlxRuntimeShader;
+import flixel.sound.FlxSound;
+import funkin.Conductor;
+import funkin.Paths;
+
+class SchoolErectStage extends Stage
+{
+	function new()
+	{
+		super('schoolErect');
+	}
+
+  var colorShaderBf:AdjustColorShader;
+  var colorShaderDad:AdjustColorShader;
+  var colorShaderGf:AdjustColorShader;
+  var colorShaderSchool:AdjustColorShader;
+  var colorShaderRoad:AdjustColorShader;
+  var colorShaderTree:AdjustColorShader;
+  var colorShaderTreeBack:AdjustColorShader;
+  var colorShaderTrunks:AdjustColorShader;
+  var colorShaderFreaks:AdjustColorShader;
+  var BlendShaderOverlay:OverlayBlend;
+  var Mosaic:MosaicEffect;
+
+	function buildStage()
+	{
+		super.buildStage();
+
+		if (PlayState.instance.currentSong.id.toLowerCase() == "roses")
+		{
+			getNamedProp('freaks').idleSuffix = '-scared';
+		} else {
+			getNamedProp('freaks').idleSuffix = '';
+		}
+
+
+    colorShaderBf = new AdjustColorShader();
+    colorShaderDad = new AdjustColorShader();
+    colorShaderGf = new AdjustColorShader();
+    colorShaderSchool = new AdjustColorShader();
+    colorShaderRoad = new AdjustColorShader();
+    colorShaderTree = new AdjustColorShader();
+    colorShaderTreeBack = new AdjustColorShader();
+    colorShaderTrunks = new AdjustColorShader();
+    colorShaderFreaks = new AdjustColorShader();
+    BlendShaderOverlay = new OverlayBlend();
+    Mosaic = new MosaicEffect();
+
+    Mosaic.setBlockSize(2, 2);
+
+    colorShaderBf.brightness = -56;
+    colorShaderBf.hue = -22;
+    colorShaderBf.contrast = 10;
+    colorShaderBf.saturation = 20;
+
+    colorShaderDad.brightness = -56;
+    colorShaderDad.hue = -22;
+    colorShaderDad.contrast = 10;
+    colorShaderDad.saturation = 20;
+    getNamedProp('freaks').shader = colorShaderDad;
+
+    colorShaderGf.brightness = -56;
+    colorShaderGf.hue = -22;
+    colorShaderGf.contrast = 10;
+    colorShaderGf.saturation = 20;
+
+    colorShaderSchool.brightness = -94;
+    colorShaderSchool.hue = 48;
+    colorShaderSchool.contrast = 17;
+    colorShaderSchool.saturation = 18;
+    getNamedProp('school').shader = colorShaderSchool;
+
+    colorShaderRoad.brightness = -50;
+    colorShaderRoad.hue = -18;
+    colorShaderRoad.contrast = 1;
+    colorShaderRoad.saturation = 12;
+    getNamedProp('street').shader = colorShaderRoad;
+
+    colorShaderTree.brightness = -74;
+    colorShaderTree.hue = -32;
+    colorShaderTree.contrast = 10;
+    colorShaderTree.saturation = 35;
+    getNamedProp('treesBG').shader = colorShaderTree;
+    getNamedProp('petals').shader = colorShaderTree;
+
+    colorShaderTrunks.brightness = -78;
+    colorShaderTrunks.hue = -38;
+    colorShaderTrunks.contrast = 10;
+    colorShaderTrunks.saturation = 20;
+    getNamedProp('trunks').shader = colorShaderTrunks;
+
+    colorShaderTreeBack.brightness = -78;
+    colorShaderTreeBack.hue = 23;
+    colorShaderTreeBack.contrast = 11;
+    colorShaderTreeBack.saturation = 28;
+    getNamedProp('treesFG').shader = colorShaderTreeBack;
+
+    getNamedProp('overlay').shader = colorShaderTrunks;
+
+	}
+
+	function onUpdate(event:UpdateScriptEvent):Void
+	{
+		super.onUpdate(event);
+
+    			if(PlayState.instance.currentStage.getBoyfriend() != null && PlayState.instance.currentStage.getBoyfriend().shader == null)
+			{
+     				PlayState.instance.currentStage.getBoyfriend().shader = colorShaderBf;
+				PlayState.instance.currentStage.getGirlfriend().shader = colorShaderGf;
+				PlayState.instance.currentStage.getDad().shader = colorShaderDad;
+				PlayState.instance.camHUD.pixelPerfectRender = true;
+				PlayState.instance.camHUD.scaleX = 640;
+				PlayState.instance.camHUD.scaleY = 120;
+				PlayState.instance.camGame.followLerp = 1;
+				PlayState.instance.camHUD.followLerp = 1;
+   			}
+	}
+}

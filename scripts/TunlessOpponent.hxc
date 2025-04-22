@@ -1,0 +1,102 @@
+import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.math.FlxBasePoint;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
+import funkin.modding.module.Module;
+import flixel.util.FlxTimer;
+import funkin.audio.FunkinSound;
+import funkin.Conductor;
+import flixel.math.FlxPoint;
+import funkin.graphics.adobeanimate.FlxAtlasSprite;
+import funkin.graphics.FunkinSprite;
+import funkin.modding.base.ScriptedFlxAtlasSprite;
+import funkin.Paths;
+import funkin.play.cutscene.CutsceneType;
+import funkin.play.cutscene.VideoCutscene;
+import funkin.play.GameOverSubState;
+import funkin.play.PlayState;
+import funkin.play.PlayStatePlaylist;
+import funkin.play.song.Song;
+import funkin.play.stage.StageProp;
+import funkin.save.Save;
+import funkin.graphics.adobeanimate.FlxAtlasSprite;
+import funkin.Paths;
+import funkin.play.notes.Strumline;
+import funkin.play.notes.notekind.NoteKind;
+import flixel.math.FlxPoint;
+import flixel.FlxSprite;
+import funkin.graphics.FunkinSprite;
+import flixel.util.FlxSave;
+import Std;
+import funkin.play.PlayState;
+import flixel.FlxG;
+
+class TunlessOpponentModule extends Module
+{
+    	var save:FlxSave = new FlxSave();
+	var RandomBool:Bool = false;
+	var CanEnableVocals:Bool = true;
+
+	function new()
+	{
+		super('TunlessOpponent');
+     		save = new FlxSave();
+        	save.bind("StuckInALoop", "Donothan73");
+	}
+
+	function onBeatHit(event:SongTimeScriptEvent)
+	{
+		super.onBeatHit(event);
+
+				event.cancelEvent();
+				return;
+	}
+
+	function onNoteHit(event:HitNoteScriptEvent)
+	{
+		super.onNoteHit(event);
+
+	var health:Float = PlayState.instance.health;
+
+	RandomBool = (FlxG.random.bool(25));
+
+    if (PlayState.instance.currentStage == null) return; 
+		if (!event.note.noteData.getMustHitNote()){
+
+        			//PlayState.instance.currentStage.getOpponent().playSingAnimation(!event.note.noteData.getDirection(), true);
+				//PlayState.instance.vocals.opponentVolume = 0;
+				//event.cancelEvent();
+				//return;
+			
+			//{
+			//if(RandomBool == true && CanEnableVocals == true)
+			//{
+			//event.cancelEvent();
+				//CanEnableVocals = false;
+			//	event.cancelEvent();
+	
+				//event.cancelEvent();
+				//CanEnableVocals = false;
+				//PlayState.instance.vocals.opponentVolume = 0;
+        			//PlayState.instance.currentStage.getOpponent().playSingAnimation(!event.note.noteData.getDirection(), true);
+        			//PlayState.instance.currentStage.getBoyfriend().playSingAnimation(!event.note.noteData.getDirection(), true);
+      				//FunkinSound.playOnce(Paths.soundRandom('missnote', 3, 1), FlxG.random.float(0.1, 0.2));
+				//new FlxTimer().start(5, function(tmr:FlxTimer)
+				//{
+				//PlayState.instance.vocals.opponentVolume = 1;
+				//CanEnableVocals = true;
+				//});
+				//event.cancelEvent();
+				//event.cancelEvent();
+				//return;
+
+				//if(CanEnableVocals == true)
+				//{
+				//event.cancelEvent();
+				//return;
+				//}
+
+		}
+	}
+}

@@ -1,0 +1,19 @@
+import funkin.graphics.adobeanimate.FlxAtlasSprite;
+import funkin.Paths;
+import flixel.math.FlxPoint;
+import funkin.Conductor;
+
+class HenchmenDeath extends FlxAtlasSprite
+{
+  function new(x:Float, y:Float)
+  {
+    super(x, y, Paths.animateAtlas("HenchmenDeath", "shared"), {
+      FrameRate: 1.0,
+      Reversed: false,
+      // ?OnComplete:Void -> Void,
+      ShowPivot: true,
+      Antialiasing: true,
+      ScrollFactor: new FlxPoint(0.4, 0.4),
+    });
+  }
+}

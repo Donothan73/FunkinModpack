@@ -1,2 +1,1 @@
-# Donothan's Friday Night Funkin' 
-# Fixes & Tweaks
+# Donothan's Friday Night Funkin' Fixes & Tweaks

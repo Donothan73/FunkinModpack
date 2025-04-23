@@ -31,9 +31,7 @@ class CountdownSprites extends Module
 		if (noteStyleId == 'funkin')
 		{
 			styleMatch = true;
-    			var offsets = noteStyle.getCountdownSpriteOffsets('GO');
-			
-			goSprite = ScriptedFlxAtlasSprite.init('CountdownGO', offsets[0], offsets[1]);
+			goSprite = ScriptedFlxAtlasSprite.init('CountdownGO', -2000, -1500);
 		}
 	}
 
@@ -44,6 +42,9 @@ class CountdownSprites extends Module
 		{
 			PlayState.instance.currentStage.add(goSprite);
 			goSprite.cameras = [PlayState.instance.camCutscene];
+			goSprite.screenCenter();
+			goSprite.x = goSprite.x - 175;
+			goSprite.y = goSprite.y - 175;
 			goSprite.scriptCall('playCutscene');
 		}	
 	}

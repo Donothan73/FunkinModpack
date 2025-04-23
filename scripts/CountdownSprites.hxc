@@ -1,0 +1,45 @@
+import funkin.play.PlayState;
+import funkin.play.Countdown;
+import funkin.modding.module.Module;
+import funkin.Paths;
+import funkin.graphics.adobeanimate.FlxAtlasSprite;
+import funkin.modding.base.ScriptedFlxAtlasSprite;
+import funkin.play.notes.notestyle.NoteStyle;
+
+class CountdownSprites extends Module 
+{
+	
+	var styleMatch:bool = false;
+	var goSprite:ScriptedFlxAtlasSprite;
+
+	function new ()
+	{
+	        super("CountdownSprites");
+	}
+
+	public function onCountdownStart(event:CountdownScriptEvent) 
+	{
+		super.onCountdownStart(event);
+		if (Countdown.noteStyle == 'funkin')
+		{
+			//styleMatch = true;
+			goSprite = ScriptedFlxAtlasSprite.init('CountdownGO', 0, 0);
+		}
+	}
+
+	public function onCountdownStep(event:CountdownScriptEvent)
+	{
+		super.onCountdownStep(event);
+		if (styleMatch == true && event.step == 'GO')
+		{
+			PlayState.instance.currentStage.add(goSprite);
+			goSprite.cameras = [PlayState.instance.camCutscene];
+			goSprite.scriptCall('playCutscene');
+		}	
+	}
+
+	public function onCountdownEnd(event:CountdownScriptEvent)
+	{
+		super.onCountdownEnd(event);
+	}	
+}

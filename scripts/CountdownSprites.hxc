@@ -5,12 +5,15 @@ import funkin.Paths;
 import funkin.graphics.adobeanimate.FlxAtlasSprite;
 import funkin.modding.base.ScriptedFlxAtlasSprite;
 import funkin.play.notes.notestyle.NoteStyle;
+import funkin.data.notestyle.NoteStyleRegistry;
+
 
 class CountdownSprites extends Module 
 {
 	
 	var styleMatch:bool = false;
 	var goSprite:ScriptedFlxAtlasSprite;
+ 	var noteStyle:NoteStyle = null;
 
 	function new ()
 	{
@@ -20,10 +23,19 @@ class CountdownSprites extends Module
 	public function onCountdownStart(event:CountdownScriptEvent) 
 	{
 		super.onCountdownStart(event);
-		if (Countdown.noteStyle == 'funkin')
+
+		noteStyle = NoteStyleRegistry.instance.fetchDefault();
+
+		if (noteStyle.getName() == 'funkin')
 		{
-			//styleMatch = true;
+			styleMatch = true;
 			goSprite = ScriptedFlxAtlasSprite.init('CountdownGO', 0, 0);
+		}
+		else //if (noteStyle.getName() == null)
+		{
+			goSprite = ScriptedFlxAtlasSprite.init('CountdownGO', 0, 0);
+			//PlayState.instance.currentStage.add(goSprite);
+			styleMatch = true;
 		}
 	}
 

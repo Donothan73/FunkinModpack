@@ -13,7 +13,8 @@ class CountdownSprites extends Module
 	
 	var styleMatch:bool = false;
 	var goSprite:ScriptedFlxAtlasSprite;
- 	var noteStyle:NoteStyle = null;
+ 	var noteStyleId:String;
+	var noteStyle:NoteStyle;
 
 	function new ()
 	{
@@ -24,18 +25,15 @@ class CountdownSprites extends Module
 	{
 		super.onCountdownStart(event);
 
-		noteStyle = NoteStyleRegistry.instance.fetchDefault();
+		noteStyleId = PlayState.instance.currentChart.noteStyle;
+		noteStyle = NoteStyleRegistry.instance.fetchEntry(noteStyleId);
 
-		if (noteStyle.getName() == 'funkin')
+		if (noteStyleId == 'funkin')
 		{
 			styleMatch = true;
-			goSprite = ScriptedFlxAtlasSprite.init('CountdownGO', 0, 0);
-		}
-		else //if (noteStyle.getName() == null)
-		{
-			goSprite = ScriptedFlxAtlasSprite.init('CountdownGO', 0, 0);
-			//PlayState.instance.currentStage.add(goSprite);
-			styleMatch = true;
+    			var offsets = noteStyle.getCountdownSpriteOffsets('GO');
+			
+			goSprite = ScriptedFlxAtlasSprite.init('CountdownGO', offsets[0], offsets[1]);
 		}
 	}
 

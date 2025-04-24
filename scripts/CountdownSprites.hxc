@@ -43,7 +43,7 @@ class CountdownSprites extends Module
 			PlayState.instance.currentStage.add(goSprite);
 			goSprite.cameras = [PlayState.instance.camCutscene];
 			goSprite.screenCenter();
-			goSprite.x = goSprite.x - 175;
+			goSprite.x = goSprite.x - 235;
 			goSprite.y = goSprite.y - 175;
 			goSprite.scriptCall('playCutscene');
 		}	

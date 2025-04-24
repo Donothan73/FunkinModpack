@@ -1,0 +1,61 @@
+import funkin.graphics.adobeanimate.FlxAtlasSprite;
+import flixel.math.FlxPoint;
+import flixel.FlxSprite;
+import funkin.graphics.FunkinSprite;
+import funkin.play.PlayState;
+import flixel.FlxG;
+import flixel.effects.FlxFlicker;
+import funkin.modding.module.Module;
+import funkin.Paths;
+import funkin.graphics.adobeanimate.FlxAtlasSprite;
+import funkin.modding.base.ScriptedFlxAtlasSprite;
+
+// a unique object for santa getting LLLOOOSSSEEE
+
+class LoseScriptedSprite extends FlxAtlasSprite
+{
+
+var loseFlicker:FlxFlicker = null;
+
+  public function new(x:Float, y:Float)
+  {
+    super(x, y, Paths.animateAtlas("lose", "shared"), {
+      FrameRate: 24.0,
+      Reversed: false,
+      // ?OnComplete:Void -> Void,
+      ShowPivot: false,
+      Antialiasing: true,
+      ScrollFactor: new FlxPoint(1, 1),
+    });
+
+	this.visible = false;
+
+   // onAnimationFinish.add(finishCanAnimation);
+  }
+
+  public function playCutscene():Void {
+    this.visible = true;
+    this.playAnimation("lose...", false, false, false, 0);
+    this.onAnimationComplete.add(onFinishAnim);
+
+  }
+
+function deathFlicker() 
+{
+			//Boo eric // ERIC: You have to use super instead of this or it breaks.
+			// This is because typeof(this) is PolymodAbstractClass.
+     loseFlicker = FlxFlicker.flicker(super, 0.3, 1 / 10, true, true, function(_) {
+      loseFlicker = FlxFlicker.flicker(super, 0.3, 1 / 20, false, true, function(_) {
+				loseFlicker = null;
+				this.visible = false; //save on performance if it stays loaded
+				//kill();
+			});
+    });
+	}
+
+
+  function onFinishAnim():Void
+  {
+    deathFlicker();
+  }
+}

@@ -73,7 +73,7 @@ class GirlfriendCharacter extends SparrowCharacter
 		PlayState.instance.currentStage.add(loseSprite);
 		loseSprite.x = this.x;
 		loseSprite.y = this.y + 600;
-		//loseSprite.zIndex = this.zIndex + 1;
+		loseSprite.zIndex = this.zIndex + 1;
 		loseSprite.scale.set(0.65, 0.65);
 
 		loseSprite.scriptCall('playCutscene');
@@ -86,18 +86,13 @@ class GirlfriendCharacter extends SparrowCharacter
 
 	override function playComboDropAnimation(comboCount:Int):Void
 	{
+		var comboLength:int = comboCount;
+
 		super.playComboDropAnimation(comboCount);
 
-		//if (comboCount > 50)
-		//{
-		//	if (canShame == false) I dont need this if the combo count check is active
-		//	{
-		//	return;
-		//	}
-		//	else
-		//	{
+		if (comboLength > 0)
+		{
 			shameBF();
-		//	}
-		//}
+		}
 	}
 }

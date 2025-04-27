@@ -18,7 +18,7 @@ var loseFlicker:FlxFlicker = null;
       // ?OnComplete:Void -> Void,
       ShowPivot: false,
       Antialiasing: true,
-      ScrollFactor: new FlxPoint(.9,.9)
+      ScrollFactor: new FlxPoint(.95,.95)
     });
 
 	this.visible = false;

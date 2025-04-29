@@ -27,6 +27,14 @@
       "offsets": [-11, -8]
     },
     {
+      "name": "drop50",
+      "prefix": "GFCRY",
+      "looped": false,
+      "frameRate": 8,
+      "frameIndices": [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+      "offsets": [-8, -12]
+    },
+    {
       "name": "danceRight",
       "prefix": "GF IDLE",
       "frameIndices": [

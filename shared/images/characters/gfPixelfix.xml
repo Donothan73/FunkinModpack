@@ -33,4 +33,6 @@
 	<SubTexture name="GFCHEER0000" x="138" y="240" width="98" height="96" />
 	<SubTexture name="GFCHEER0001" x="138" y="240" width="98" height="96" />
 	<SubTexture name="GFCHEER0002" x="138" y="240" width="98" height="96" />
+	<SubTexture name="GFCRY0000" x="269" y="244" width="104" height="92" />
+	<SubTexture name="GFCRY0001" x="395" y="244" width="104" height="92" />
 </TextureAtlas>

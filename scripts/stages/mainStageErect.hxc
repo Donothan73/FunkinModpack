@@ -1,0 +1,192 @@
+import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.addons.display.FlxRuntimeShader;
+import flixel.sound.FlxSound;
+import funkin.Conductor;
+import funkin.modding.base.ScriptedFlxRuntimeShader;
+import funkin.graphics.shaders.AdjustColorShader;
+import funkin.play.PlayState;
+import funkin.play.stage.Stage;
+import funkin.graphics.adobeanimate.FlxAtlasSprite;
+import funkin.modding.base.ScriptedFlxAtlasSprite;
+
+import funkin.graphics.shaders.DropShadowShader;
+import funkin.play.character.CharacterType;
+import funkin.play.character.BaseCharacter;
+import openfl.display.BitmapData;
+import flixel.graphics.FlxGraphic;
+import flixel.math.FlxAngle;
+
+
+class MainStageErectStage extends Stage
+{
+	function new()
+	{
+		super('mainStageErect');
+	}
+
+	var CharacterBf:BaseCharacter;
+	var CharacterGf:BaseCharacter;
+	var CharacterDad:BaseCharacter;
+
+
+	public override function onCountdownStart(event:CountdownScriptEvent):Void {
+		super.onCountdownStart(event);
+	}
+
+
+	override function addCharacter(character:BaseCharacter, charType:CharacterType):Void 
+	{
+		super.addCharacter(character, charType);
+
+		switch(charType)
+		{
+			case CharacterType.BF:
+				CharacterBf = character;
+
+			case CharacterType.GF:
+				CharacterGf = character;
+
+			case CharacterType.DAD:
+				CharacterDad = character;
+
+			default:
+
+		}
+
+	}
+
+
+	function buildStage()
+	{
+		super.buildStage();
+
+	switch(PlayState.instance.currentVariation) {
+    	  case 'erect':
+
+  		var colorShaderBf:AdjustColorShader;
+  		var colorShaderDad:AdjustColorShader;
+  		var colorShaderGf:AdjustColorShader;
+
+    		colorShaderBf = new AdjustColorShader();
+    		colorShaderDad = new AdjustColorShader();
+   		colorShaderGf = new AdjustColorShader();
+
+    		colorShaderBf.brightness = -23;
+    		colorShaderBf.hue = 12;
+    		colorShaderBf.contrast = 7;
+		colorShaderBf.saturation = 0;
+
+		colorShaderGf.brightness = -30;
+		colorShaderGf.hue = -9;
+    		colorShaderGf.contrast = -4;
+		colorShaderGf.saturation = 0;
+
+    		colorShaderDad.brightness = -33;
+    		colorShaderDad.hue = -32;
+    		colorShaderDad.contrast = -23;
+		colorShaderDad.saturation = 0;
+
+    		getNamedProp('brightLightSmall').blend = 0;
+    		getNamedProp('orangeLight').blend = 0;
+    		getNamedProp('lightgreen').blend = 0;
+    		getNamedProp('lightred').blend = 0;
+    		getNamedProp('lightAbove').blend = 0;
+
+    	  case 'pico':
+
+  		var colorShaderBg:AdjustColorShader;
+    		colorShaderBg = new AdjustColorShader();
+  		var colorShaderLight:AdjustColorShader;
+    		colorShaderLight = new AdjustColorShader();
+
+		var rimBf = new DropShadowShader();
+		var rimDad = new DropShadowShader();
+		var rimGf = new DropShadowShader();
+
+		rimBf.setAdjustColor(-16, -26, 0, -5);
+    		rimBf.color = 0xFF456768;
+		rimBf.attachedSprite = CharacterBf;
+		rimBf.threshold = 0.1;
+		rimBf.distance = 12;
+		rimBf.strength = 1.05;
+		rimBf.angle = 130;
+
+		CharacterBf.animation.onFrameChange.add(function()
+ 		{
+			if (getBoyfriend() != null)
+			{
+      				rimBf.updateFrameInfo(getBoyfriend().frame);
+			}
+    		});
+
+    		getNamedProp('brightLightSmall').blend = 0;
+    		getNamedProp('orangeLight').blend = 0;
+    		getNamedProp('lightgreen').blend = 0;
+    		getNamedProp('lightred').blend = 0;
+    		getNamedProp('lightAbove').blend = 0;
+
+    		colorShaderBg.brightness = -33;
+    		colorShaderBg.hue = -22;
+    		colorShaderBg.contrast = -23;
+		colorShaderBg.saturation = -10;
+
+    		colorShaderLight.brightness = -35;
+    		colorShaderLight.hue = -66;
+    		colorShaderLight.contrast = 0;
+		colorShaderLight.saturation = -10;
+
+
+    		getNamedProp('backDark').shader = colorShaderBg;
+    		getNamedProp('brightLightSmall').shader = colorShaderLight;
+    		//getNamedProp('brightLightSmall').visible = false;
+    		getNamedProp('crowd').shader = colorShaderBg;
+    		getNamedProp('bg').shader = colorShaderBg;
+    		getNamedProp('server').shader = colorShaderBg;
+    		getNamedProp('lights').shader = colorShaderBg;
+    		getNamedProp('orangeLight').shader = colorShaderLight;
+    		//getNamedProp('orangeLight').visible = false;
+    		getNamedProp('lightgreen').shader = colorShaderBg;
+    		getNamedProp('lightred').shader = colorShaderBg;
+    		getNamedProp('lightAbove').shader = colorShaderLight;
+    		//getNamedProp('lightAbove').visible = false;
+
+      		getBoyfriend().shader = rimBf;
+		getGirlfriend().shader = colorShaderGf;
+		getDad().shader = colorShaderDad;
+
+		}
+	}
+
+	function onUpdate(event:UpdateScriptEvent):Void
+	{
+		super.onUpdate(event);
+
+	switch(PlayState.instance.currentVariation)
+
+	{
+    	  case 'erect':
+    		if (PlayState.instance.currentStage.getBoyfriend() != null && PlayState.instance.currentStage.getBoyfriend().shader == null)
+			{
+      			PlayState.instance.currentStage.getBoyfriend().shader = colorShaderBf;
+			PlayState.instance.currentStage.getGirlfriend().shader = colorShaderGf;
+			PlayState.instance.currentStage.getDad().shader = colorShaderDad;
+    			}
+    	  case 'pico':
+    		if (PlayState.instance.currentStage.getBoyfriend() != null && PlayState.instance.currentStage.getBoyfriend().shader == null)
+			{
+
+    			}
+		}
+	}
+
+	function onBeatHit(event:SongTimeScriptEvent):Void
+	{
+		super.onBeatHit(event);
+	}
+
+  function onStepHit(event:SongTimeScriptEvent):Void
+	{
+		super.onStepHit(event);
+	}
+}

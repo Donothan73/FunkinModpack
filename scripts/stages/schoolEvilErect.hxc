@@ -1,0 +1,62 @@
+import funkin.play.PlayState;
+import funkin.play.stage.Stage;
+import funkin.graphics.shaders.WiggleEffectRuntime;
+import funkin.graphics.shaders.WiggleEffectType;
+import flixel.addons.effects.FlxTrail;
+import funkin.play.Countdown;
+import funkin.graphics.shaders.AdjustColorShader;
+
+class SchoolEvilErectStage extends Stage
+{
+	function new()
+	{
+		super('schoolEvilErect');
+	}
+
+	var wiggleBG:FlxRuntimeShader = null;
+	var wiggleCHAR:FlxRuntimeShader = null;
+  	var colorShader:AdjustColorShader;
+
+	override function buildStage()
+	{
+		super.buildStage();
+
+		wiggleBG = new WiggleEffectRuntime(2, 4, 0.017, WiggleEffectType.DREAMY);
+		wiggleCHAR = new WiggleEffectRuntime(0.5, 0.5, 0.017, WiggleEffectType.DREAMY);
+
+		getNamedProp('evilSchoolBG').shader = wiggleBG;
+
+		colorShader = new AdjustColorShader();
+		colorShader.hue = -26;
+		colorShader.saturation = -16;
+		colorShader.contrast = 0;
+		colorShader.brightness = -5;
+
+		PlayState.instance.camCutscene.shader = wiggleCHAR;
+
+	}
+
+	override function addCharacter(char:BaseCharacter, charType:CharacterType)
+	{
+
+		super.addCharacter(char, charType);
+
+		char.shader = wiggleCHAR;
+		char.shader = colorShader;
+	}
+
+	override function onUpdate(event:UpdateScriptEvent) {
+		super.onUpdate(event);
+
+		if (wiggleBG != null) {
+			wiggleBG.update(event.elapsed);
+			wiggleCHAR.update(event.elapsed);
+		}
+	}
+
+	function kill() {
+		super.kill();
+		wiggleCHAR = null;
+		wiggleBG = null;
+	}
+}

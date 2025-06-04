@@ -1,0 +1,37 @@
+import funkin.ui.MusicBeatSubState;
+import funkin.ui.title.TitleState;
+import funkin.ui.mainmenu.MainMenuState;
+import funkin.ui.freeplay.FreeplayState;
+import funkin.ui.debug.results.ResultsDebugSubState;
+import funkin.modding.module.Module;
+import funkin.modding.base.ScriptedMusicBeatState;
+import flixel.FlxSubState;
+import flixel.FlxG;
+
+class BootupScreen extends Module
+{
+	function new ()
+	{
+	        super("BootupScreen");
+	}
+
+
+	public function onStateChangeBegin(event:StateChangeScriptEvent)
+ 	 {
+    		super.onStateChangeBegin(event);
+
+			if (event != MainMenuState)
+			{
+				//FlxG.switchState(() -> new ResultsDebugSubState());
+			}
+ 	 }
+
+}
+
+class BootupScreenState extends ScriptedMusicBeatState
+{
+	function new ()
+	{
+	        super("MusicBeatSubState");
+	}
+}

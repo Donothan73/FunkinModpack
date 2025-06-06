@@ -11,6 +11,7 @@ import funkin.graphics.adobeanimate.FlxAtlasSprite;
 import funkin.modding.base.ScriptedFlxAtlasSprite;
 
 import funkin.graphics.shaders.DropShadowShader;
+import funkin.graphics.shaders.DropShadowScreenspace;
 import funkin.play.character.CharacterType;
 import funkin.play.character.BaseCharacter;
 import openfl.display.BitmapData;
@@ -20,14 +21,24 @@ import flixel.math.FlxAngle;
 
 class MainStageErectStage extends Stage
 {
-	function new()
-	{
-		super('mainStageErect');
-	}
 
 	var CharacterBf:BaseCharacter;
 	var CharacterGf:BaseCharacter;
 	var CharacterDad:BaseCharacter;
+
+  	var colorShaderBf:AdjustColorShader;
+  	var colorShaderDad:AdjustColorShader;
+  	var colorShaderGf:AdjustColorShader;
+
+	function new()
+	{
+		super('mainStageErect');
+
+    		colorShaderBf = new AdjustColorShader();
+    		colorShaderDad = new AdjustColorShader();
+   			colorShaderGf = new AdjustColorShader();
+
+	}
 
 
 	public override function onCountdownStart(event:CountdownScriptEvent):Void {
@@ -39,19 +50,112 @@ class MainStageErectStage extends Stage
 	{
 		super.addCharacter(character, charType);
 
-		switch(charType)
+		switch(PlayState.instance.currentVariation) 
 		{
-			case CharacterType.BF:
-				CharacterBf = character;
+    		  case 'erect':
+			switch(charType)
+			{
+				case CharacterType.BF:
+					CharacterBf = character;
+					character.shader = colorShaderBf;
 
-			case CharacterType.GF:
-				CharacterGf = character;
+				case CharacterType.GF:
+					CharacterGf = character;
+					character.shader = colorShaderGf;
 
-			case CharacterType.DAD:
-				CharacterDad = character;
+				case CharacterType.DAD:
+					CharacterDad = character;
+					character.shader = colorShaderDad;
 
-			default:
+				default:
 
+			}
+    		  case 'pico':
+
+			var rim = new DropShadowShader();
+
+			switch(charType)
+			{
+				case CharacterType.BF:
+					CharacterBf = character;
+			
+					rim.setAdjustColor(-26, -18, 0, -30);	//brightness -> hue -> contrast -> saturation
+    				rim.color = 0xFF87645A;
+					character.shader = rim;
+					rim.attachedSprite = character;
+					rim.angle = 65;
+					rim.threshold = 0.1;
+					rim.distance = 15;
+					rim.strength = 1.05;
+
+					character.animation.onFrameChange.add(function()
+					 {
+						if (getBoyfriend() != null)
+						{
+      							rim.updateFrameInfo(getBoyfriend().frame);
+						}
+    					});
+
+				case CharacterType.GF:
+					CharacterGf = character;
+
+
+					rim.setAdjustColor(-56, -18, -15, -10);	//brightness -> hue -> contrast -> saturation
+    				rim.color = 0xFF917274;
+					character.shader = rim;
+					rim.attachedSprite = character;
+					rim.angle = 45;
+					rim.threshold = 0.1;
+					rim.distance = 12;
+					rim.strength = 1.05;
+
+
+					if (getGirlfriend().characterId == 'nene')
+					{
+						var aBotShader:DropShadowScreenspace;
+						
+						aBotShader = new DropShadowScreenspace ();
+						aBotShader.distance = rim.distance;
+						aBotShader.angle = rim.angle;
+						aBotShader.threshold = rim.threshold;
+						aBotShader.strength = rim.strength;
+						aBotShader.color = rim.color;
+
+						aBotShader.distance = 9;
+						aBotShader.angle = 25;
+						aBotShader.strength = 1.25;
+					
+						getGirlfriend().scriptCall('addShaderAbot', [aBotShader]);
+					}
+
+					character.animation.onFrameChange.add(function()
+					 {
+						if (getGirlfriend() != null)
+						{
+      							rim.updateFrameInfo(getGirlfriend().frame);
+						}
+    					});
+
+				case CharacterType.DAD:
+					CharacterDad = character;
+
+					rim.setAdjustColor(-66, -28, -35, -15); //brightness -> hue -> contrast -> saturation
+    				rim.color = 0xFF2F2635;
+					character.shader = rim;
+					rim.attachedSprite = character;
+					rim.angle = 25;
+					rim.threshold = 0.1;
+					rim.distance = 12;
+					rim.strength = 1.05;
+
+					character.animation.onFrameChange.add(function()
+					 {
+						if (getDad() != null)
+						{
+      							rim.updateFrameInfo(getDad().frame);
+						}
+    					});
+			}
 		}
 
 	}
@@ -64,28 +168,20 @@ class MainStageErectStage extends Stage
 	switch(PlayState.instance.currentVariation) {
     	  case 'erect':
 
-  		var colorShaderBf:AdjustColorShader;
-  		var colorShaderDad:AdjustColorShader;
-  		var colorShaderGf:AdjustColorShader;
-
-    		colorShaderBf = new AdjustColorShader();
-    		colorShaderDad = new AdjustColorShader();
-   		colorShaderGf = new AdjustColorShader();
-
     		colorShaderBf.brightness = -23;
     		colorShaderBf.hue = 12;
     		colorShaderBf.contrast = 7;
-		colorShaderBf.saturation = 0;
+			colorShaderBf.saturation = 0;
 
-		colorShaderGf.brightness = -30;
-		colorShaderGf.hue = -9;
+			colorShaderGf.brightness = -30;
+			colorShaderGf.hue = -9;
     		colorShaderGf.contrast = -4;
-		colorShaderGf.saturation = 0;
+			colorShaderGf.saturation = 0;
 
     		colorShaderDad.brightness = -33;
     		colorShaderDad.hue = -32;
     		colorShaderDad.contrast = -23;
-		colorShaderDad.saturation = 0;
+			colorShaderDad.saturation = 0;
 
     		getNamedProp('brightLightSmall').blend = 0;
     		getNamedProp('orangeLight').blend = 0;
@@ -95,30 +191,10 @@ class MainStageErectStage extends Stage
 
     	  case 'pico':
 
-  		var colorShaderBg:AdjustColorShader;
+  			var colorShaderBg:AdjustColorShader;
     		colorShaderBg = new AdjustColorShader();
-  		var colorShaderLight:AdjustColorShader;
+  			var colorShaderLight:AdjustColorShader;
     		colorShaderLight = new AdjustColorShader();
-
-		var rimBf = new DropShadowShader();
-		var rimDad = new DropShadowShader();
-		var rimGf = new DropShadowShader();
-
-		rimBf.setAdjustColor(-16, -26, 0, -5);
-    		rimBf.color = 0xFF456768;
-		rimBf.attachedSprite = CharacterBf;
-		rimBf.threshold = 0.1;
-		rimBf.distance = 12;
-		rimBf.strength = 1.05;
-		rimBf.angle = 130;
-
-		CharacterBf.animation.onFrameChange.add(function()
- 		{
-			if (getBoyfriend() != null)
-			{
-      				rimBf.updateFrameInfo(getBoyfriend().frame);
-			}
-    		});
 
     		getNamedProp('brightLightSmall').blend = 0;
     		getNamedProp('orangeLight').blend = 0;
@@ -126,57 +202,29 @@ class MainStageErectStage extends Stage
     		getNamedProp('lightred').blend = 0;
     		getNamedProp('lightAbove').blend = 0;
 
-    		colorShaderBg.brightness = -33;
-    		colorShaderBg.hue = -22;
-    		colorShaderBg.contrast = -23;
-		colorShaderBg.saturation = -10;
+    		getNamedProp('orangeLight').zIndex = 600;
 
-    		colorShaderLight.brightness = -35;
-    		colorShaderLight.hue = -66;
+    		colorShaderBg.brightness = -19;
+    		colorShaderBg.hue = -37;
+    		colorShaderBg.contrast = 0;
+			colorShaderBg.saturation = -25;
+
+    		colorShaderLight.brightness = 0;
+    		colorShaderLight.hue = 25;
     		colorShaderLight.contrast = 0;
-		colorShaderLight.saturation = -10;
-
+			colorShaderLight.saturation = -55;
 
     		getNamedProp('backDark').shader = colorShaderBg;
     		getNamedProp('brightLightSmall').shader = colorShaderLight;
-    		//getNamedProp('brightLightSmall').visible = false;
     		getNamedProp('crowd').shader = colorShaderBg;
     		getNamedProp('bg').shader = colorShaderBg;
     		getNamedProp('server').shader = colorShaderBg;
     		getNamedProp('lights').shader = colorShaderBg;
-    		getNamedProp('orangeLight').shader = colorShaderLight;
-    		//getNamedProp('orangeLight').visible = false;
+    		getNamedProp('orangeLight').shader = colorShaderBg;
     		getNamedProp('lightgreen').shader = colorShaderBg;
     		getNamedProp('lightred').shader = colorShaderBg;
     		getNamedProp('lightAbove').shader = colorShaderLight;
-    		//getNamedProp('lightAbove').visible = false;
 
-      		getBoyfriend().shader = rimBf;
-		getGirlfriend().shader = colorShaderGf;
-		getDad().shader = colorShaderDad;
-
-		}
-	}
-
-	function onUpdate(event:UpdateScriptEvent):Void
-	{
-		super.onUpdate(event);
-
-	switch(PlayState.instance.currentVariation)
-
-	{
-    	  case 'erect':
-    		if (PlayState.instance.currentStage.getBoyfriend() != null && PlayState.instance.currentStage.getBoyfriend().shader == null)
-			{
-      			PlayState.instance.currentStage.getBoyfriend().shader = colorShaderBf;
-			PlayState.instance.currentStage.getGirlfriend().shader = colorShaderGf;
-			PlayState.instance.currentStage.getDad().shader = colorShaderDad;
-    			}
-    	  case 'pico':
-    		if (PlayState.instance.currentStage.getBoyfriend() != null && PlayState.instance.currentStage.getBoyfriend().shader == null)
-			{
-
-    			}
 		}
 	}
 

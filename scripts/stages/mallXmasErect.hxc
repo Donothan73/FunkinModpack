@@ -11,6 +11,14 @@ import funkin.graphics.adobeanimate.FlxAtlasSprite;
 import funkin.modding.base.ScriptedFlxAtlasSprite;
 import flixel.FlxG;
 
+import funkin.graphics.shaders.DropShadowShader;
+import funkin.graphics.shaders.DropShadowScreenspace;
+import funkin.play.character.CharacterType;
+import funkin.play.character.BaseCharacter;
+import openfl.display.BitmapData;
+import flixel.graphics.FlxGraphic;
+import flixel.math.FlxAngle;
+
 class MallXmasErectStage extends Stage
 {
 	function new()
@@ -20,26 +28,222 @@ class MallXmasErectStage extends Stage
 
 	var colorShader:AdjustColorShader;
 
-	function onCreate(event:ScriptEvent):Void {
-		super.onCreate(event);
+	override function buildStage()
+	{
+		super.buildStage();
 
-		// Create a single color shader and reuse it.
-		colorShader = new AdjustColorShader();
-		colorShader.hue = -5;
-		colorShader.saturation = -20;
+		switch(PlayState.instance.currentVariation) 
+		{
+    	  case 'erect':
 
-		// Create a single color shader and reuse it.
-		//colorShader = new AdjustColorShader();
-		//colorShader.hue = 5;
-		//colorShader.saturation = 20;
+			// Create a single color shader and reuse it.
+			colorShader = new AdjustColorShader();
+			colorShader.hue = 5;
+			colorShader.saturation = 20;
 
-		getNamedProp('santa').shader = colorShader;
+			getNamedProp('santa').shader = colorShader;
+
+    	  case 'pico':
+
+			// Create a single color shader and reuse it.
+			colorShader = new AdjustColorShader();
+			colorShader.hue = 30;
+			colorShader.saturation = 5;
+			colorShader.brightness = -66;
+			colorShader.contrast = -25;
+
+			//Bopper rim
+			var rimBopper = new DropShadowShader();
+			rimBopper.setAdjustColor(-56, -18, -15, -10);	//brightness -> hue -> contrast -> saturation
+    		rimBopper.color = 0xFF99A6AF;
+			rimBopper.attachedSprite = getNamedProp('bottomBoppers');
+			rimBopper.angle = 90;
+			rimBopper.threshold = 0.1;
+			rimBopper.distance = 10;
+			rimBopper.strength = 1.25;
+			getNamedProp('bottomBoppers').animation.onFrameChange.add(function()
+			{
+				if (getNamedProp('bottomBoppers') != null)
+				{
+      							rimBopper.updateFrameInfo(getNamedProp('bottomBoppers').frame);
+				}
+    		});
+
+			//Santa rim
+			var rimSanta = new DropShadowShader();
+			rimSanta.setAdjustColor(-56, -18, -15, -10);	//brightness -> hue -> contrast -> saturation
+    		rimSanta.color = 0xFF99A6AF;
+			rimSanta.attachedSprite = getNamedProp('santa');
+			rimSanta.angle = 90;
+			rimSanta.threshold = 0.1;
+			rimSanta.distance = 15;
+			rimSanta.strength = 1.25;
+			getNamedProp('santa').animation.onFrameChange.add(function()
+			{
+				if (getNamedProp('bottomBoppers') != null)
+				{
+      							rimSanta.updateFrameInfo(getNamedProp('santa').frame);
+				}
+    		});
+
+			//Tree rim
+			var rimTree = new DropShadowShader();
+			rimTree.setAdjustColor(-56, -18, -15, -10);	//brightness -> hue -> contrast -> saturation
+    		rimTree.color = 0xFF99A6AF;
+			rimTree.attachedSprite = getNamedProp('christmasTree');
+			rimTree.angle = 90;
+			rimTree.threshold = 0.1;
+			rimTree.distance = 15;
+			rimTree.strength = 1.25;
+
+			getNamedProp('bgWalls').shader = colorShader;
+			getNamedProp('upperBoppers').shader = colorShader;
+			getNamedProp('bgEscalator').shader = colorShader;
+			getNamedProp('bottomBoppers').shader = rimBopper;
+			getNamedProp('christmasTree').shader = rimTree;
+			getNamedProp('santa').shader = rimSanta;
+
+			//fog stuff
+			var colorShaderFog = new AdjustColorShader();
+			colorShaderFog = new AdjustColorShader();
+			colorShaderFog.hue = 30;
+			colorShaderFog.saturation = 5;
+			colorShaderFog.brightness = -66;
+			colorShaderFog.contrast = -25;
+			getNamedProp('fog').y = -900;
+			getNamedProp('fog').blend = 0;
+			getNamedProp('fog').shader = colorShaderFog;
+
+			//snow stuff
+			var colorShaderSnow = new AdjustColorShader();
+			colorShaderSnow = new AdjustColorShader();
+			colorShaderSnow.hue = 0;
+			colorShaderSnow.saturation = 0;
+			colorShaderSnow.brightness = -56;
+			colorShaderSnow.contrast = 0;
+			getNamedProp('snowUnder').shader = colorShaderSnow;
+			getNamedProp('fgSnow').shader = colorShaderSnow;
+
+			default:
+
+		}
 	}
 
-	override function addCharacter(character:BaseCharacter, charType:CharacterType):Void {
-		// Apply the shader automatically to each character as it gets added.
+	override function addCharacter(character:BaseCharacter, charType:CharacterType):Void 
+	{
 		super.addCharacter(character, charType);
-		trace('Applied stage shader to ' + character.characterName);
-		character.shader = colorShader;
+
+		switch(PlayState.instance.currentVariation) 
+		{
+    		  case 'erect':
+			switch(charType)
+			{
+				case CharacterType.BF:
+					CharacterBf = character;
+					character.shader = colorShader;
+
+				case CharacterType.GF:
+					CharacterGf = character;
+					character.shader = colorShader;
+
+				case CharacterType.DAD:
+					CharacterDad = character;
+					character.shader = colorShader;
+
+				default:
+
+			}
+    		  case 'pico':
+
+			var rim = new DropShadowShader();
+
+			switch(charType)
+			{
+				case CharacterType.BF:
+					CharacterBf = character;
+			
+					rim.setAdjustColor(-56, -18, -15, -10);	//brightness -> hue -> contrast -> saturation
+    				rim.color = 0xFF99A6AF;
+					character.shader = rim;
+					rim.attachedSprite = character;
+					rim.angle = 90;
+					rim.threshold = 0.1;
+					rim.distance = 15;
+					rim.strength = 1.05;
+
+					character.animation.onFrameChange.add(function()
+					 {
+						if (getBoyfriend() != null)
+						{
+      							rim.updateFrameInfo(getBoyfriend().frame);
+						}
+    				});
+
+				case CharacterType.GF:
+					CharacterGf = character;
+
+
+					rim.setAdjustColor(-56, -18, -15, -10);	//brightness -> hue -> contrast -> saturation
+    				rim.color = 0xFF99A6AF;
+					character.shader = rim;
+					rim.attachedSprite = character;
+					rim.angle = 90;
+					rim.threshold = 0.1;
+					rim.distance = 12;
+					rim.strength = 1.05;
+
+
+					if (getGirlfriend().characterId == 'nene-christmas')
+					{
+						var aBotShader:DropShadowScreenspace;
+						
+						aBotShader = new DropShadowScreenspace ();
+						aBotShader.distance = rim.distance;
+						aBotShader.angle = rim.angle;
+						aBotShader.threshold = rim.threshold;
+						aBotShader.strength = rim.strength;
+						aBotShader.color = rim.color;
+
+						//aBotShader.distance = 9;
+						//aBotShader.angle = 25;
+						aBotShader.strength = 1.25;
+
+						aBotShader.loadAltMask('shared/images/characters/abot/abotSystemChristmas_mask.png');
+						//aBotShader.maskThreshold = 0.1;
+						aBotShader.useAltMask = true;
+					
+						getGirlfriend().scriptCall('addShaderAbot', [aBotShader]);
+					}
+
+					character.animation.onFrameChange.add(function()
+					 {
+						if (getGirlfriend() != null)
+						{
+      							rim.updateFrameInfo(getGirlfriend().frame);
+						}
+    					});
+
+				case CharacterType.DAD:
+					CharacterDad = character;
+
+					rim.setAdjustColor(-56, -18, -15, -10);	//brightness -> hue -> contrast -> saturation
+    				rim.color = 0xFF99A6AF;
+					character.shader = rim;
+					rim.attachedSprite = character;
+					rim.angle = 90;
+					rim.threshold = 0.1;
+					rim.distance = 12;
+					rim.strength = 1.05;
+
+					character.animation.onFrameChange.add(function()
+					 {
+						if (getDad() != null)
+						{
+      							rim.updateFrameInfo(getDad().frame);
+						}
+    					});
+			}
+		}
+
 	}
 }

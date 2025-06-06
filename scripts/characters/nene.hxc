@@ -9,10 +9,7 @@ import funkin.modding.base.ScriptedFlxSprite;
 import funkin.modding.base.ScriptedFlxSpriteGroup;
 import funkin.graphics.adobeanimate.FlxAtlasSprite;
 import funkin.audio.visualize.ABotVis;
-import openfl.display.BitmapData;
-import flixel.graphics.FlxGraphic;
-import flixel.math.FlxAngle;
-import funkin.graphics.shaders.DropShadowShader;
+import funkin.graphics.shaders.AdjustColorShader;
 
 class NeneCharacter extends MultiSparrowCharacter {
 	function new() {
@@ -321,6 +318,7 @@ class NeneCharacter extends MultiSparrowCharacter {
 			abotViz.x = abot.x + 200;
 			abotViz.y = abot.y + 84;
 			abotViz.zIndex = abot.zIndex - 1;
+			abotViz.blend = 0;
 			PlayState.instance.currentStage.add(abotViz);
 
 			eyeWhites.x = abot.x + 40;
@@ -365,17 +363,21 @@ class NeneCharacter extends MultiSparrowCharacter {
 
 	function addShaderAbot(inputShader:shader):Void
 	{
-		abot.shader = inputShader;
 		aBotDropShadow = inputShader;
-		aBotDropShadow.attachedSprite = abot;
 
-		this.animation.onFrameChange.add(function()
-		{
-			if (abot != null)
-			{
-      				aBotDropShadow.updateFrameInfo(abot);
-			}
-    		});
+		abot.shader = aBotDropShadow;
+		abotViz.shader = aBotDropShadow;
+		eyeWhites.shader = aBotDropShadow;
+		pupil.shader = aBotDropShadow;
+		stereoBG.shader = aBotDropShadow;
+
+		abot.animation.onFrameChange.add(function()
+					 {
+						if (this != null)
+						{
+      						aBotDropShadow.set_curZoom(PlayState.instance.currentStage.get_camZoom());
+						}
+    				});
 	}
 
 	function onAnimationFinished(name:String) {

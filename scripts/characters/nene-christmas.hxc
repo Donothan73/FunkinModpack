@@ -240,8 +240,8 @@ class NeneChristmasCharacter extends SparrowCharacter {
 			abotViz.x = abot.x + 200;
 			abotViz.y = abot.y + 84;
 			abotViz.zIndex = abot.zIndex - 1;
+			abotViz.blend = 0;
 			PlayState.instance.currentStage.add(abotViz);
-			abotViz.shader = abotVizColorShader;
 
 
 			eyeWhites.x = abot.x + 40;
@@ -277,6 +277,28 @@ class NeneChristmasCharacter extends SparrowCharacter {
 	}
 
 	var animationFinished:Bool = false;
+
+	var aBotDropShadow:DropShadowShader;
+
+
+	function addShaderAbot(inputShader:shader):Void
+	{
+		aBotDropShadow = inputShader;
+
+		abot.shader = aBotDropShadow;
+		abotViz.shader = aBotDropShadow;
+		eyeWhites.shader = aBotDropShadow;
+		pupil.shader = aBotDropShadow;
+		stereoBG.shader = aBotDropShadow;
+
+		abot.animation.onFrameChange.add(function()
+					 {
+						if (this != null)
+						{
+      						aBotDropShadow.set_curZoom(PlayState.instance.currentStage.get_camZoom());
+						}
+    				});
+	}
 
 	function onAnimationFinished(name:String) {
 		super.onAnimationFinished(name);

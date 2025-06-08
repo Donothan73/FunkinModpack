@@ -1,0 +1,23 @@
+import funkin.ui.story.Level;
+import funkin.save.Save;
+
+class Weekend1Level extends Level
+{
+	function new()
+	{
+		super('weekend1');
+	}
+
+  override function isUnlocked():Bool {
+    return true;
+  }
+
+  override function getSongDisplayNames(difficultyId:String):Array<String> {
+    if (Save.instance.hasBeatenLevel('week1')) {
+      // BUED' is a secret song ;)
+      return ["Bopeebo", "Fresh", "DadBattle", "Battling Ur Evil Dad"];
+    } else {
+      return ["Bopeebo", "Fresh", "DadBattle"];
+    }
+  }
+}

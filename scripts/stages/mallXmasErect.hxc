@@ -55,7 +55,7 @@ class MallXmasErectStage extends Stage
 			//Bopper rim
 			var rimBopper = new DropShadowShader();
 			rimBopper.setAdjustColor(-56, -18, -15, -10);	//brightness -> hue -> contrast -> saturation
-    		rimBopper.color = 0xFF99A6AF;
+    			rimBopper.color = 0xFF99A6AF;
 			rimBopper.attachedSprite = getNamedProp('bottomBoppers');
 			rimBopper.angle = 90;
 			rimBopper.threshold = 0.1;
@@ -72,7 +72,7 @@ class MallXmasErectStage extends Stage
 			//Santa rim
 			var rimSanta = new DropShadowShader();
 			rimSanta.setAdjustColor(-56, -18, -15, -10);	//brightness -> hue -> contrast -> saturation
-    		rimSanta.color = 0xFF99A6AF;
+    			rimSanta.color = 0xFF99A6AF;
 			rimSanta.attachedSprite = getNamedProp('santa');
 			rimSanta.angle = 90;
 			rimSanta.threshold = 0.1;
@@ -84,12 +84,12 @@ class MallXmasErectStage extends Stage
 				{
       							rimSanta.updateFrameInfo(getNamedProp('santa').frame);
 				}
-    		});
+    			});
 
 			//Tree rim
 			var rimTree = new DropShadowShader();
 			rimTree.setAdjustColor(-56, -18, -15, -10);	//brightness -> hue -> contrast -> saturation
-    		rimTree.color = 0xFF99A6AF;
+    			rimTree.color = 0xFF99A6AF;
 			rimTree.attachedSprite = getNamedProp('christmasTree');
 			rimTree.angle = 90;
 			rimTree.threshold = 0.1;
@@ -184,7 +184,7 @@ class MallXmasErectStage extends Stage
 
 
 					rim.setAdjustColor(-56, -18, -15, -10);	//brightness -> hue -> contrast -> saturation
-    				rim.color = 0xFF99A6AF;
+    					rim.color = 0xFF99A6AF;
 					character.shader = rim;
 					rim.attachedSprite = character;
 					rim.angle = 90;
@@ -227,7 +227,7 @@ class MallXmasErectStage extends Stage
 					CharacterDad = character;
 
 					rim.setAdjustColor(-56, -18, -15, -10);	//brightness -> hue -> contrast -> saturation
-    				rim.color = 0xFF99A6AF;
+    					rim.color = 0xFF99A6AF;
 					character.shader = rim;
 					rim.attachedSprite = character;
 					rim.angle = 90;

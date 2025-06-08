@@ -1,0 +1,15 @@
+{
+  "version": "2.0.0",
+  "scrollSpeed": {
+    "easy": 1,
+    "erect": 1,
+    "normal": 1
+  },
+  "events": [  ],
+  "notes": {
+    "easy": [    ],
+    "erect": [    ],
+    "normal": [    ]
+  },
+  "generatedBy": "Friday Night Funkin' - v0.6.3"
+}

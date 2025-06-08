@@ -1,0 +1,49 @@
+{
+  "version": "2.2.4",
+  "songName": "Battling ur evil dad (Erect)",
+  "artist": "Saruky",
+  "looped": false,
+  "offsets": {
+    "instrumental": 0,
+    "altInstrumentals": {    },
+    "vocals": {    },
+    "altVocals": {    }
+  },
+  "playData": {
+    "songVariations": [    ],
+    "difficulties": [
+      "erect",
+      "nightmare"
+    ],
+    "characters": {
+      "player": "bf",
+      "girlfriend": "gf",
+      "opponent": "dad-fight",
+      "instrumental": ""
+    },
+    "stage": "mainStageErect",
+    "noteStyle": "funkin",
+    "ratings": {
+      "easy": 5
+    },
+    "previewStart": 0,
+    "previewEnd": 0
+  },
+  "generatedBy": "Friday Night Funkin' - v0.6.3",
+  "timeFormat": "ms",
+  "timeChanges": [
+    {
+      "t": 0,
+      "b": 0,
+      "bpm": 160,
+      "n": 4,
+      "d": 4,
+      "bt": [
+        4,
+        4,
+        4,
+        4
+      ]
+    }
+  ]
+}

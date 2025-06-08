@@ -1,0 +1,105 @@
+import flixel.tweens.FlxEase;
+import funkin.graphics.FunkinSprite;
+import flixel.tweens.FlxTween;
+import funkin.play.cutscene.dialogue.DialogueBox;
+import funkin.play.PlayState;
+import funkin.play.PlayStatePlaylist;
+import funkin.play.song.Song;
+import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.util.FlxTimer;
+import funkin.save.Save;
+
+
+class BatingYourDadSong extends Song
+
+{
+
+	public function new() 
+	{
+		super('battling-ur-evil-dad');
+	}
+
+	function hideOpponentStrumline()
+	{
+		var opponentStrumline = PlayState.instance.opponentStrumline;
+		if (opponentStrumline != null)
+		{
+			for (arrow in opponentStrumline.members)
+			{
+				arrow.visible = false;
+			}
+		}
+	}
+
+	function centerPlayerStrumline()
+	{
+    	// This is a song gimmick we are never making middlescroll an option.
+
+		var playerStrumline = PlayState.instance.playerStrumline;
+		var opponentStrumline = PlayState.instance.opponentStrumline;
+		if (playerStrumline != null)
+		{
+			playerStrumline.x = FlxG.width / 2 - playerStrumline.width / 2;
+
+
+			for (arrow in opponentStrumline.members)
+			{
+				arrow.y = 500;
+			}
+		}
+	}
+
+
+
+
+
+	function onNoteHit(event:HitNoteScriptEvent)
+	{
+		super.onNoteHit(event);
+
+    		if (PlayState.instance.currentStage == null) return;
+
+		switch (event.note.kind)
+		{
+			case "dadAttack":
+			PlayState.instance.currentStage.getDad().playAnimation('attack', true, true);
+			case "bfAttack":
+			PlayState.instance.currentStage.getBoyfriend().playAnimation('attack', true, true);
+			case "dadPre":
+			PlayState.instance.currentStage.getDad().playAnimation('preAttack', true, true);
+			case "bfPre":
+			PlayState.instance.currentStage.getBoyfriend().playAnimation('preAttack', true, true);
+			case "dadHit":
+			PlayState.instance.currentStage.getDad().playAnimation('hit', true, true);
+			case "bfHit":
+			PlayState.instance.currentStage.getBoyfriend().playAnimation('hit', true, true);
+		}
+	}
+
+	var hasHidden = false;
+	var hasPlayedCutscene:Bool = false;
+
+
+	function onUpdate(event:ScriptEvent):Void
+	{
+		super.onUpdate(event);
+
+	var playerStrumline = PlayState.instance.playerStrumline;
+
+		if (!this.hasHidden)
+		{
+			//this.hasHidden = true;
+			hideOpponentStrumline();
+			//centerPlayerStrumline();
+
+			for (i in 0...playerStrumline.strumlineNotes.length)
+			{
+				playerStrumline.getByIndex(i).y = 550 - (i * 150);
+				playerStrumline.getByIndex(i).x = 550;
+				playerStrumline.getByIndex(i).angle = -90;
+			}
+		}
+	}
+
+}

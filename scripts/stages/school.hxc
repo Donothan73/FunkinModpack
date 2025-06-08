@@ -1,0 +1,29 @@
+import funkin.play.PlayState;
+import funkin.play.stage.Stage;
+import flixel.FlxG;
+import flixel.FlxSprite;
+import funkin.Conductor;
+import funkin.play.stage.Bopper;
+
+class SchoolStage extends Stage
+{
+	function new()
+	{
+		super('school');
+	}
+
+	function buildStage()
+	{
+		super.buildStage();
+
+      getNamedProp('school').pixelPerfectRender = true;
+      getNamedProp('school').pixelPerfectPosition = true;
+
+		if (PlayState.instance.currentSong.id.toLowerCase() == "roses")
+		{
+			getNamedProp('freaks').idleSuffix = '-scared';
+		} else {
+			//getNamedProp('freaks').idleSuffix = '';
+		}
+	}
+}

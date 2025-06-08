@@ -16,11 +16,9 @@ import funkin.data.song.SongRegistry;
 import flixel.text.FlxText;
 import flixel.text.FlxTextBorderStyle;
 import funkin.input.Controls;
-import funkin.play.character.CharacterType;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import funkin.Preferences;
-import funkin.graphics.shaders.DropShadowShader;
 
 class PhillyTrainErectStage extends Stage
 {
@@ -315,7 +313,7 @@ class PhillyTrainErectStage extends Stage
 		lightShader = ScriptedFlxRuntimeShader.init('BuildingEffectShader', 1.0);
 		trainSound = new FlxSound().loadEmbedded(Paths.sound('train_passes'));
 
-    		colorShader = new AdjustColorShader();
+    colorShader = new AdjustColorShader();
 		colorShader.hue = -26;
 		colorShader.saturation = -16;
 		colorShader.contrast = 0;
@@ -390,80 +388,21 @@ class PhillyTrainErectStage extends Stage
 		}
 	}
 
-	//override function addCharacter(character:BaseCharacter, charType:CharacterType):Void {
-		// Apply the shader automatically to each character as it gets added.
-		//super.addCharacter(character, charType);
-		//trace('Applied stage shader to ' + character.characterName);
-
-		//shader = new AdjustColorShader();
-
-   // shader.hue = -26;
-	//	shader.saturation = -16;
-	//	shader.contrast = 0;
-	//	shader.brightness = -5;
-
-	//	character.shader = shader;
-
-	//}
-
-override function addCharacter(character:BaseCharacter, charType:CharacterType):Void {
+	override function addCharacter(character:BaseCharacter, charType:CharacterType):Void {
 		// Apply the shader automatically to each character as it gets added.
 		super.addCharacter(character, charType);
 		trace('Applied stage shader to ' + character.characterName);
 
-		var rim = new DropShadowShader();
-		rim.setAdjustColor(-16, -26, 0, -5);
-    		rim.color = 0xFF456768;
-		rim.attachedSprite = character;
-		rim.threshold = 0.1;
-		rim.distance = 12;
-		rim.strength = 1.05;
+		shader = new AdjustColorShader();
 
-		switch(charType){
-			case CharacterType.BF:
+    shader.hue = -26;
+		shader.saturation = -16;
+		shader.contrast = 0;
+		shader.brightness = -5;
 
-				rim.angle = 130;
-				character.shader = rim;
-
-				character.animation.onFrameChange.add(function() {
-					if (getBoyfriend() != null)
-					{
-      						rim.updateFrameInfo(getBoyfriend().frame);
-					}
-    		});
-
-			case CharacterType.GF:
-
-				rim.setAdjustColor(-26, -16, 0, -25);
-				rim.angle = 90;
-				character.shader = rim;
-				rim.distance = 9;
-
-				character.animation.onFrameChange.add(function() {
-					if (getGirlfriend() != null)
-					{
-						rim.updateFrameInfo(getGirlfriend().frame);
-					}
-    		});
-
-			case CharacterType.DAD:
-
-				rim.angle = 70;
-				character.shader = rim;
-
-				character.animation.onFrameChange.add(function() {
-					if (getDad() != null)
-					{
-						rim.updateFrameInfo(getDad().frame);
-					}
-    		});
-
-			default:
-
-		}
+		character.shader = shader;
 
 	}
-
 
 	function onBeatHit(event:SongTimeScriptEvent):Void
 	{

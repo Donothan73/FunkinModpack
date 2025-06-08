@@ -208,8 +208,8 @@ class MallXmasErectStage extends Stage
 						//aBotShader.angle = 25;
 						aBotShader.strength = 1.25;
 
-						aBotShader.loadAltMask('shared/images/characters/abot/abotSystemChristmas_mask.png');
-						//aBotShader.maskThreshold = 0.1;
+						aBotShader.loadAltMask('assets/week5/images/erect/masks/abotSystemChristmas_mask.png');
+						aBotShader.maskThreshold = 0.1;
 						aBotShader.useAltMask = true;
 					
 						getGirlfriend().scriptCall('addShaderAbot', [aBotShader]);

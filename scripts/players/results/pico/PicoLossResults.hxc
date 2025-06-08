@@ -1,0 +1,37 @@
+import funkin.graphics.adobeanimate.FlxAtlasSprite;
+import flixel.math.FlxPoint;
+import flixel.FlxG;
+import funkin.graphics.FunkinSprite;
+import funkin.Preferences;
+import flixel.util.FlxGradient;
+import funkin.graphics.shaders.RuntimeCustomBlendShader;
+import funkin.graphics.FunkinCamera;
+
+class PicoLossResults extends FlxAtlasSprite
+{
+  function new(x:Float, y:Float)
+  {
+    super(x, y, Paths.animateAtlas("resultScreen/results-pico/resultsSHIT", "shared"), {
+      Reversed: false,
+      // ?OnComplete:Void -> Void,
+      ShowPivot: false,
+      Antialiasing: true,
+      ScrollFactor: new FlxPoint(1, 1),
+    });
+    var resultState:ResultState = FlxG.state;
+    while (resultState.subState != null) 
+      {
+      resultState = resultState.subState;
+      }
+    
+    var bg:FlxSprite = FlxGradient.createGradientFlxSprite(FlxG.width, FlxG.height, [0xFF366DE4, 0xFF3667E4], 90);
+    bg.scrollFactor.set();
+    bg.zIndex = 11;
+    bg.cameras = [resultState.cameraBG];
+    resultState.add(bg);
+
+    var rankScrollTextCustomBlendShader = new RuntimeCustomBlendShader();
+    rankScrollTextCustomBlendShader.set_blendSwag('ADD');
+    resultState.cameraScroll.customBlendFilter = rankScrollTextCustomBlendShader;
+	}
+}

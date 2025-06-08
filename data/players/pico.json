@@ -145,6 +145,7 @@
       {
         "renderType": "animateatlas",
         "assetPath": "shared:resultScreen/results-pico/resultsSHIT",
+        "scriptClass": "PicoLossResults",
         "zIndex": 500,
         "offsets": [-185, -125],
         "loopFrame": 0

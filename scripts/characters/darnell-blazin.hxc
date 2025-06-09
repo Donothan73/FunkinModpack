@@ -2,6 +2,9 @@ import flixel.FlxG;
 import funkin.play.PlayState;
 import funkin.play.character.AnimateAtlasCharacter;
 import StringTools;
+import flixel.tweens.FlxTween;
+import flixel.tweens.FlxEase;
+import flixel.effects.FlxFlicker;
 
 class DarnellBlazinCharacter extends AnimateAtlasCharacter
 {
@@ -18,6 +21,22 @@ class DarnellBlazinCharacter extends AnimateAtlasCharacter
 	}
 
 	var cantUppercut = false;
+
+	function KnockBack():Void
+		{
+		var Tween:FlxTween;
+		var hitFlicker:FlxFlicker = null;
+		//Tween.cancel();
+		Tween = FlxTween.tween(PlayState.instance.currentStage.getDad(), {x: -525 }, .25, {ease: FlxEase.elasticOut});
+		hitFlicker = FlxFlicker.flicker(super, 0.3, 1 / 16, true, true);
+		}
+
+	function Back():Void
+		{
+		var Tween:FlxTween;
+		//Tween.cancel();
+		Tween = FlxTween.tween(PlayState.instance.currentStage.getDad(), {x: -415 }, .25, {ease: FlxEase.elasticOut});
+		}
 
 	function onNoteHit(event:HitNoteScriptEvent)
 	{
@@ -45,45 +64,79 @@ class DarnellBlazinCharacter extends AnimateAtlasCharacter
 		{
 			case "weekend-1-punchlow":
 				playHitLowAnim();
+				Back();
+				
 			case "weekend-1-punchlowblocked":
 				playBlockAnim();
+				Back();
+				
 			case "weekend-1-punchlowdodged":
 				playDodgeAnim();
+				Back();
+				
 			case "weekend-1-punchlowspin":
 				playSpinAnim();
+				Back();
+				
 
 			case "weekend-1-punchhigh":
 				playHitHighAnim();
+				Back();
+				
 			case "weekend-1-punchhighblocked":
 				playBlockAnim();
+				Back();
+				
 			case "weekend-1-punchhighdodged":
 				playDodgeAnim();
+				Back();
+				
 			case "weekend-1-punchhighspin":
 				playSpinAnim();
+				Back();
+				
 
 			// Attempt to punch, Pico dodges or gets hit.
 			case "weekend-1-blockhigh":
 				playPunchHighAnim();
+				Back();
+				
 			case "weekend-1-blocklow":
 				playPunchLowAnim();
+				Back();
+				
 			case "weekend-1-blockspin":
 				playPunchHighAnim();
+				Back();
+				
 
 			// Attempt to punch, Pico dodges or gets hit.
 			case "weekend-1-dodgehigh":
 				playPunchHighAnim();
+				Back();
+				
 			case "weekend-1-dodgelow":
 				playPunchLowAnim();
+				Back();
+				
 			case "weekend-1-dodgespin":
 				playPunchHighAnim();
+				Back();
+				
 
 			// Attempt to punch, Pico ALWAYS gets hit.
 			case "weekend-1-hithigh":
 				playPunchHighAnim();
+				Back();
+				
 			case "weekend-1-hitlow":
 				playPunchLowAnim();
+				Back();
+				
 			case "weekend-1-hitspin":
 				playPunchHighAnim();
+				Back();
+				
 
 			// Fail to dodge the uppercut.
 			case "weekend-1-picouppercutprep":
@@ -95,19 +148,33 @@ class DarnellBlazinCharacter extends AnimateAtlasCharacter
 			// Attempt to punch, Pico dodges or gets hit.
 			case "weekend-1-darnelluppercutprep":
 				playUppercutPrepAnim();
+				Back();
+				
 			case "weekend-1-darnelluppercut":
 				playUppercutAnim();
+				Back();
+				
 
 			case "weekend-1-idle":
 				playIdleAnim();
+				Back();
+				
 			case "weekend-1-fakeout":
 				playCringeAnim();
+				Back();
+				
 			case "weekend-1-taunt":
 				playPissedConditionalAnim();
+				Back();
+				
 			case "weekend-1-tauntforce":
 				playPissedAnim();
+				Back();
+				
 			case "weekend-1-reversefakeout":
 				playFakeoutAnim();
+				Back();
+				
 
 			default:
 				trace('Unknown note kind: ' + event.note.kind);
@@ -146,12 +213,20 @@ class DarnellBlazinCharacter extends AnimateAtlasCharacter
 			// Pico tried and failed to punch, punch back!
 			case "weekend-1-punchlow":
 				playPunchLowAnim();
+				KnockBack();
+				
 			case "weekend-1-punchlowblocked":
 				playPunchLowAnim();
+				KnockBack();
+				
 			case "weekend-1-punchlowdodged":
 				playPunchLowAnim();
+				KnockBack();
+				
 			case "weekend-1-punchlowspin":
 				playPunchLowAnim();
+				KnockBack();
+				
 
 			// Pico tried and failed to punch, punch back!
 			case "weekend-1-punchhigh":
@@ -191,6 +266,8 @@ class DarnellBlazinCharacter extends AnimateAtlasCharacter
 			case "weekend-1-picouppercutprep":
 				playHitHighAnim();
 				cantUppercut = true;
+				KnockBack();
+				
 			case "weekend-1-picouppercut":
 				playDodgeAnim();
 
@@ -343,6 +420,8 @@ class DarnellBlazinCharacter extends AnimateAtlasCharacter
 	{
 		this.playAnimation('uppercutHit', true, false);
 		moveToBack();
+		KnockBack();
+				
 	}
 
 	function playHitHighAnim()
@@ -350,6 +429,8 @@ class DarnellBlazinCharacter extends AnimateAtlasCharacter
 		this.playAnimation('hitHigh', true, false);
 		PlayState.instance.camGame.shake(0.0025, 0.15);
 		moveToBack();
+		KnockBack();
+				
 	}
 
 	function playHitLowAnim()
@@ -357,6 +438,8 @@ class DarnellBlazinCharacter extends AnimateAtlasCharacter
 		this.playAnimation('hitLow', true, false);
 		PlayState.instance.camGame.shake(0.0025, 0.15);
 		moveToBack();
+		KnockBack();
+				
 	}
 
 	function playPunchHighAnim()
@@ -376,5 +459,7 @@ class DarnellBlazinCharacter extends AnimateAtlasCharacter
 		this.playAnimation('hitSpin', true, false);
 		PlayState.instance.camGame.shake(0.0025, 0.15);
 		moveToBack();
+		KnockBack();
+				
 	}
 }

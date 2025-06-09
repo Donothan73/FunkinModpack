@@ -104,6 +104,7 @@
       {
         "renderType": "animateatlas",
         "assetPath": "shared:resultScreen/results-pico/resultsPERFECT",
+        "scriptClass": "PicoPerfectResults",
         "zIndex": 500,
         "scale": 0.88,
         "offsets": [385, 82],

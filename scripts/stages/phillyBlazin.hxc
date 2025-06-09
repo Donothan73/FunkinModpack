@@ -12,6 +12,7 @@ import funkin.graphics.framebuffer.BitmapDataUtil;
 import funkin.graphics.framebuffer.FixedBitmapData;
 import funkin.graphics.shaders.OverlayBlend;
 import funkin.graphics.shaders.RuntimeRainShader;
+import funkin.graphics.shaders.GaussianBlurShader;
 import funkin.modding.base.ScriptedFlxRuntimeShader;
 import funkin.play.PlayState;
 import funkin.play.stage.Stage;
@@ -179,6 +180,7 @@ class PhillyBlazin extends Stage
 		var additionalLighten = PlayState.instance.currentStage.getNamedProp('additionalLighten');
 		additionalLighten.blend = 0; // ADD
 		additionalLighten.visible = false;
+
 
 	}
 
@@ -417,10 +419,17 @@ class PhillyBlazin extends Stage
 			cameraInitialized = true;
 			initializeCamera();
 
+			var blur:GaussianBlurShader = new GaussianBlurShader(1);
+			PlayState.instance.currentStage.getNamedProp('phillyForeground').shader = blur;
+			PlayState.instance.currentStage.getGirlfriend().shader = blur;
+			PlayState.instance.currentStage.getGirlfriend().scriptGet('abot').shader = blur;
+			PlayState.instance.currentStage.getGirlfriend().scriptGet('abotViz').shader = blur;
+
 			PlayState.instance.currentStage.getBoyfriend().color = 0xFFDEDEDE;
 			PlayState.instance.currentStage.getDad().color = 0xFFDEDEDE;
 			PlayState.instance.currentStage.getGirlfriend().color = 0xFF888888;
 			PlayState.instance.currentStage.getGirlfriend().scriptGet('abot').color = 0xFF888888;
+
 		}
 
 

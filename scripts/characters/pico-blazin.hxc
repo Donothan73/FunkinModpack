@@ -7,9 +7,13 @@ import funkin.graphics.FunkinSprite;
 import funkin.play.character.AnimateAtlasCharacter;
 import funkin.play.GameOverSubState;
 import StringTools;
+import flixel.tweens.FlxTween;
+import flixel.tweens.FlxEase;
+import flixel.effects.FlxFlicker;
 
 class PicoBlazinCharacter extends AnimateAtlasCharacter
 {
+
 	function new()
 	{
 		super('pico-blazin');
@@ -28,6 +32,15 @@ class PicoBlazinCharacter extends AnimateAtlasCharacter
 		GameOverSubState.blueBallSuffix = '-pico-gutpunch';
 
 		PauseSubState.musicSuffix = '-pico';
+		
+	}
+
+	public function onScriptEvent(event:ScriptEvent):Void {
+		if (event.type == "SONG_START")
+		{
+			//var starting_x:float;
+			//PlayState.instance.currentStage.getBoyfriend().x = starting_x;
+		}
 	}
 
 	var cantUppercut = false;
@@ -60,35 +73,63 @@ class PicoBlazinCharacter extends AnimateAtlasCharacter
 		{
 			case "weekend-1-punchlow":
 				playPunchLowAnim();
+				picoBack();
+				
 			case "weekend-1-punchlowblocked":
 				playPunchLowAnim();
+				picoBack();
+				
 			case "weekend-1-punchlowdodged":
 				playPunchLowAnim();
+				picoBack();
+				
 			case "weekend-1-punchlowspin":
 				playPunchLowAnim();
+				picoBack();
+				
 
 			case "weekend-1-punchhigh":
 				playPunchHighAnim();
+				picoBack();
+				
 			case "weekend-1-punchhighblocked":
 				playPunchHighAnim();
+				picoBack();
+				
 			case "weekend-1-punchhighdodged":
 				playPunchHighAnim();
+				picoBack();
+				
 			case "weekend-1-punchhighspin":
 				playPunchHighAnim();
+				picoBack();
+				
 
 			case "weekend-1-blockhigh":
 				playBlockAnim(event.judgement);
+				picoBack();
+				
 			case "weekend-1-blocklow":
 				playBlockAnim(event.judgement);
+				picoBack();
+				
 			case "weekend-1-blockspin":
 				playBlockAnim(event.judgement);
+				picoBack();
+				
 
 			case "weekend-1-dodgehigh":
 				playDodgeAnim();
+				picoBack();
+				
 			case "weekend-1-dodgelow":
 				playDodgeAnim();
+				picoBack();
+				
 			case "weekend-1-dodgespin":
 				playDodgeAnim();
+				picoBack();
+				
 
 			// Pico ALWAYS gets punched.
 			case "weekend-1-hithigh":
@@ -100,8 +141,10 @@ class PicoBlazinCharacter extends AnimateAtlasCharacter
 
 			case "weekend-1-picouppercutprep":
 				playUppercutPrepAnim();
+				
 			case "weekend-1-picouppercut":
 				playUppercutAnim(true);
+				
 
 			case "weekend-1-darnelluppercutprep":
 				playIdleAnim();
@@ -143,6 +186,22 @@ class PicoBlazinCharacter extends AnimateAtlasCharacter
 		GameOverSubState.instance.startDeathMusic(1.0, false);
 		playAnimation('deathLoop', true, false);
 	}
+
+	function picoKnockBack():Void
+		{
+		var Tween:FlxTween;
+		var hitFlicker:FlxFlicker = null;
+		//Tween.cancel();
+		Tween = FlxTween.tween(PlayState.instance.currentStage.getBoyfriend(), {x: -305 }, .25, {ease: FlxEase.elasticOut});
+		hitFlicker = FlxFlicker.flicker(super, 0.3, 1 / 16, true, true);
+		}
+
+	function picoBack():Void
+		{
+		var Tween:FlxTween;
+		//Tween.cancel();
+		Tween = FlxTween.tween(PlayState.instance.currentStage.getBoyfriend(), {x: -415 }, .25, {ease: FlxEase.elasticOut});
+		}
 
 	function doDeathConfirm():Void {
 		var picoDeathConfirm:FunkinSprite = FunkinSprite.createSparrow(this.x + 905, this.y + 1030, 'picoBlazinDeathConfirm');
@@ -186,46 +245,80 @@ class PicoBlazinCharacter extends AnimateAtlasCharacter
 			// Pico fails to punch, and instead gets hit!
 			case "weekend-1-punchlow":
 				playHitLowAnim();
+				picoKnockBack();
+
 			case "weekend-1-punchlowblocked":
 				playHitLowAnim();
+				picoKnockBack();
+
 			case "weekend-1-punchlowdodged":
 				playHitLowAnim();
+				picoKnockBack();
+
 			case "weekend-1-punchlowspin":
 				playHitSpinAnim();
+				picoKnockBack();
+
 
 			// Pico fails to punch, and instead gets hit!
 			case "weekend-1-punchhigh":
 				playHitHighAnim();
+				picoKnockBack();
+
 			case "weekend-1-punchhighblocked":
 				playHitHighAnim();
+				picoKnockBack();
+
 			case "weekend-1-punchhighdodged":
 				playHitHighAnim();
+				picoKnockBack();
+
 			case "weekend-1-punchhighspin":
 				playHitSpinAnim();
+				picoKnockBack();
+
 
 			// Pico fails to block, and instead gets hit!
 			case "weekend-1-blockhigh":
 				playHitHighAnim();
+				picoKnockBack();
+
 			case "weekend-1-blocklow":
 				playHitLowAnim();
+				picoKnockBack();
+
 			case "weekend-1-blockspin":
 				playHitSpinAnim();
+				picoKnockBack();
+
 
 			// Pico fails to dodge, and instead gets hit!
 			case "weekend-1-dodgehigh":
 				playHitHighAnim();
+				picoKnockBack();
+
 			case "weekend-1-dodgelow":
 				playHitLowAnim();
+				picoKnockBack();
+
 			case "weekend-1-dodgespin":
 				playHitSpinAnim();
+				picoKnockBack();
+
 
 			// Pico ALWAYS gets punched.
 			case "weekend-1-hithigh":
 				playHitHighAnim();
+				picoKnockBack();
+
 			case "weekend-1-hitlow":
 				playHitLowAnim();
+				picoKnockBack();
+
 			case "weekend-1-hitspin":
 				playHitSpinAnim();
+				picoKnockBack();
+
 
 			// Fail to dodge the uppercut.
 			case "weekend-1-picouppercutprep":
@@ -242,14 +335,23 @@ class PicoBlazinCharacter extends AnimateAtlasCharacter
 
 			case "weekend-1-idle":
 				playIdleAnim();
+				picoBack();
+
 			case "weekend-1-fakeout":
 				playHitHighAnim();
+				picoBack();
+				
 			case "weekend-1-taunt":
 				playTauntConditionalAnim();
+				picoBack();
+				
 			case "weekend-1-tauntforce":
 				playTauntAnim();
+				picoBack();
+				
 			case "weekend-1-reversefakeout":
 				playIdleAnim();
+				picoBack();
 
 			default:
 				trace('Unknown note kind: ' + event.note.kind);
@@ -366,30 +468,35 @@ class PicoBlazinCharacter extends AnimateAtlasCharacter
 	{
 		this.playAnimation('cringe', true, false);
 		moveToBack();
+		picoBack();
 	}
 
 	function playDodgeAnim()
 	{
 		this.playAnimation('dodge', true, false);
 		moveToBack();
+		picoBack();
 	}
 
 	function playIdleAnim()
 	{
 		this.playAnimation('idle', false, false);
 		moveToBack();
+		picoBack();
 	}
 
 	function playFakeoutAnim()
 	{
 		this.playAnimation('fakeout', true, false);
 		moveToBack();
+		picoBack();
 	}
 
 	function playUppercutPrepAnim()
 	{
 		this.playAnimation('uppercutPrep', true, false);
 		moveToFront();
+		picoBack();
 	}
 
 	function playUppercutAnim(hit:Bool)
@@ -397,6 +504,7 @@ class PicoBlazinCharacter extends AnimateAtlasCharacter
 		this.playAnimation('uppercut', true, false);
 		if (hit) {
 			PlayState.instance.camGame.shake(0.005, 0.25);
+			picoBack();
 		}
 		moveToFront();
 	}
@@ -406,6 +514,7 @@ class PicoBlazinCharacter extends AnimateAtlasCharacter
 		this.playAnimation('uppercutHit', true, false);
 		PlayState.instance.camGame.shake(0.005, 0.25);
 		moveToBack();
+		picoKnockBack();
 	}
 
 	function playHitHighAnim()
@@ -413,6 +522,7 @@ class PicoBlazinCharacter extends AnimateAtlasCharacter
 		this.playAnimation('hitHigh', true, false);
 		PlayState.instance.camGame.shake(0.0025, 0.15);
 		moveToBack();
+		picoKnockBack();
 	}
 
 	function playHitLowAnim()
@@ -420,6 +530,7 @@ class PicoBlazinCharacter extends AnimateAtlasCharacter
 		this.playAnimation('hitLow', true, false);
 		PlayState.instance.camGame.shake(0.0025, 0.15);
 		moveToBack();
+		picoKnockBack();
 	}
 
 	function playHitSpinAnim()
@@ -427,26 +538,31 @@ class PicoBlazinCharacter extends AnimateAtlasCharacter
 		this.playAnimation('hitSpin', true, false, true);
 		PlayState.instance.camGame.shake(0.0025, 0.15);
 		moveToBack();
+		picoKnockBack();
 	}
 
 	function playPunchHighAnim()
 	{
 		this.playAnimation('punchHigh' + doAlternate(), true, false);
 		moveToFront();
+		picoBack();
 	}
 
 	function playPunchLowAnim()
 	{
 		this.playAnimation('punchLow' + doAlternate(), true, false);
 		moveToFront();
+		picoBack();
 	}
 
 	function playTauntConditionalAnim()
 	{
 		if (getCurrentAnimation() == "fakeout") {
 			playTauntAnim();
+			picoBack();
 		} else {
 			playIdleAnim();
+			picoBack();
 		}
 	}
 
@@ -454,5 +570,6 @@ class PicoBlazinCharacter extends AnimateAtlasCharacter
 	{
 		this.playAnimation('taunt', true, false);
 		moveToBack();
+		picoBack();
 	}
 }

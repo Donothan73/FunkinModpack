@@ -3,6 +3,7 @@ import funkin.ui.title.TitleState;
 import funkin.ui.mainmenu.MainMenuState;
 import funkin.ui.freeplay.FreeplayState;
 import funkin.ui.debug.results.ResultsDebugSubState;
+import funkin.ui.debug.DebugMenuSubState;
 import funkin.modding.module.Module;
 import funkin.modding.base.ScriptedMusicBeatState;
 import flixel.FlxSubState;
@@ -27,6 +28,7 @@ class BootupScreen extends Module
 
 			inPlay = false;
 
+
 		//	if (event != MainMenuState)
 		//	{
 		//		//FlxG.switchState(() -> new ResultsDebugSubState());
@@ -36,11 +38,19 @@ class BootupScreen extends Module
 	function onUpdate(event:UpdateScriptEvent):Void
 	{
 	    super.onUpdate(event);
-		if (inPlay){
+		if (inPlay)
+		{
 			if(FlxG.keys.justPressed.SPACE)
-			{
-			PlayState.instance.endSong(true);
-			}
+				{
+				PlayState.instance.endSong(true);
+				}
+		}
+		if (!inPlay)
+		{
+			if(FlxG.keys.justPressed.NUMPADFIVE)
+				{
+				FlxG.switchState(() -> new funkin.ui.debug.results.ResultsDebugSubState());
+				}
 		}		
 	}
 	

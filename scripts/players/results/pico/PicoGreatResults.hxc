@@ -19,11 +19,11 @@ import flixel.util.FlxTimer;
 import funkin.audio.FunkinSound;
 import funkin.graphics.shaders.AdjustColorShader;
 
-class PicoPerfectResults extends FlxAtlasSprite
+class PicoGreatResults extends FlxAtlasSprite
 {
   function new(x:Float, y:Float)
   {
-    super(x, y, Paths.animateAtlas("resultScreen/results-pico/resultsPERFECT", "shared"), {
+    super(x, y, Paths.animateAtlas("resultScreen/results-pico/resultsGREAT", "shared"), {
       Reversed: false,
       // ?OnComplete:Void -> Void,
       ShowPivot: false,

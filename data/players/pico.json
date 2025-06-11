@@ -94,6 +94,7 @@
       {
         "renderType": "animateatlas",
         "assetPath": "shared:resultScreen/results-pico/resultsPERFECT",
+        "scriptClass": "PicoPerfectResults",
         "zIndex": 500,
         "scale": 0.88,
         "offsets": [385, 82],
@@ -116,8 +117,9 @@
         "renderType": "animateatlas",
         "assetPath": "shared:resultScreen/results-pico/resultsGREAT",
         "zIndex": 500,
-        "scale": 1.25,
-        "offsets": [350, 25],
+        "scriptClass": "PicoGreatResults",
+        "scale": 1.15,
+        "offsets": [450, 25],
         "looped": true,
         "loopFrame": 32
       }
@@ -127,8 +129,9 @@
         "renderType": "animateatlas",
         "assetPath": "shared:resultScreen/results-pico/resultsGREAT",
         "zIndex": 500,
-        "scale": 1.25,
-        "offsets": [350, 25],
+        "scriptClass": "PicoGreatResults",
+        "scale": 1.15,
+        "offsets": [450, 25],
         "looped": true,
         "loopFrame": 32
       }

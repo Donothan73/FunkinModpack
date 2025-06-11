@@ -18,6 +18,8 @@ import flixel.util.FlxGradient;
 import flixel.util.FlxTimer;
 import funkin.audio.FunkinSound;
 import funkin.graphics.shaders.AdjustColorShader;
+import flixel.graphics.frames.FlxBitmapFont;
+
 
 class PicoLossResults extends FlxAtlasSprite
 {
@@ -42,7 +44,60 @@ class PicoLossResults extends FlxAtlasSprite
     bg.cameras = [resultState.cameraBG];
     resultState.add(bg);
 
-    resultState.cameraScroll.color = 0xFF0037FF;
-    resultState.cameraScroll.alpha = 0.25;
+    resultState.cameraScroll.color = 0xFF6C90FE;
+    resultState.cameraScroll.alpha = 1;
+
+    var resultsAnim:FunkinSprite = FunkinSprite.createSparrow(-200, -10, "resultScreen/results-pico");
+
+    resultsAnim.animation.addByPrefix("result", "results instance 1", 24, false);
+    resultsAnim.visible = false;
+    resultsAnim.zIndex = 1201;
+    resultState.add(resultsAnim);
+    new FlxTimer().start(6 / 24, _ -> {
+      resultsAnim.visible = true;
+      resultsAnim.animation.play("result");
+    });
+
+    var soundSystem:FlxSprite = FunkinSprite.createSparrow(-15, -180, 'resultScreen/soundSystem-pico');
+    soundSystem.animation.addByPrefix("idle", "sound system", 24, false);
+    soundSystem.visible = false;
+    new FlxTimer().start(8 / 24, _ -> {
+      soundSystem.animation.play("idle");
+      soundSystem.visible = true;
+    });
+    soundSystem.zIndex = 1101;
+    resultState.add(soundSystem); //7580FF
+
+  //resultState.songName = new FlxBitmapText(FlxBitmapFont.fromMonospace(Paths.image("resultScreen/tardlingSpritesheet"), resultState.fontLetters, FlxPoint.get(49, 62)));
+  //resultState.add(resultState.songName);
+  resultState.songName.textColor = 0xFF0072FF;
+  resultState.songName.useTextColor = true;
+
+  resultState.score.frames = Paths.getSparrowAtlas('resultScreen/score-digital-numbers-pico');
+  resultState.score.color = 0xFFFF003F;
+
+  resultState.scorePopin.color = 0xFFFF003F;
+
+ // for (ScoreNum in resultState.score)
+	 // {
+   // ScoreNum.frames = Paths.getSparrowAtlas('resultScreen/score-digital-numbers-pico');
+   // ScoreNum.set_digit(ScoreNum.digit);
+   // }
+
+  //  var songName:FlxBitmapText;
+  //  var diffYTween:Float = 122;
+   // var fontLetters:String = "AaBbCcDdEeFfGgHhiIJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz:1234567890";
+  //  songName = new FlxBitmapText(FlxBitmapFont.fromMonospace(Paths.image("resultScreen/tardlingSpritesheet-pico"), fontLetters, FlxPoint.get(49, 62)));
+  //  songName.text = "EAT DICK";
+  //  songName.letterSpacing = -15;
+  //  songName.angle = -4.4;
+  //  songName.zIndex = 1001;
+  //  resultState.add(songName);
+  //  songName.shader = resultState.maskShaderSongName;
+  //  songName.y = -songName.height;
+  //  var fuckedupnumber = (10) * (songName.text.length / 15);
+  //  FlxTween.tween(songName, {y: diffYTween - 25 - fuckedupnumber}, 0.5, {ease: FlxEase.expoOut, startDelay: 0.9});
+  //  songName.x = resultState.clearPercentSmall.x + 94;
+    
 	}
 }

@@ -3,6 +3,21 @@ import flixel.math.FlxPoint;
 import flixel.FlxG;
 import funkin.graphics.FunkinSprite;
 import funkin.Preferences;
+import flixel.util.FlxGradient;
+import funkin.graphics.shaders.RuntimeCustomBlendShader;
+import funkin.graphics.FunkinCamera;
+import flixel.addons.display.FlxBackdrop;
+import flixel.effects.FlxFlicker;
+import flixel.FlxSprite;
+import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
+import flixel.text.FlxBitmapText;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
+import flixel.util.FlxGradient;
+import flixel.util.FlxTimer;
+import funkin.audio.FunkinSound;
+import funkin.graphics.shaders.AdjustColorShader;
 
 class PicoGoodResults extends FlxAtlasSprite
 {
@@ -79,6 +94,44 @@ class PicoGoodResults extends FlxAtlasSprite
       trace('Looping Pico shooting animation...');
       super.playAnimation("loop", true, false, true);
     });
+
+    var bg:FlxSprite = FlxGradient.createGradientFlxSprite(FlxG.width, FlxG.height, [0xFF366DE4, 0xFF366DE4], 90);
+    bg.scrollFactor.set();
+    bg.zIndex = 11;
+    bg.cameras = [resultState.cameraBG];
+    resultState.add(bg);
+    
+    resultState.cameraScroll.color = 0xFF6C90FE;
+    resultState.cameraScroll.alpha = 1;
+
+    var resultsAnim:FunkinSprite = FunkinSprite.createSparrow(-200, -10, "resultScreen/results-pico");
+
+    resultsAnim.animation.addByPrefix("result", "results instance 1", 24, false);
+    resultsAnim.visible = false;
+    resultsAnim.zIndex = 1201;
+    resultState.add(resultsAnim);
+    new FlxTimer().start(6 / 24, _ -> {
+      resultsAnim.visible = true;
+      resultsAnim.animation.play("result");
+    });
+
+    var soundSystem:FlxSprite = FunkinSprite.createSparrow(-15, -180, 'resultScreen/soundSystem-pico');
+    soundSystem.animation.addByPrefix("idle", "sound system", 24, false);
+    soundSystem.visible = false;
+    new FlxTimer().start(8 / 24, _ -> {
+      soundSystem.animation.play("idle");
+      soundSystem.visible = true;
+    });
+    soundSystem.zIndex = 1101;
+    resultState.add(soundSystem);
+
+  resultState.songName.textColor = 0xFF0072FF;
+  resultState.songName.useTextColor = true;
+
+  resultState.score.frames = Paths.getSparrowAtlas('resultScreen/score-digital-numbers-pico');
+  resultState.score.color = 0xFFFF003F;
+
+  resultState.scorePopin.color = 0xFFFF003F;
   }
 
   override function playAnimation(id:String, restart:Bool = false, ignoreOther:Bool = false, loop:Bool = false, startFrame:Int = 0):Void

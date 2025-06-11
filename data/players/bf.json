@@ -103,6 +103,7 @@
       {
         "renderType": "animateatlas",
         "assetPath": "shared:resultScreen/results-bf/resultsPERFECT/bed",
+        "scriptClass": "BfPerfectResults",
         "zIndex": 500,
         "offsets": [1342, 370],
         "loopFrameLabel": "LOOP START"
@@ -120,6 +121,7 @@
       {
         "renderType": "animateatlas",
         "assetPath": "shared:resultScreen/results-bf/resultsPERFECT/bed",
+        "scriptClass": "BfPerfectResults",
         "startFrameLabel": "INTRO",
         "filter": "naughty",
         "zIndex": 500,
@@ -138,6 +140,7 @@
       {
         "renderType": "animateatlas",
         "assetPath": "shared:resultScreen/results-bf/resultsPERFECT/bed",
+        "scriptClass": "BfPerfectResults",
         "startFrameLabel": "INTRO 2",
         "filter": "safe",
         "zIndex": 500,
@@ -160,6 +163,7 @@
       {
         "renderType": "animateatlas",
         "assetPath": "shared:resultScreen/results-bf/resultsEXCELLENT",
+        "scriptClass": "BfExcellentResults",
         "zIndex": 500,
         "offsets": [1329, 429],
 
@@ -180,6 +184,7 @@
       {
         "renderType": "animateatlas",
         "assetPath": "shared:resultScreen/results-bf/resultsGREAT/bf",
+        "scriptClass": "BfGreatResults",
         "scale": 0.93,
         "zIndex": 500,
         "offsets": [929, 363],
@@ -192,6 +197,7 @@
         "renderType": "animateatlas",
         "assetPath": "shared:resultScreen/results-bf/resultsGOOD/bf",
         "zIndex": 501,
+        "scriptClass": "BfGoodResults",
         "offsets": [662, 371],
 
         "loopFrame": 14
@@ -209,6 +215,7 @@
       {
         "renderType": "animateatlas",
         "assetPath": "shared:resultScreen/results-bf/resultsSHIT",
+        "scriptClass": "BfLossResults",
         "zIndex": 500,
         "offsets": [0, 20],
         "loopFrameLabel": "Loop Start"

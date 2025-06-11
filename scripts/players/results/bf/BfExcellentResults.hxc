@@ -1,0 +1,36 @@
+import funkin.graphics.adobeanimate.FlxAtlasSprite;
+import flixel.math.FlxPoint;
+import flixel.FlxG;
+import funkin.graphics.FunkinSprite;
+import funkin.Preferences;
+import flixel.util.FlxGradient;
+import funkin.graphics.shaders.RuntimeCustomBlendShader;
+import funkin.graphics.FunkinCamera;
+import flixel.addons.display.FlxBackdrop;
+import flixel.effects.FlxFlicker;
+import flixel.FlxSprite;
+
+class BfEXCELLENTResults extends FlxAtlasSprite
+{
+
+  function new(x:Float, y:Float)
+  {
+    super(x, y, Paths.animateAtlas("resultScreen/results-bf/resultsEXCELLENT", "shared"), {
+      Reversed: false,
+      // ?OnComplete:Void -> Void,
+      ShowPivot: false,
+      Antialiasing: true,
+      ScrollFactor: new FlxPoint(1, 1),
+    });
+
+    var baseX:Float = this.x;
+    var baseY:Float = this.y;
+
+    var resultState:ResultState = FlxG.state;
+    while (resultState.subState != null) {
+      resultState = resultState.subState;
+    }
+
+    resultState.cameraScroll.color = 0xFFFEDA6C;
+	}
+}

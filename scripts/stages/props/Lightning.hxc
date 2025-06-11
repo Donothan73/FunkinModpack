@@ -1,0 +1,42 @@
+import flixel.FlxG;
+import funkin.graphics.FunkinSprite;
+import funkin.audio.FunkinSound;
+import funkin.modding.base.ScriptedFunkinSprite;
+import funkin.play.stage.Stage;
+import funkin.play.PlayState;
+import flixel.util.FlxTimer;
+import flixel.util.FlxTimerManager;
+
+class Lightning extends ScriptedFunkinSprite
+{
+
+		var timer = new FlxTimer();
+
+	function new()
+	{
+		super();
+
+		loadSparrow('limo/erect/lightning');
+		animation.addByPrefix('strike', 'lightning', 24, true);
+    scrollFactor.set(0, 0);
+
+		setGraphicSize(Std.int(width * 0.4));
+
+		updateHitbox();
+
+    visible = false;
+	}
+
+  function strike():Void
+  {
+		visible = true;
+		animation.play('strike');
+    x = FlxG.random.int(-500, 500);
+    y = FlxG.random.int(0, 250);
+    scale.set(1*FlxG.random.float(1.5, 2.5), 1*FlxG.random.float(1.5, 2.5));
+    timer.start(1, function() 
+      {
+			visible = false;
+		  });
+  }
+}

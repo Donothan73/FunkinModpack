@@ -14,6 +14,7 @@ import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
+import flixel.util.FlxGradient;
 import flixel.util.FlxTimer;
 import funkin.Conductor;
 import funkin.graphics.shaders.OverlayBlend;
@@ -73,14 +74,14 @@ class LimoRideErectStage extends Stage
 		switch (PlayState.instance.currentSong.id)
 		{
 			case "satin-panties":
-				rainShaderStartIntensity = 0.2;
-				rainShaderEndIntensity = 0.4;
+				rainShaderStartIntensity = 0.4;
+				rainShaderEndIntensity = 0.6;
 			case "high":
-				rainShaderStartIntensity = 0.1;
-				rainShaderEndIntensity = 0.2;
+				rainShaderStartIntensity = 0.6;
+				rainShaderEndIntensity = 0.7;
 			case "milf":
-				rainShaderStartIntensity = 0.2;
-				rainShaderEndIntensity = 0.4;
+				rainShaderStartIntensity = 0.7;
+				rainShaderEndIntensity = 0.8;
 		}
 
 		rainShader.intensity = rainShaderStartIntensity;
@@ -209,6 +210,9 @@ class LimoRideErectStage extends Stage
 	}
 
 	var scrollingSky:FlxTiledSprite;
+	var lampHead:FlxTiledSprite;
+	var lampPole:FlxTiledSprite;
+	var bg:FlxSprite;
 
 	function buildStage()
 	{
@@ -308,23 +312,52 @@ class LimoRideErectStage extends Stage
 
     	case 'pico':
 
+			dropColor = 0xFF0B2B33;
+
+			rainShader.rainColor = 0xFF0B2B33;
+
 			scrollingSky = new FlxTiledSprite(Paths.image('limo/erect/storm'), 3153, 898, true, false);
 			scrollingSky.setPosition(-650, -55);
 			scrollingSky.scrollFactor.set(0, 0);
 			scrollingSky.zIndex = 14;
-			scrollingSky.scale.set(.5, .5);
+			scrollingSky.scale.set(1, 1);
 			scrollingSky.alpha = .9;
 			scrollingSky.blend = 1;
+
+			PlayState.instance.currentStage.add(scrollingSky);
+			PlayState.instance.currentStage.refresh(); // Apply z-index.
+
+			lampHead = new FlxTiledSprite(Paths.image('limo/erect/highwayLight'), 1480, 339, true, false);
+			lampHead.setPosition(-100, 75);
+			lampHead.scrollX = 2000;
+			lampHead.scrollFactor.set(0.1, .4);
+			lampHead.zIndex = 18;
+			lampHead.scale.set(1.5, 1.5);
+			//lampHead.alpha = 1;
+			lampHead.blend = 1;
+
+			PlayState.instance.currentStage.add(lampHead);
+			PlayState.instance.currentStage.refresh(); // Apply z-index.
+
+			lampPole = new FlxTiledSprite(Paths.image('limo/erect/highwayPoleTall'), 1480, 959, true, false);
+			lampPole.setPosition(-90, 110);
+			lampPole.scrollX = 2000;
+			lampPole.scrollFactor.set(0.1, .4);
+			lampPole.zIndex = 16;
+			lampPole.scale.set(1.5, 1.5);
+			//lampPole.alpha = 1;
+			//lampPole.blend = 1;
+
+			PlayState.instance.currentStage.add(lampPole);
+			PlayState.instance.currentStage.refresh(); // Apply z-index.
 
 			colorShader = new AdjustColorShader();
 
 			colorShader.hue = -30;
 			colorShader.saturation = -20;
 			colorShader.contrast = 0;
-			colorShader.brightness = -50;
+			colorShader.brightness = -60;
 
-			PlayState.instance.currentStage.add(scrollingSky);
-			PlayState.instance.currentStage.refresh(); // Apply z-index.
 
 		 	getNamedProp('limoDancer1').shader = colorShader;   
       		getNamedProp('limoDancer2').shader = colorShader;
@@ -344,10 +377,10 @@ class LimoRideErectStage extends Stage
 				mist1.setPosition(-650, -100);
 				mist1.scrollFactor.set(1.1, 1.1);
 				mist1.zIndex = 400;
-   				mist1.blend = 0;
+   				mist1.blend = 12;
 				mist1.color = 0xFF313E3F;
-				mist1.alpha = 0.4;
-				mist1.velocity.x = 1700;
+				mist1.alpha = 1;
+				mist1.velocity.x = 3200;
 
 				PlayState.instance.currentStage.add(mist1);
 				PlayState.instance.currentStage.refresh(); // Apply z-index.
@@ -356,10 +389,10 @@ class LimoRideErectStage extends Stage
 				mist2.setPosition(-650, -100);
 				mist2.scrollFactor.set(1.2, 1.2);
 				mist2.zIndex = 401;
-    			mist2.blend = 0;
+    			mist2.blend = 12;
 				mist2.color = 0xFF313E3F;
 				mist2.alpha = 1;
-				mist2.velocity.x = 2100;
+				mist2.velocity.x = 4200;
 				mist1.scale.set(1.3, 1.3);
 
 				PlayState.instance.currentStage.add(mist2);
@@ -369,10 +402,10 @@ class LimoRideErectStage extends Stage
 				mist3.setPosition(-650, -100);
 				mist3.scrollFactor.set(0.8, 0.8);
 				mist3.zIndex = 99;
-   				mist3.blend = 0;
+   				mist3.blend = 12;
 				mist3.color = 0xFF313E3F;
-				mist3.alpha = 0.5;
-				mist3.velocity.x = 900;
+				mist3.alpha = 1;
+				mist3.velocity.x = 1800;
 				mist3.scale.set(1.5, 1.5);
 
 				PlayState.instance.currentStage.add(mist3);
@@ -383,10 +416,10 @@ class LimoRideErectStage extends Stage
 				mist4.setPosition(-650, -380);
 				mist4.scrollFactor.set(0.6, 0.6);
 				mist4.zIndex = 98;
-    			mist4.blend = 0;
+    			mist4.blend = 12;
 				mist4.color = 0xFF313E3F;
 				mist4.alpha = 1;
-				mist4.velocity.x = 700;
+				mist4.velocity.x = 1400;
 				mist4.scale.set(1.5, 1.5);
 
 				PlayState.instance.currentStage.add(mist4);
@@ -396,14 +429,25 @@ class LimoRideErectStage extends Stage
 				mist5.setPosition(-650, -400);
 				mist5.scrollFactor.set(0.2, 0.2);
 				mist5.zIndex = 15;
-   				mist5.blend = 0;
+   				mist5.blend = 12;
 				mist5.color = 0xFF313E3F;
 				mist5.alpha = 1;
-				mist5.velocity.x = 100;
+				mist5.velocity.x = 200;
 				mist5.scale.set(1.5, 1.5);
 
 				PlayState.instance.currentStage.add(mist5);
 				PlayState.instance.currentStage.refresh(); // Apply z-index.
+
+				bg = FlxGradient.createGradientFlxSprite(FlxG.width, FlxG.height, [0xFFffffff, 0xFF000000], 1, 90, true);
+				bg.scrollFactor.set(0, 0);
+				bg.zIndex = 1500;
+   				bg.blend = 0;
+				bg.alpha = 0;
+				bg.scale.set(1.5, 1.5);
+				bg.setPosition(0, 0);
+				PlayState.instance.currentStage.add(bg);
+				PlayState.instance.currentStage.refresh(); // Apply z-index.
+
 		}
 
 	}
@@ -456,14 +500,16 @@ class LimoRideErectStage extends Stage
 			rainShader.update(event.elapsed);
 			}
 
-			if(scrollingSky != null) scrollingSky.scrollX -= FlxG.elapsed * 66;
+			if(scrollingSky != null) scrollingSky.scrollX += FlxG.elapsed * 66;
+			if(lampHead != null) lampHead.scrollX += FlxG.elapsed * 256*10;
+			if(lampPole != null) lampPole.scrollX += FlxG.elapsed * 256*10;
 
 			_timer += event.elapsed;
-			mist1.y = 100 + (Math.sin(_timer)*200);
-			mist2.y = 0 + (Math.sin(_timer*0.8)*100);
-			mist3.y = -20 + (Math.sin(_timer*0.5)*200);
-			mist4.y = -180 + (Math.sin(_timer*0.4)*300);
-			mist5.y = -450 + (Math.sin(_timer*0.2)*150);
+			mist1.y = 100 + (Math.sin(_timer)*50);
+			mist2.y = 0 + (Math.sin(_timer*0.8)*50);
+			mist3.y = -20 + (Math.sin(_timer*0.5)*100);
+			mist4.y = -180 + (Math.sin(_timer*0.4)*150);
+			mist5.y = -450 + (Math.sin(_timer*0.2)*75);
 
 			if (lightning != null) {
 				lightningTimer -= FlxG.elapsed;
@@ -484,11 +530,16 @@ class LimoRideErectStage extends Stage
 	{
 		var timer = new FlxTimer();
 		var Tween:FlxTween;
-		//Tween = FlxTween.color(PlayState.instance.currentStage.getDad().shader.color, .25, 0xffFFFFFF, 0xFF0B2B33, {ease: FlxEase.elasticOut});
-		Tween = FlxTween.tween(PlayState.instance.currentStage.getBoyfriend().shader, {strength: -155 }, 5, {ease: FlxEase.elasticInOut});
-		timer.start(1, function() 
+		Tween = FlxTween.tween(bg, {alpha: 1 }, .25, {ease: FlxEase.elasticInOut});
+		timer.start(.25, function() 
       	{
-			Tween = FlxTween.tween(PlayState.instance.currentStage.getBoyfriend().shader, {strength: -155 }, 5, {ease: FlxEase.elasticInOut});
+			Tween = FlxTween.tween(bg, {alpha: 0 }, .5, {ease: FlxEase.elasticInOut});
+
+					Tween = FlxTween.tween(bg, {alpha: 1 }, .5, {ease: FlxEase.elasticInOut});
+					timer.start(.25, function() 
+      				{
+					Tween = FlxTween.tween(bg, {alpha: 0 }, .5, {ease: FlxEase.elasticInOut});
+					});
 		});
 	}
 
@@ -513,7 +564,7 @@ class LimoRideErectStage extends Stage
 		if (FlxG.random.bool(10) && fastCarCanDrive)
 			fastCarDrive();
 
-		if (FlxG.random.bool(10) && event.beat > (shootingStarBeat + shootingStarOffset))
+		if (PlayState.instance.currentVariation != 'pico' && FlxG.random.bool(10) && event.beat > (shootingStarBeat + shootingStarOffset))
 		{
 			doShootingStar(event.beat);
 		}

@@ -1,0 +1,33 @@
+import funkin.play.PlayState;
+import funkin.modding.module.Module;
+import funkin.Paths;
+import flixel.addons.display.FlxTiledSprite;
+
+
+class PauseGraphic extends Module 
+{
+	var pauseImage:FlxTiledSprite;
+
+	function new ()
+	{
+	        super("PauseGraphic");
+	}
+
+  	public function onPause(event:PauseScriptEvent) 
+	{
+		pauseImage = new FlxTiledSprite(Paths.image('pause', "shared"), 697*5, 255, true, false);
+		pauseImage.setPosition(-650, -55);
+		//pauseImage.zIndex = 14;
+		pauseImage.scale.set(0.25, 0.25);
+		//pauseImage.alpha = .9;
+		//pauseImage.blend = 1;
+		pauseImage.velocity.x = 1700;
+		PlayState.instance.add(pauseImage);
+
+	}
+
+  	public function onResume(event:ScriptEvent) 
+	{
+	pauseImage.destroy();
+	}
+}

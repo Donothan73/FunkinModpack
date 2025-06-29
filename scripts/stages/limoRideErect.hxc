@@ -327,7 +327,7 @@ class LimoRideErectStage extends Stage
 			PlayState.instance.currentStage.add(scrollingSky);
 			PlayState.instance.currentStage.refresh(); // Apply z-index.
 
-			lampHead = new FlxTiledSprite(Paths.image('limo/erect/highwayLight'), 1480, 339, true, false);
+			lampHead = new FlxTiledSprite(Paths.image('limo/erect/highwayLight'), 3480, 339, true, false);
 			lampHead.setPosition(-100, 75);
 			lampHead.scrollX = 2000;
 			lampHead.scrollFactor.set(0.1, .4);
@@ -339,7 +339,7 @@ class LimoRideErectStage extends Stage
 			PlayState.instance.currentStage.add(lampHead);
 			PlayState.instance.currentStage.refresh(); // Apply z-index.
 
-			lampPole = new FlxTiledSprite(Paths.image('limo/erect/highwayPoleTall'), 1480, 959, true, false);
+			lampPole = new FlxTiledSprite(Paths.image('limo/erect/highwayPoleTall'), 3480, 959, true, false);
 			lampPole.setPosition(-90, 110);
 			lampPole.scrollX = 2000;
 			lampPole.scrollFactor.set(0.1, .4);

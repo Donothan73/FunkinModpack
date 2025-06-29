@@ -1,0 +1,77 @@
+import funkin.ui.title.TitleState;
+import flixel.FlxCamera;
+import flixel.math.FlxMath;
+import flixel.FlxSprite;
+import flixel.math.FlxAngle;
+import flixel.math.FlxPoint;
+import flixel.text.FlxText;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
+import flixel.util.FlxSpriteUtil;
+import flixel.util.FlxTimer;
+import funkin.util.Constants;
+import funkin.graphics.adobeanimate.FlxAtlasSprite;
+import funkin.graphics.FunkinSprite;
+import funkin.ui.freeplay.charselect.PlayableCharacter;
+import funkin.ui.MusicBeatSubState;
+import funkin.graphics.shaders.AdjustColorShader;
+import flixel.addons.display.FlxTiledSprite;
+import flixel.addons.display.FlxBackdrop;
+import funkin.PlayerSettings;
+import funkin.modding.module.Module;
+import funkin.modding.events.ScriptEvent;
+import funkin.modding.base.ScriptedMusicBeatSubState;
+import funkin.modding.base.ScriptedFlxRuntimeShader;
+import funkin.modding.base.ScriptedMusicBeatState;
+import funkin.util.ReflectUtil;
+import flixel.FlxG;
+import funkin.util.WindowUtil;
+import funkin.Preferences;
+
+class LudumDareTitleScreen extends Module
+{  
+  var finished:Bool = false;
+
+  var backer:FlxSprite;
+
+  public function new()
+  {
+    super('LudumDareTitleScreen');
+  }
+
+  override function onStateChangeEnd(event)
+  {
+    super.onStateChangeEnd(event);
+    finished = false;
+  }
+
+  override function onUpdate(event:UpdateScriptEvent)
+  {
+	super.onUpdate(event);
+
+    if (ReflectUtil.getClassNameOf(FlxG.state) == "funkin.ui.title.TitleState")
+    {
+        FlxG.mouse.visible = false;
+
+        if (finished == false && FlxG.state.skippedIntro)
+        {
+            if(FlxG.state.logoBl != null && FlxG.state.gfDance != null && FlxG.state.titleText != null)
+            {
+
+        	backer = new FlxSprite(-27, 193).loadGraphic(Paths.image('OLdLOgoHQ'));
+                FlxG.state.add(backer);
+		backer.scale = ('0.25, 0.25');
+                backer.screenCenter(0x01);
+
+                FlxG.state.titleText.x = 126;
+                FlxG.state.titleText.y = 605;
+
+                FlxG.state.gfDance.visible = false;
+                FlxG.state.logoBl.visible = false;
+
+                finished = true;
+            }
+        }
+    }
+  }
+}

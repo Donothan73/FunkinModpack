@@ -18,6 +18,7 @@ import flixel.util.FlxGradient;
 import flixel.util.FlxTimer;
 import funkin.audio.FunkinSound;
 import funkin.graphics.shaders.AdjustColorShader;
+import funkin.ui.FullScreenScaleMode;
 
 class PicoGoodResults extends FlxAtlasSprite
 {
@@ -104,8 +105,9 @@ class PicoGoodResults extends FlxAtlasSprite
     resultState.cameraScroll.color = 0xFF6C90FE;
     resultState.cameraScroll.alpha = 1;
 
-    var resultsAnim:FunkinSprite = FunkinSprite.createSparrow(-200, -10, "resultScreen/results-pico");
+    var resultsAnim:FunkinSprite;
 
+    resultsAnim = FunkinSprite.createSparrow(FlxG.width - (1480 + (FullScreenScaleMode.gameCutoutSize.x / 2)), -10, "resultScreen/results-pico");
     resultsAnim.animation.addByPrefix("result", "results instance 1", 24, false);
     resultsAnim.visible = false;
     resultsAnim.zIndex = 1201;
@@ -115,7 +117,7 @@ class PicoGoodResults extends FlxAtlasSprite
       resultsAnim.animation.play("result");
     });
 
-    var soundSystem:FlxSprite = FunkinSprite.createSparrow(-15, -180, 'resultScreen/soundSystem-pico');
+    var soundSystem:FlxSprite = FunkinSprite.createSparrow(-15 + FullScreenScaleMode.gameNotchSize.x, -180, 'resultScreen/soundSystem-pico');
     soundSystem.animation.addByPrefix("idle", "sound system", 24, false);
     soundSystem.visible = false;
     new FlxTimer().start(8 / 24, _ -> {
@@ -136,11 +138,11 @@ class PicoGoodResults extends FlxAtlasSprite
 
   override function playAnimation(id:String, restart:Bool = false, ignoreOther:Bool = false, loop:Bool = false, startFrame:Int = 0):Void
   {
-    if (FlxG.random.bool(5)) {
+    if (FlxG.random.bool(25)) {
       trace('Playing special Fatass animation...');
       super.playAnimation("intro fat gf", true, false, false);
     }
-    else if (FlxG.random.bool(20)) {
+    else if (FlxG.random.bool(25)) {
       trace('Playing special Cass animation...');
       super.playAnimation("intro cass", true, false, false);
     }

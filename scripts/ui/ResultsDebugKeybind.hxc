@@ -1,0 +1,29 @@
+import funkin.ui.MusicBeatSubState;
+import funkin.ui.title.TitleState;
+import funkin.ui.mainmenu.MainMenuState;
+import funkin.ui.freeplay.FreeplayState;
+import funkin.ui.debug.results.ResultsDebugSubState;
+import funkin.ui.debug.DebugMenuSubState;
+import funkin.modding.module.Module;
+import funkin.modding.base.ScriptedMusicBeatState;
+import flixel.FlxSubState;
+import flixel.FlxG;
+import funkin.play.PlayState;
+
+class ResultsDebugKeybind extends Module
+{
+	function new ()
+	{
+	        super("ResultsDebugKeybind");
+	}
+
+
+	function onUpdate(event:UpdateScriptEvent):Void
+	{
+	    super.onUpdate(event);
+			if(FlxG.keys.justPressed.NUMPADFIVE)
+				{
+				FlxG.switchState(() -> new funkin.ui.debug.results.ResultsDebugSubState());
+				}		
+	}
+}

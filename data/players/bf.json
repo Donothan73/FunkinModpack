@@ -1,8 +1,8 @@
 {
   "version": "1.0.0",
   "name": "Boyfriend",
-  "ownedChars": ["bf", "bf-car", "bf-pixel", "bf-christmas", "bf-holding-gf"],
-  "showUnownedChars": true,
+  "ownedChars": ["bf", "bf-dark", "bf-car", "bf-pixel", "bf-christmas", "bf-holding-gf"],
+  "showUnownedChars": false,
   "unlocked": true,
   "freeplayStyle": "bf",
   "stickerPack": "standard-bf",
@@ -162,7 +162,7 @@
     "excellent": [
       {
         "renderType": "animateatlas",
-        "assetPath": "shared:resultScreen/results-bf/resultsEXCELLENT",
+        "assetPath": "shared:resultScreen\results-bf\resultsEXCELLENT",
         "scriptClass": "BfExcellentResults",
         "zIndex": 500,
         "offsets": [1329, 429],

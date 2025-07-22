@@ -214,7 +214,7 @@ class MainStageErectStage extends Stage
     		colorShaderLight.contrast = 0;
 			colorShaderLight.saturation = -55;
 
-    		getNamedProp('backDark').shader = colorShaderBg;
+    		//getNamedProp('backDark').shader = colorShaderBg;
     		getNamedProp('brightLightSmall').shader = colorShaderLight;
     		getNamedProp('crowd').shader = colorShaderBg;
     		getNamedProp('bg').shader = colorShaderBg;

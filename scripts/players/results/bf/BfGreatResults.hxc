@@ -15,7 +15,7 @@ class BfGreatResults extends FlxAtlasSprite
 
   function new(x:Float, y:Float)
   {
-    super(x, y, Paths.animateAtlas("resultScreen/results-bf/resultsGREAT", "shared"), {
+    super(x, y, Paths.animateAtlas("resultScreen/results-bf/resultsGREAT/bf", "shared"), {
       Reversed: false,
       // ?OnComplete:Void -> Void,
       ShowPivot: false,

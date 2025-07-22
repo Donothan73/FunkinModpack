@@ -10,7 +10,7 @@ import flixel.addons.display.FlxBackdrop;
 import flixel.effects.FlxFlicker;
 import flixel.FlxSprite;
 
-class BfEXCELLENTResults extends FlxAtlasSprite
+class BfExcellentResults extends FlxAtlasSprite
 {
 
   function new(x:Float, y:Float)

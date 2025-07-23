@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="bf_pixel_peace.png">
+	<!-- Created with Adobe Animate version 24.0.9.74 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="BF HEY0000" x="5" y="5" width="103" height="97"/>
+	<SubTexture name="BF HEY0001" x="5" y="5" width="103" height="97"/>
+	<SubTexture name="BF HEY0002" x="110" y="5" width="103" height="97"/>
+	<SubTexture name="BF HEY0003" x="110" y="5" width="103" height="97"/>
+	<SubTexture name="BF HEY0004" x="110" y="5" width="103" height="97"/>
+	<SubTexture name="BF HEY0005" x="110" y="5" width="103" height="97"/>
+</TextureAtlas>

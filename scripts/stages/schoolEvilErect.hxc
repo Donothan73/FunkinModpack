@@ -4,59 +4,125 @@ import funkin.graphics.shaders.WiggleEffectRuntime;
 import funkin.graphics.shaders.WiggleEffectType;
 import flixel.addons.effects.FlxTrail;
 import funkin.play.Countdown;
-import funkin.graphics.shaders.AdjustColorShader;
+import funkin.play.character.CharacterType;
+import funkin.graphics.shaders.DropShadowShader;
 
 class SchoolEvilErectStage extends Stage
 {
-	function new()
-	{
-		super('schoolEvilErect');
-	}
+  function new()
+  {
+    super('schoolEvilErect');
+  }
 
-	var wiggleBG:FlxRuntimeShader = null;
-	var wiggleCHAR:FlxRuntimeShader = null;
-  	var colorShader:AdjustColorShader;
+  var wiggleBack:FlxRuntimeShader = null;
+  var wiggleSchool:FlxRuntimeShader = null;
+  var wiggleGround:FlxRuntimeShader = null;
+  var wiggleSpike:FlxRuntimeShader = null;
 
-	override function buildStage()
-	{
-		super.buildStage();
+  var wiggleHUD:FlxRuntimeShader = null;
 
-		wiggleBG = new WiggleEffectRuntime(2, 4, 0.017, WiggleEffectType.DREAMY);
-		wiggleCHAR = new WiggleEffectRuntime(0.5, 0.5, 0.017, WiggleEffectType.DREAMY);
+  override function buildStage()
+  {
+    super.buildStage();
 
-		getNamedProp('evilSchoolBG').shader = wiggleBG;
+    wiggleBack = new WiggleEffectRuntime(2 * 0.8, 4 * 0.4, 0.011, WiggleEffectType.DREAMY);
+    wiggleSchool = new WiggleEffectRuntime(2, 4, 0.017, WiggleEffectType.DREAMY);
+    wiggleSpike = new WiggleEffectRuntime(2, 4, 0.01, WiggleEffectType.DREAMY);
+    wiggleGround = new WiggleEffectRuntime(2, 4, 0.007, WiggleEffectType.DREAMY);
+    wiggleHUD = new WiggleEffectRuntime(2, 4, 0.007, WiggleEffectType.DREAMY);
 
-		colorShader = new AdjustColorShader();
-		colorShader.hue = -26;
-		colorShader.saturation = -16;
-		colorShader.contrast = 0;
-		colorShader.brightness = -5;
+    getNamedProp('school').shader = wiggleSchool;
+    getNamedProp('evilstreet').shader = wiggleGround;
+    getNamedProp('backspikes').shader = wiggleBack;
+    getNamedProp('backspike').shader = wiggleSpike;
 
-		PlayState.instance.camCutscene.shader = wiggleCHAR;
+    //PlayState.instance.camHUD.shader = wiggleHUD;
+    PlayState.instance.camHUD.pixelPerfectRender = true;
+    PlayState.instance.camGame.pixelPerfectRender = true;
+  }
 
-	}
+  override function addCharacter(character:BaseCharacter, charType:CharacterType):Void
+  {
+    // Apply the shader automatically to each character as it gets added.
+    super.addCharacter(character, charType);
+    trace('Applied stage shader to ' + character.characterName);
 
-	override function addCharacter(char:BaseCharacter, charType:CharacterType)
-	{
+    var rim = new DropShadowShader();
+    rim.setAdjustColor(-100, -44, -9, 5);
+    rim.color = 0xFFB0003B;
+    rim.antialiasAmt = 0;
+    rim.attachedSprite = character;
+    rim.distance = 4;
+    rim.threshold = 0.3;
+    rim.angle = 175;
+    rim.strength = 0.80;
 
-		super.addCharacter(char, charType);
+    switch (charType)
+    {
+      case CharacterType.BF:
+        character.shader = rim;
 
-		char.shader = wiggleCHAR;
-		char.shader = colorShader;
-	}
+        rim.loadAltMask('assets/week6/images/weeb/erect/masks/bfPixel_mask.png');
+        rim.maskThreshold = 1;
+        //rim.useAltMask = true;
 
-	override function onUpdate(event:UpdateScriptEvent) {
-		super.onUpdate(event);
+        character.animation.onFrameChange.add(function() {
+          if (getBoyfriend() != null)
+          {
+            rim.updateFrameInfo(getBoyfriend().frame);
+          }
+        });
 
-		if (wiggleBG != null) {
-			wiggleBG.update(event.elapsed);
-			wiggleCHAR.update(event.elapsed);
-		}
-	}
+      case CharacterType.GF:
+        character.shader = rim;
 
-	function kill() {
-		super.kill();
-		wiggleCHAR = null;
-		wiggleBG = null;
-	}
+        rim.loadAltMask('assets/week6/images/weeb/erect/masks/gfPixel_mask.png');
+        rim.maskThreshold = 1;
+        //rim.useAltMask = true;
+
+        character.animation.onFrameChange.add(function() {
+          if (getGirlfriend() != null)
+          {
+            rim.updateFrameInfo(getGirlfriend().frame);
+          }
+        });
+
+      //case CharacterType.DAD:
+        //rim.angle = 90;
+        //character.shader = rim;
+
+        //character.animation.onFrameChange.add(function() {
+          //if (getDad() != null)
+          //{
+          //  rim.updateFrameInfo(getDad().frame);
+          //}
+        //});
+
+      default:
+    }
+  }
+
+  override function onUpdate(event:UpdateScriptEvent)
+  {
+    super.onUpdate(event);
+
+    if (wiggleBack != null)
+    {
+      wiggleBack.update(event.elapsed);
+      wiggleSchool.update(event.elapsed);
+      wiggleGround.update(event.elapsed);
+      wiggleSpike.update(event.elapsed);
+      wiggleHUD.update(event.elapsed);
+    }
+  }
+
+  function kill()
+  {
+    super.kill();
+    wiggleBack = null;
+    wiggleSchool = null;
+    wiggleGround = null;
+    wiggleSpike = null;
+    wiggleHUD = null;
+  }
 }

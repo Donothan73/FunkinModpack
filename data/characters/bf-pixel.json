@@ -1,0 +1,198 @@
+{
+	"version": "1.0.1",
+	"renderType": "multisparrow",
+	"offsets": [
+		0,
+		0
+	],
+	"danceEvery": 1,
+	"scale": 6,
+	"flipX": true,
+	"name": "Boyfriend (Pixel)",
+	"cameraOffsets": [
+		0,
+		0
+	],
+	"isPixel": true,
+	"singTime": 8,
+	"death": {
+		"cameraOffsets": [
+			0,
+			0
+		]
+	},
+	"startingAnimation": "idle",
+	"healthIcon": {
+		"offsets": [
+			0,
+			0
+		],
+		"isPixel": true,
+		"scale": 1,
+		"id": "bf-pixel",
+		"flipX": false
+	},
+	"assetPath": "characters/bfPixel",
+	"animations": [
+		{
+			"flipY": false,
+			"offsets": [
+				0,
+				0
+			],
+			"frameRate": 24,
+			"prefix": "BF IDLE instance 10",
+			"flipX": false,
+			"looped": false,
+			"name": "idle"
+		},
+		{
+			"flipY": false,
+			"offsets": [
+				0,
+				0
+			],
+			"frameRate": 24,
+			"prefix": "BF UP NOTE instance 10",
+			"flipX": false,
+			"looped": false,
+			"name": "singUP"
+		},
+		{
+			"flipY": false,
+			"offsets": [
+				0,
+				0
+			],
+			"frameRate": 24,
+			"prefix": "BF LEFT NOTE instance 10",
+			"flipX": false,
+			"looped": false,
+			"name": "singLEFT"
+		},
+		{
+			"flipY": false,
+			"offsets": [
+				0,
+				0
+			],
+			"frameRate": 24,
+			"prefix": "BF RIGHT NOTE instance 10",
+			"flipX": false,
+			"looped": false,
+			"name": "singRIGHT"
+		},
+		{
+			"flipY": false,
+			"offsets": [
+				0,
+				0
+			],
+			"frameRate": 24,
+			"prefix": "BF DOWN NOTE instance 10",
+			"flipX": false,
+			"looped": false,
+			"name": "singDOWN"
+		},
+		{
+			"flipY": false,
+			"offsets": [
+				0,
+				0
+			],
+			"frameRate": 24,
+			"prefix": "BF UP MISS instance 10",
+			"flipX": false,
+			"looped": false,
+			"name": "singUPmiss"
+		},
+		{
+			"flipY": false,
+			"offsets": [
+				0,
+				0
+			],
+			"frameRate": 24,
+			"prefix": "BF LEFT MISS instance 10",
+			"flipX": false,
+			"looped": false,
+			"name": "singLEFTmiss"
+		},
+		{
+			"flipY": false,
+			"offsets": [
+				0,
+				0
+			],
+			"frameRate": 24,
+			"prefix": "BF RIGHT MISS instance 10",
+			"flipX": false,
+			"looped": false,
+			"name": "singRIGHTmiss"
+		},
+		{
+			"flipY": false,
+			"offsets": [
+				0,
+				0
+			],
+			"frameRate": 24,
+			"prefix": "BF DOWN MISS instance 10",
+			"flipX": false,
+			"looped": false,
+			"name": "singDOWNmiss"
+		},
+		{
+			"flipY": false,
+			"offsets": [
+				8.33,
+				0
+			],
+			"frameRate": 24,
+			"assetPath": "characters/bfPixelsDEAD",
+			"prefix": "BF Dies pixel",
+			"flipX": false,
+			"looped": false,
+			"name": "firstDeath"
+		},
+		{
+			"flipY": false,
+			"offsets": [
+				18.33,
+				13
+			],
+			"frameRate": 24,
+			"assetPath": "characters/bf_pixel_peace",
+			"prefix": "BF HEY",
+			"flipX": false,
+			"looped": false,
+			"name": "hey"
+		},
+		{
+			"flipY": false,
+			"offsets": [
+				0,
+				0
+			],
+			"frameRate": 24,
+			"assetPath": "characters/bfPixelsDEAD",
+			"prefix": "Retry Loop",
+			"flipX": false,
+			"name": "deathLoop",
+			"looped": true
+		},
+		{
+			"flipY": false,
+			"offsets": [
+				3.33,
+				-2.08
+			],
+			"frameRate": 24,
+			"assetPath": "characters/bfPixelsDEAD",
+			"prefix": "RETRY CONFIRM",
+			"flipX": false,
+			"looped": false,
+			"name": "deathConfirm"
+		}
+	]
+}

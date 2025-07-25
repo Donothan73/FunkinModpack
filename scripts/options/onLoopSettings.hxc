@@ -1,0 +1,43 @@
+import funkin.modding.module.Module;
+import funkin.ui.options.PreferencesMenu;
+import funkin.ui.options.OptionsState;
+import flixel.FlxG;
+import Std;
+
+//Shout out to JugieNoob
+
+class FunkinOnALoopSettings extends Module {
+
+    var pagename = OptionsState.PageName;
+
+    function new (){
+        super("Funkin on a Loop Settings", 20);
+
+        if (FlxG.save.data.week6pixel == null)
+        {
+            FlxG.save.data.week6pixel = true;
+        }
+    }
+
+    function onStateChangeEnd(event)
+    {
+        super.onStateChangeEnd(event);
+
+            if (Std.isOfType(event.targetState, OptionsState))
+                {
+          
+                        var preferences = event.targetState.optionsCodex.pages.get("preferences");
+        
+        
+                        preferences.createPrefItemCheckbox('Pixel Perfect', 'Toggles the pixel perfect rendering for week 6, aligning every pixel of the stage.', function(value:Bool):Void
+                        {
+                        FlxG.save.data.week6pixel = value; 
+                        FlxG.save.flush();
+                        }
+                        , FlxG.save.data.week6pixel);
+            
+                }
+        
+      
+    }
+}

@@ -2,7 +2,7 @@
   "version": "1.0.0",
   "name": "Boyfriend",
   "ownedChars": ["bf", "bf-dark", "bf-car", "bf-pixel", "bf-christmas", "bf-holding-gf"],
-  "showUnownedChars": false,
+  "showUnownedChars": true,
   "unlocked": true,
   "freeplayStyle": "bf",
   "stickerPack": "standard-bf",

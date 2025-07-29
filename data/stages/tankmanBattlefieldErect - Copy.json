@@ -1,0 +1,202 @@
+{
+  "version": "1.0.2",
+  "name": "Tankman Battlefield [Erect]",
+  "directory": "week7",
+  "props": [
+    {
+      "assetPath": "erect/bgFlats",
+      "name": "bg",
+      "position": [
+        -985,
+        -805
+      ],
+      "scale": 1.15,
+      "scroll": [1, 1],
+      "zIndex": 10
+    },
+    {
+      "assetPath": "erect/barBottles",
+      "name": "bottles",
+      "position": [-46, 171],
+      "scale": [1.08, 1.15],
+      "scroll": [0.95, 1],
+      "zIndex": 11
+    },
+    {
+      "assetPath": "erect/barGrey",
+      "blend": "screen",
+      "name": "barLights",
+      "position": [
+        -92,
+        -2
+      ],
+      "scale": 1.15,
+      "scroll": [
+        0.95,
+        1
+      ],
+      "zIndex": 12
+    },
+    {
+      "alpha": 0.5,
+      "assetPath": "erect/barGrey",
+      "blend": "overlay",
+      "name": "barLights2",
+      "position": [
+        -92,
+        -2
+      ],
+      "scale": 1.15,
+      "scroll": [
+        0.95,
+        1
+      ],
+      "zIndex": 12
+    },
+    {
+      "assetPath": "erect/bar",
+      "name": "bar",
+      "position": [
+        -152,
+        -799
+      ],
+      "scale": 1.15,
+      "scroll": [
+        0.95,
+        1
+      ],
+      "zIndex": 13
+    },
+    {
+      "alpha": 0.5,
+      "assetPath": "erect/topBlend1",
+      "blend": "overlay",
+      "name": "overlay1",
+      "position": [
+        -68,
+        -63
+      ],
+      "scale": 1.15,
+      "scroll": [
+        0.9,
+        1
+      ],
+      "zIndex": 14
+    },
+    {
+      "alpha": 0.5,
+      "assetPath": "erect/topBlend2",
+      "blend": "overlay",
+      "name": "overlay2",
+      "position": [
+        -199,
+        -202
+      ],
+      "scale": 1.15,
+      "scroll": [
+        0.9,
+        1
+      ],
+      "zIndex": 14
+    },
+    {
+      "assetPath": "erect/vehicles",
+      "name": "vehicles",
+      "position": [
+        -1061,
+        -178
+      ],
+      "scale": 1.15,
+      "scroll": [
+        0.95,
+        1
+      ],
+      "zIndex": 15
+    },
+    {
+      "animType": "sparrow",
+      "animations": [
+        {
+          "frameRate": 24,
+          "looped": false,
+          "name": "sip",
+          "prefix": "tanksippingBaked instance 1"
+        },
+        {
+          "frameRate": 24,
+          "looped": false,
+          "name": "idle",
+          "prefix": "Tankmanidlebaked instance 1"
+        }
+      ],
+      "assetPath": "erect/sniper",
+      "name": "sniper",
+      "position": [
+        -127,
+        349
+      ],
+      "scale": 1.15,
+      "scroll": [
+        0.95,
+        1
+      ],
+      "startingAnimation": "idle",
+      "zIndex": 20
+    },
+    {
+      "alpha": 1,
+      "angle": 0,
+      "animType": "sparrow",
+      "animations": [
+        {
+          "frameRate": 24,
+          "looped": false,
+          "name": "idle",
+          "prefix": "BLTank2 instance 1"
+        }
+      ],
+      "assetPath": "erect/guy",
+      "blend": "",
+      "color": "#FFFFFF",
+      "danceEvery": 2,
+      "flipX": false,
+      "flipY": false,
+      "isPixel": false,
+      "name": "guy",
+      "position": [
+        1398,
+        407
+      ],
+      "scale": 1.15,
+      "scroll": [
+        0.95,
+        1
+      ],
+      "startingAnimation": "idle",
+      "zIndex": 20
+    },
+    {
+      "name": "tankBricks",
+      "assetPath": "erect/bricksGround",
+      "position": [465, 760],
+      "scroll": [1, 1],
+      "scale": [1.15, 1.15],
+      "zIndex": 101,
+      "flipX": true
+    }
+  ],
+  "characters": {
+    "bf": {
+      "zIndex": 100,
+      "position": [1340.5, 885],
+      "cameraOffsets": [-220, -100]
+    },
+    "dad": {
+      "zIndex": 100,
+      "position": [230.5, 996],
+      "cameraOffsets": [250, -100]
+    },
+    "gf": { "zIndex": 100, "position": [800.5, 775], "cameraOffsets": [0, 0] }
+  },
+  "cameraZoom": 0.65
+}

@@ -4,7 +4,7 @@ import funkin.ui.options.OptionsState;
 import flixel.FlxG;
 import Std;
 
-//Shout out to JugieNoob
+//Shout out to JugieNoob for the og code !!!
 
 class FunkinOnALoopSettings extends Module {
 
@@ -16,6 +16,11 @@ class FunkinOnALoopSettings extends Module {
         if (FlxG.save.data.week6pixel == null)
         {
             FlxG.save.data.week6pixel = true;
+        }
+
+        if (FlxG.save.data.freeplayCutscenes == null)
+        {
+            FlxG.save.data.freeplayCutscenes = true;
         }
     }
 
@@ -36,6 +41,13 @@ class FunkinOnALoopSettings extends Module {
                         }
                         , FlxG.save.data.week6pixel);
             
+                        preferences.createPrefItemCheckbox('Freeplay Cutscenes', 'Toggles cutscenes playing in a song while playing in Freeplay.', function(value:Bool):Void
+                        {
+                        FlxG.save.data.freeplayCutscenes = value; 
+                        FlxG.save.flush();
+                        }
+                        , FlxG.save.data.freeplayCutscenes);
+
                 }
         
       

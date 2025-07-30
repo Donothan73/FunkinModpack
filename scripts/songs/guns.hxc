@@ -1,0 +1,243 @@
+import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.math.FlxBasePoint;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
+import flixel.util.FlxTimer;
+import funkin.audio.FunkinSound;
+import funkin.Conductor;
+import funkin.graphics.adobeanimate.FlxAtlasSprite;
+import funkin.graphics.FunkinSprite;
+import funkin.modding.base.ScriptedFlxAtlasSprite;
+import funkin.play.cutscene.CutsceneType;
+import funkin.play.GameOverSubState;
+import funkin.play.PlayState;
+import funkin.play.PlayStatePlaylist;
+import funkin.play.song.Song;
+import funkin.play.stage.StageProp;
+import funkin.save.Save;
+import flixel.text.FlxText;
+import flixel.text.FlxTextBorderStyle;
+import funkin.util.TouchUtil;
+import funkin.ui.FullScreenScaleMode;
+
+// We have to use FlxBasePoint in scripts because FlxPoint is inlined and not available in scripts
+class GunsSong extends Song
+{
+  var hasPlayedCutscene:Bool = false;
+  var cutsceneSkipped:Bool = false;
+  var canSkipCutscene:Bool = false;
+  var shootSound:FunkinSound;
+
+  var tankCutscene:ScriptedFlxAtlasSprite;
+
+  var debugTesting:Bool = false;
+
+  var isMobilePauseButtonPressed:Bool = false;
+
+  function new()
+  {
+    super('guns');
+  }
+
+  public override function onCountdownStart(event:CountdownScriptEvent):Void
+  {
+    super.onCountdownStart(event);
+    trace(PlayState.instance.currentVariation);
+
+
+    // start the video cutscene and hide it so the other stuff can happen after
+    if (hasPlayedCutscene == false && FlxG.save.data.freeplayCutscenes == true)
+    {
+      event.cancel();
+      startCutscene();
+    }
+  }
+
+  function onSongRetry(event:ScriptEvent)
+  {
+    super.onSongRetry(event);
+  }
+
+  public override function isSongNew(currentDifficulty:String, currentVariation:String):Bool
+  {
+    return false;
+  }
+
+  public override function listAltInstrumentalIds(difficultyId:String, variationId:String):Array<String>
+  {
+    if (difficultyId == 'easy' || difficultyId == 'normal' || difficultyId == 'hard')
+    {
+      var hasBeatenPicoMix = Save.instance.hasBeatenSong(this.id, null, 'pico');
+
+      switch (variationId)
+      {
+        case 'pico':
+          // return hasBeatenPicoMix ? [''] : [];
+          // No Pico mix on BF instrumental, sorry!
+          return [];
+        default:
+          return hasBeatenPicoMix ? ['pico'] : [];
+      }
+    }
+  }
+
+  var skipText:FlxText;
+
+  function startCutscene()
+  {
+    skipText = new FlxText(936 * FullScreenScaleMode.wideScale.x, 618 * FullScreenScaleMode.wideScale.y, 0,
+      'Skip [ ' + PlayState.instance.controls.getDialogueNameFromToken("CUTSCENE_ADVANCE", true) + ' ]', 20);
+    if (FlxG.onMobile)
+    {
+      skipText.text = 'Skip [Pause Button]';
+      skipText.x -= 136;
+    }
+    skipText.setFormat(Paths.font('vcr.ttf'), 40, 0xFFFFFFFF, "right", FlxTextBorderStyle.OUTLINE, 0xFF000000);
+    skipText.scrollFactor.set();
+    skipText.borderSize = 2;
+    skipText.alpha = 0;
+    PlayState.instance.currentStage.add(skipText);
+
+    skipText.cameras = [PlayState.instance.camCutscene];
+
+    PlayState.instance.currentStage.refresh(); // Apply z-index.
+
+
+    PlayState.instance.currentStage.getDad().visible = false;
+    //PlayState.instance.currentStage.getDad().alpha = 0.5;
+    //debug placement
+    var tankCutscene:ScriptedFlxAtlasSprite = ScriptedFlxAtlasSprite.init('DadShootsSprite', 0, 0);
+    tankCutscene.x = tankCutscene.x - 205;
+    tankCutscene.y = tankCutscene.y + 190;
+    tankCutscene.zIndex = PlayState.instance.currentStage.getDad().zIndex;
+    PlayState.instance.currentStage.add(tankCutscene);
+    PlayState.instance.currentStage.refresh(); // Apply z-index.
+    tankCutscene.scriptCall('playCutscene');
+
+    var dialogue:FunkinSound;
+    dialogue = FunkinSound.load(Paths.sound('tankSong2'), 1);
+    dialogue.volume = 1;
+    dialogue.play(false);
+
+    FlxTween.tween(PlayState.instance.camHUD, {alpha: 0}, 1);
+    PlayState.instance.tweenCameraZoom(0.85, 2, true, FlxEase.quadInOut);
+
+    PlayState.instance.isInCutscene = true;
+    hasPlayedCutscene = true;
+
+    PlayState.instance.currentStage.getBoyfriend().danceEvery = 0;
+    PlayState.instance.currentStage.getDad().danceEvery = 0;
+    PlayState.instance.currentStage.getGirlfriend().danceEvery = 0;
+
+
+    //Bf flexes too soon
+    new FlxTimer().start(1.3, function(tmr) 
+      {
+      var bf =  PlayState.instance.currentStage.getBoyfriend();
+      if (!cutsceneSkipped) PlayState.instance.currentStage.getBoyfriend().playAnimation('hey', true, true);
+      if (!cutsceneSkipped) PlayState.instance.tweenCameraToPosition(bf.x - 160, bf.y + 80, 8, FlxEase.expoOut);
+    });
+
+    //gets insulted
+    new FlxTimer().start(3.0, function(tmr) 
+      {
+      if (!cutsceneSkipped) PlayState.instance.currentStage.getBoyfriend().playAnimation('singDOWNmiss', true, true);
+    });
+
+    //gf cries
+    new FlxTimer().start(5.0, function(tmr) 
+      {
+      var bf =  PlayState.instance.currentStage.getBoyfriend();
+      if (!cutsceneSkipped) PlayState.instance.currentStage.getGirlfriend().playAnimation('sad', true, true);
+      if (!cutsceneSkipped) PlayState.instance.tweenCameraToPosition(bf.x - 160, bf.y - 80, 2, FlxEase.expoOut);
+      });
+
+      //cutscene over go to guns song now
+      new FlxTimer().start(11.0, function(tmr) 
+      {
+      if (!cutsceneSkipped) 
+      {
+        var bf =  PlayState.instance.currentStage.getBoyfriend();
+        if (!cutsceneSkipped) PlayState.instance.tweenCameraToPosition(bf.x - 160, bf.y + 80, 2, FlxEase.expoOut);
+        PlayState.instance.isInCutscene = false;
+        PlayState.instance.currentStage.getDad().visible = true;
+        tankCutscene.visible = false;
+        tankCutscene.kill();
+        dialogue.stop();
+        FlxTween.tween(skipText, {alpha: 0}, 0.5, {ease: FlxEase.quadOut});
+        cutsceneSkipped = true;
+        canSkipCutscene = false;
+        FlxTween.tween(PlayState.instance.camHUD, {alpha: 1}, 1);
+        new FlxTimer().start(0.5, function(tmr) {
+        PlayState.instance.startCountdown();
+        PlayState.instance.tweenCameraZoom(0.9, 1, true, FlxEase.quadInOut);
+        PlayState.instance.currentStage.getBoyfriend().danceEvery = 1;
+        PlayState.instance.currentStage.getDad().danceEvery = 1;
+        PlayState.instance.currentStage.getGirlfriend().danceEvery = 1;
+      });
+      }
+    });
+
+  }
+
+  function onUpdate(event:UpdateScriptEvent)
+  {
+    super.onUpdate(event);
+
+    if (FlxG.onMobile)
+    {
+      isMobilePauseButtonPressed = TouchUtil.overlapsComplex(PlayState.instance.pauseButton) && TouchUtil.justPressed;
+    }
+
+    if (PlayState.instance.isInCutscene)
+    {
+      if ((PlayState.instance.controls.CUTSCENE_ADVANCE || isMobilePauseButtonPressed) && cutsceneSkipped == false)
+      {
+        if (canSkipCutscene == false)
+        {
+          trace('cant skip yet!');
+          FlxTween.tween(skipText, {alpha: 1}, 0.5, {ease: FlxEase.quadOut});
+          new FlxTimer().start(0.5, _ -> {
+            canSkipCutscene = true;
+            trace('can skip!');
+          });
+        }
+      }
+    }
+
+    if ((PlayState.instance.controls.CUTSCENE_ADVANCE || isMobilePauseButtonPressed) && canSkipCutscene)
+    {
+        var bf =  PlayState.instance.currentStage.getBoyfriend();
+        if (!cutsceneSkipped) PlayState.instance.tweenCameraToPosition(bf.x - 160, bf.y + 80, 2, FlxEase.expoOut);
+        PlayState.instance.isInCutscene = false;
+        PlayState.instance.currentStage.getDad().visible = true;
+        tankCutscene.visible = false;
+        tankCutscene.kill();
+        dialogue.stop();
+        FlxTween.tween(skipText, {alpha: 0}, 0.5, {ease: FlxEase.quadOut});
+        cutsceneSkipped = true;
+        canSkipCutscene = false;
+        FlxTween.tween(PlayState.instance.camHUD, {alpha: 1}, 1);
+        new FlxTimer().start(0.5, function(tmr) 
+        {
+          PlayState.instance.startCountdown();
+          PlayState.instance.tweenCameraZoom(0.9, 1, true, FlxEase.quadInOut);
+          PlayState.instance.currentStage.getBoyfriend().danceEvery = 1;
+          PlayState.instance.currentStage.getDad().danceEvery = 1;
+          PlayState.instance.currentStage.getGirlfriend().danceEvery = 1;
+        });
+    }
+  }
+
+  /**
+   * Replay the cutscene after leaving the song.
+   */
+  function onCreate(event:ScriptEvent):Void
+  {
+    super.onCreate(event);
+    cutsceneSkipped = false;
+    canSkipCutscene = false;
+    hasPlayedCutscene = false;
+  }
+}

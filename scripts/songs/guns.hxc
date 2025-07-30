@@ -45,12 +45,19 @@ class GunsSong extends Song
     super.onCountdownStart(event);
     trace(PlayState.instance.currentVariation);
 
-
-    // start the video cutscene and hide it so the other stuff can happen after
+    // start cutscene if it hasnt played and is story mode
+    if (hasPlayedCutscene == false && PlayStatePlaylist.isStoryMode)
+    {
+      event.cancel();
+      startCutscene();
+      hasPlayedCutscene = true;
+    }
+    // start cutscene if it hasnt played and player wants freeplay cutscenes
     if (hasPlayedCutscene == false && FlxG.save.data.freeplayCutscenes == true)
     {
       event.cancel();
       startCutscene();
+      hasPlayedCutscene = true;
     }
   }
 

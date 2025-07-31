@@ -194,7 +194,7 @@ class StressSong extends Song
         PlayState.instance.currentStage.getGirlfriend().visible = true;
         PlayState.instance.currentStage.getBoyfriend().visible = true;
         tankCutscene.kill();
-        girlCutscene.kill();
+        //girlCutscene.kill();
         FlxTween.tween(skipText, {alpha: 0}, 0.5, {ease: FlxEase.quadOut});
         cutsceneSkipped = true;
         canSkipCutscene = false;

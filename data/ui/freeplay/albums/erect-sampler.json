@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
-  "name": "Ugh",
-  "artists": ["Kawai Sprite"],
-  "albumArtAsset": "freeplay/albumRoll/ugh",
-  "albumTitleAsset": "freeplay/albumRoll/ugh-text"
+  "name": "Erect Sampler",
+  "artists": ["Kawai Sprite", "Kohta Takahashi", "Saruky"],
+  "albumArtAsset": "freeplay/albumRoll/erect-sampler",
+  "albumTitleAsset": "freeplay/albumRoll/erect-sampler-text"
 }

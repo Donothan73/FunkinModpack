@@ -1,0 +1,7 @@
+{
+  "version": "1.0.0",
+  "name": "Bopeebo",
+  "artists": ["Kawai Sprite"],
+  "albumArtAsset": "freeplay/albumRoll/bopeebo",
+  "albumTitleAsset": "freeplay/albumRoll/bopeebo-text"
+}

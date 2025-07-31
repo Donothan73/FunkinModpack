@@ -2,6 +2,6 @@
   "version": "1.0.0",
   "name": "Erect Sampler",
   "artists": ["Kawai Sprite", "Kohta Takahashi", "Saruky"],
-  "albumArtAsset": "freeplay/albumRoll/erect-sampler",
-  "albumTitleAsset": "freeplay/albumRoll/erect-sampler-text"
+  "albumArtAsset": "freeplay/albumRoll/erectSampler",
+  "albumTitleAsset": "freeplay/albumRoll/erectSampler-text"
 }

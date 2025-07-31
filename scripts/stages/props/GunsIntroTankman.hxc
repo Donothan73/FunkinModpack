@@ -8,12 +8,12 @@ import flixel.FlxG;
 
 // a unique object for santa getting KILLED
 
-class DadShootsSprite extends FlxAtlasSprite
+class GunsIntroTankman extends FlxAtlasSprite
 {
 
   public function new(x:Float, y:Float)
   {
-    super(x, y, Paths.animateAtlas("tightBars", "week7"), {
+    super(x, y, Paths.animateAtlas("cutscene/tankmanPackaged", "week7"), {
       FrameRate: 24.0,
       Reversed: false,
       // ?OnComplete:Void -> Void,

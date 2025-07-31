@@ -27,6 +27,7 @@ class GunsSong extends Song
   var hasPlayedCutscene:Bool = false;
   var cutsceneSkipped:Bool = false;
   var canSkipCutscene:Bool = false;
+  var distortoMus:FunkinSound;
   var shootSound:FunkinSound;
 
   var tankCutscene:ScriptedFlxAtlasSprite;
@@ -46,14 +47,14 @@ class GunsSong extends Song
     trace(PlayState.instance.currentVariation);
 
     // start cutscene if it hasnt played and is story mode
-    if (hasPlayedCutscene == false && PlayStatePlaylist.isStoryMode)
+    if (hasPlayedCutscene == false && PlayStatePlaylist.isStoryMode && PlayState.instance.currentVariation == 'default')
     {
       event.cancel();
       startCutscene();
       hasPlayedCutscene = true;
     }
     // start cutscene if it hasnt played and player wants freeplay cutscenes
-    if (hasPlayedCutscene == false && FlxG.save.data.freeplayCutscenes == true)
+    if (hasPlayedCutscene == false && FlxG.save.data.freeplayCutscenes == true && PlayState.instance.currentVariation == 'default')
     {
       event.cancel();
       startCutscene();
@@ -114,13 +115,18 @@ class GunsSong extends Song
     PlayState.instance.currentStage.getDad().visible = false;
     //PlayState.instance.currentStage.getDad().alpha = 0.5;
     //debug placement
-    var tankCutscene:ScriptedFlxAtlasSprite = ScriptedFlxAtlasSprite.init('DadShootsSprite', 0, 0);
-    tankCutscene.x = tankCutscene.x - 205;
-    tankCutscene.y = tankCutscene.y + 190;
+    var tankCutscene:ScriptedFlxAtlasSprite = ScriptedFlxAtlasSprite.init('GunsIntroTankman', 0, 0);
+    tankCutscene.x = tankCutscene.x + 432;
+    tankCutscene.y = tankCutscene.y + 545;
     tankCutscene.zIndex = PlayState.instance.currentStage.getDad().zIndex;
     PlayState.instance.currentStage.add(tankCutscene);
     PlayState.instance.currentStage.refresh(); // Apply z-index.
     tankCutscene.scriptCall('playCutscene');
+
+    distortoMus = FunkinSound.load(Paths.music('DISTORTO'));
+    distortoMus.play(false);
+    distortoMus.looped = true;
+    distortoMus.volume = 0.5;
 
     var dialogue:FunkinSound;
     dialogue = FunkinSound.load(Paths.sound('tankSong2'), 1);
@@ -153,11 +159,11 @@ class GunsSong extends Song
     });
 
     //gf cries
-    new FlxTimer().start(5.0, function(tmr) 
+    new FlxTimer().start(4.0, function(tmr) 
       {
       var bf =  PlayState.instance.currentStage.getBoyfriend();
       if (!cutsceneSkipped) PlayState.instance.currentStage.getGirlfriend().playAnimation('sad', true, true);
-      if (!cutsceneSkipped) PlayState.instance.tweenCameraToPosition(bf.x - 160, bf.y - 80, 2, FlxEase.expoOut);
+      if (!cutsceneSkipped) PlayState.instance.tweenCameraToPosition(bf.x - 180, bf.y - 80, 1, FlxEase.expoOut);
       });
 
       //cutscene over go to guns song now
@@ -172,6 +178,7 @@ class GunsSong extends Song
         tankCutscene.visible = false;
         tankCutscene.kill();
         dialogue.stop();
+        distortoMus.stop();
         FlxTween.tween(skipText, {alpha: 0}, 0.5, {ease: FlxEase.quadOut});
         cutsceneSkipped = true;
         canSkipCutscene = false;
@@ -221,6 +228,7 @@ class GunsSong extends Song
         PlayState.instance.currentStage.getDad().visible = true;
         tankCutscene.visible = false;
         tankCutscene.kill();
+        distortoMus.stop();
         dialogue.stop();
         FlxTween.tween(skipText, {alpha: 0}, 0.5, {ease: FlxEase.quadOut});
         cutsceneSkipped = true;

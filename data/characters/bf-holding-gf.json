@@ -1,0 +1,172 @@
+{
+  "version": "1.0.0",
+  "name": "Boyfriend (Holding GF)",
+  "assetPath": "characters/bfAndGF",
+  "flipX": true,
+  "renderType": "multisparrow",
+  "healthIcon": {
+    "id": "bf"
+  },
+  "animations": [
+    {
+      "name": "singUP-gf",
+      "prefix": "BF Dead with GF Loop",
+      "assetPath": "characters/bfHoldingGF-DEAD",
+      "offsets": [0, 0]
+    },
+    {
+      "name": "firstDeath-gfs",
+      "prefix": "BF Dies with GF",
+      "assetPath": "characters/bfHoldingGF-DEAD",
+      "offsets": [37, 14]
+    },
+    {
+      "name": "deathConfirm-gf",
+      "prefix": "RETRY confirm holding gf",
+      "assetPath": "characters/bfHoldingGF-DEAD",
+      "offsets": [37, 28]
+    },
+    {
+      "name": "deathLoop-gf",
+      "prefix": "BF Dead with GF Loop",
+      "looped": true,
+      "assetPath": "characters/bfHoldingGF-DEAD",
+      "offsets": [37, -3]
+    },
+    {
+      "name": "idle",
+      "assetPath": "characters/BOYFRIEND",
+      "prefix": "BF idle dance",
+      "offsets": [-5, 0]
+    },
+    {
+      "name": "idle-gf",
+      "prefix": "BF idle dance w gf0",
+      "offsets": [0, 0]
+    },
+    {
+      "name": "singLEFT-gf",
+      "prefix": "BF NOTE LEFT0",
+      "offsets": [12, 7]
+    },
+    {
+      "name": "singDOWN-gf",
+      "prefix": "BF NOTE DOWN0",
+      "offsets": [-10, -10]
+    },
+    {
+      "name": "singUP-gf",
+      "prefix": "BF NOTE UP0",
+      "offsets": [-29, 10]
+    },
+    {
+      "name": "singRIGHT-gf",
+      "prefix": "BF NOTE RIGHT0",
+      "offsets": [-41, 23]
+    },
+    {
+      "name": "singLEFTmiss-gf",
+      "prefix": "BF NOTE LEFT MISS",
+      "offsets": [12, 7]
+    },
+    {
+      "name": "singDOWNmiss-gf",
+      "prefix": "BF NOTE DOWN MISS",
+      "offsets": [-10, -10]
+    },
+    {
+      "name": "singUPmiss-gf",
+      "prefix": "BF NOTE UP MISS",
+      "offsets": [-29, 10]
+    },
+    {
+      "name": "singRIGHTmiss-gf",
+      "prefix": "BF NOTE RIGHT MISS",
+      "offsets": [-41, 23]
+    },
+    {
+      "name": "bfCatch",
+      "prefix": "BF catches GF",
+      "offsets": [0, 0]
+    },
+    {
+      "name": "singLEFT",
+      "assetPath": "characters/BOYFRIEND",
+      "prefix": "BF NOTE LEFT0",
+      "offsets": [12, -6]
+    },
+    {
+      "name": "singDOWN",
+      "assetPath": "characters/BOYFRIEND",
+      "prefix": "BF NOTE DOWN0",
+      "offsets": [-10, -50]
+    },
+    {
+      "name": "singUP",
+      "assetPath": "characters/BOYFRIEND",
+      "prefix": "BF NOTE UP0",
+      "offsets": [-29, 27]
+    },
+    {
+      "name": "singRIGHT",
+      "assetPath": "characters/BOYFRIEND",
+      "prefix": "BF NOTE RIGHT0",
+      "offsets": [-38, -7]
+    },
+    {
+      "name": "singLEFTmiss",
+      "assetPath": "characters/BOYFRIEND",
+      "prefix": "BF NOTE LEFT MISS",
+      "offsets": [12, 24]
+    },
+    {
+      "name": "singDOWNmiss",
+      "assetPath": "characters/BOYFRIEND",
+      "prefix": "BF NOTE DOWN MISS",
+      "offsets": [-11, -19]
+    },
+    {
+      "name": "singUPmiss",
+      "assetPath": "characters/BOYFRIEND",
+      "prefix": "BF NOTE UP MISS",
+      "offsets": [-29, 27]
+    },
+    {
+      "name": "singRIGHTmiss",
+      "assetPath": "characters/BOYFRIEND",
+      "prefix": "BF NOTE RIGHT MISS",
+      "offsets": [-30, 21]
+    },
+    {
+      "name": "dodge-bf",
+      "assetPath": "characters/BOYFRIEND",
+      "prefix": "boyfriend dodge",
+      "offsets": [0, 0]
+    },
+    {
+      "name": "hey-bf",
+      "assetPath": "characters/BOYFRIEND",
+      "prefix": "BF HEY!!",
+      "offsets": [7, 4]
+    },
+        {
+      "name": "firstDeath",
+      "assetPath": "characters/BOYFRIEND",
+      "prefix": "BF dies",
+      "offsets": [-37, 11]
+    },
+    {
+      "name": "deathLoop",
+      "assetPath": "characters/BOYFRIEND",
+      "prefix": "BF Dead Loop",
+      "looped": true,
+      "offsets": [-37, 5]
+    },
+    {
+      "name": "deathConfirm",
+      "assetPath": "characters/BOYFRIEND",
+      "prefix": "BF Dead confirm",
+      "offsets": [-37, 69]
+    }
+  ]
+}

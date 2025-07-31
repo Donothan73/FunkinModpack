@@ -100,6 +100,9 @@ class TankmanBattlefieldErectStage extends Stage
 						aBotShader.distance = 11;
 						aBotShader.angle = 90;
 						aBotShader.strength = 1.15;
+            aBotShader.loadAltMask('assets/shared/images/characters/abot/aBotSystem_Mask.png');
+            aBotShader.maskThreshold = 0.4;
+            aBotShader.useAltMask = true;
 					
 						getGirlfriend().scriptCall('addShaderAbot', [aBotShader]);
 

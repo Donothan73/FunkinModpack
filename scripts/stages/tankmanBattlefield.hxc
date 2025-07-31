@@ -3,6 +3,8 @@ import flixel.math.FlxAngle;
 import funkin.play.PlayState;
 import funkin.play.stage.Stage;
 import flixel.addons.display.FlxTiledSprite;
+import funkin.graphics.FunkinSprite;
+import funkin.Paths;
 
 class TankmanBattlefieldStage extends Stage
 {
@@ -34,6 +36,8 @@ class TankmanBattlefieldStage extends Stage
 
     tankAngle = FlxG.random.int(-90, 45);
     tankSpeed = FlxG.random.float(5, 7);
+
+    FunkinSprite.cacheTexture(Paths.animateAtlas('tankmanPackaged'));
   }
 
   function onUpdate(event:UpdateScriptEvent):Void

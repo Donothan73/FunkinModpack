@@ -157,9 +157,12 @@ class StressSong extends Song
     PlayState.instance.tweenCameraZoom(0.85, 5, true, FlxEase.quadInOut);
     if (!cutsceneSkipped) PlayState.instance.tweenCameraToPosition(645, 490, 5, FlxEase.expoOut);
 
-    StressCutsceneSnd = FunkinSound.load(Paths.sound('stressCutscene'), 1);
-    StressCutsceneSnd.volume = 1;
-    StressCutsceneSnd.play(false);
+    new FlxTimer().start(0.5, function(tmr) 
+    {
+      StressCutsceneSnd = FunkinSound.load(Paths.sound('stressCutscene'), 1);
+      StressCutsceneSnd.volume = 1;
+      StressCutsceneSnd.play(false);
+    });
 
     //create tankman and start animation
     PlayState.instance.currentStage.getDad().visible = false;

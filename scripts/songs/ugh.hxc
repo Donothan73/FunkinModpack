@@ -50,7 +50,7 @@ class UghSong extends Song
     PlayState.instance.cameraFollowPoint.setPosition(675, -3575);
     PlayState.instance.camCutscene.fade(0xFF000000, 0.5, true, null, true);
     introSound = FunkinSound.load(Paths.sound('ughIntroSnd'), 1);
-    introSound.volume = 0.75;
+    introSound.volume = 1.0;
     canSkipCutscene = true;
     introSound.play(false);
     PlayState.instance.isInCutscene = true;
@@ -64,11 +64,13 @@ class UghSong extends Song
     if (hasPlayedCutscene == false && PlayStatePlaylist.isStoryMode && PlayState.instance.currentVariation == 'default')
     {
     introCameraShit();
+    FunkinSprite.cacheTexture(Paths.animateAtlas('tankmanPackaged'));
     }
 
     if (hasPlayedCutscene == false && FlxG.save.data.freeplayCutscenes == true && PlayState.instance.currentVariation == 'default')
     {
     introCameraShit();
+    FunkinSprite.cacheTexture(Paths.animateAtlas('tankmanPackaged'));
     }
   }
 
@@ -149,18 +151,22 @@ class UghSong extends Song
       if (!cutsceneSkipped) PlayState.instance.tweenCameraToPosition(dad.x + 675, dad.y + 150, 11.0, FlxEase.expoOut);
       if (!cutsceneSkipped) PlayState.instance.currentStage.getDad().visible = true;
     });
-    if (!cutsceneSkipped) new FlxTimer().start(6.0, function(tmr) {
-    
 
     if (!cutsceneSkipped) PlayState.instance.currentStage.getDad().visible = false;
-    //PlayState.instance.currentStage.getDad().alpha = 0.5;
-    //debug placement
     if (!cutsceneSkipped) var tankCutscene:ScriptedFlxAtlasSprite = ScriptedFlxAtlasSprite.init('UghsIntroTankman', 0, 0);
     if (!cutsceneSkipped) tankCutscene.x = tankCutscene.x + 432;
     if (!cutsceneSkipped) if (!cutsceneSkipped) tankCutscene.y = tankCutscene.y + 545;
     if (!cutsceneSkipped) tankCutscene.zIndex = PlayState.instance.currentStage.getDad().zIndex;
     if (!cutsceneSkipped) PlayState.instance.currentStage.add(tankCutscene);
     if (!cutsceneSkipped) PlayState.instance.currentStage.refresh(); // Apply z-index.
+
+
+    if (!cutsceneSkipped) new FlxTimer().start(6.0, function(tmr) {
+    
+
+    if (!cutsceneSkipped) PlayState.instance.currentStage.getDad().visible = false;
+    //PlayState.instance.currentStage.getDad().alpha = 0.5;
+    //debug placement
     if (!cutsceneSkipped) tankCutscene.scriptCall('playCutscene');
     if (!cutsceneSkipped) var dad =  PlayState.instance.currentStage.getDad();
     if (!cutsceneSkipped) PlayState.instance.tweenCameraToPosition(dad.x + 500, dad.y + 150, 2.5, FlxEase.expoOut);
@@ -218,17 +224,17 @@ class UghSong extends Song
         dialogue.stop();
         FlxTween.tween(skipText, {alpha: 0}, 0.5, {ease: FlxEase.quadOut});
         cutsceneSkipped = true;
-        distortoMus.stop();
+        if (distortoMus != null) distortoMus.stop();
         canSkipCutscene = false;
         FlxTween.tween(PlayState.instance.camHUD, {alpha: 1}, 1);
         new FlxTimer().start(0.5, function(tmr) {
         PlayState.instance.startCountdown();
-        distortoMus.stop();
-        distortoMus.volume = 0;
+        if (distortoMus != null) distortoMus.stop();
+        if (distortoMus != null) distortoMus.volume = 0;
         PlayState.instance.tweenCameraZoom(0.9, 1, true, FlxEase.quadInOut);
         PlayState.instance.currentStage.getBoyfriend().danceEvery = 1;
         PlayState.instance.currentStage.getDad().danceEvery = 1;
-        distortoMus.stop();
+        if (distortoMus != null) distortoMus.stop();
         PlayState.instance.currentStage.getGirlfriend().danceEvery = 1;
       });
       }

@@ -174,13 +174,13 @@ class StressSong extends Song
     //create purple gf and start animation
     PlayState.instance.currentStage.getGirlfriend().visible = false;
     //PlayState.instance.currentStage.getGirlfriend().alpha = 0.5;
-    var girlCutscene:ScriptedFlxAtlasSprite = ScriptedFlxAtlasSprite.init('StressIntroGirlfriend', 0, 0);
-    girlCutscene.x = - 525;
-    girlCutscene.y = - 375;
-    girlCutscene.zIndex = PlayState.instance.currentStage.getGirlfriend().zIndex;
-    PlayState.instance.currentStage.add(girlCutscene);
-    PlayState.instance.currentStage.refresh(); // Apply z-index.
-    girlCutscene.scriptCall('playCutscene');
+    //var girlCutscene:ScriptedFlxAtlasSprite = ScriptedFlxAtlasSprite.init('StressIntroGirlfriend', 0, 0);
+   // girlCutscene.x = - 525;
+    //girlCutscene.y = - 375;
+   // girlCutscene.zIndex = PlayState.instance.currentStage.getGirlfriend().zIndex;
+   // PlayState.instance.currentStage.add(girlCutscene);
+   // PlayState.instance.currentStage.refresh(); // Apply z-index.
+   // girlCutscene.scriptCall('playCutscene');
 
       //cutscene over. let's stress
       new FlxTimer().start(35.0, function(tmr) 

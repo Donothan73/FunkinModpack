@@ -32,7 +32,7 @@ class UghsIntroTankman extends FlxAtlasSprite
     this.onAnimationComplete.add(onFinishAnim);
 
     //Tankman Continues
-    new FlxTimer().start(4.5, function(tmr) 
+    new FlxTimer().start(19, function(tmr) 
       {
         this.playAnimation("TANK TALK 1 P2", false, false, false, 0);
         this.onAnimationComplete.add(onFinishAnim);

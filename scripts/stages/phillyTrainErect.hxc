@@ -584,7 +584,7 @@ class PhillyTrainErectStage extends Stage
       skipCutscene();
       trace('skipped');
     }
-
+//
     if (cutsceneConductor != null && cutsceneMusic != null)
     {
       cutsceneConductor.update(cutsceneMusic.time);

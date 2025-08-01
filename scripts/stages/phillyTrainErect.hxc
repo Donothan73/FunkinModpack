@@ -10,6 +10,7 @@ import funkin.play.PlayState;
 import funkin.play.stage.Stage;
 import funkin.play.character.CharacterType;
 import funkin.graphics.adobeanimate.FlxAtlasSprite;
+import flixel.addons.display.FlxBackdrop;
 import funkin.modding.base.ScriptedFlxAtlasSprite;
 import flixel.util.FlxTimer;
 import flixel.util.FlxTimerManager;
@@ -456,14 +457,13 @@ class PhillyTrainErectStage extends Stage
         mist1 = new FlxBackdrop(Paths.image('phillyStreets/phillySmog', 'weekend1'), 0x01);
 			  mist1.setPosition(-650, -100);
 			  mist1.scrollFactor.set(1.1, 1.1);
-			  mist1.zIndex = 400;
-   			mist1.blend = 0;
+			  mist1.zIndex = 49;
+   			//mist1.blend = 0;
 			  mist1.color = 0xFF313E3F;
-			  mist1.alpha = 0.4;
-			  mist1.velocity.x = 1700;
+			  mist1.alpha = 1;
 
-        scrollingSky = new FlxTiledSprite(Paths.image('phillyStreets/phillySkybox', 'weekend1'), 3153, 798, true, false);
-			  scrollingSky.setPosition(-650, -445);
+        scrollingSky = new FlxTiledSprite(Paths.image('phillyStreets/phillySkybox', 'weekend1'), 3153, 718, true, false);
+			  scrollingSky.setPosition(-650, -345);
 			  scrollingSky.scrollFactor.set(0, 0);
 			  scrollingSky.zIndex = 14;
 			  scrollingSky.scale.set(0.5, 0.5);
@@ -472,6 +472,7 @@ class PhillyTrainErectStage extends Stage
 
 
 			  PlayState.instance.currentStage.add(scrollingSky);
+        PlayState.instance.currentStage.add(mist1);
 			  PlayState.instance.currentStage.refresh(); // Apply z-index.
 
         scrollingSky.shader = colorShader;

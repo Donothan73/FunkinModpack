@@ -26,6 +26,16 @@ import funkin.util.HapticUtil;
 import funkin.ui.FullScreenScaleMode;
 import funkin.graphics.shaders.DropShadowScreenspace;
 import flixel.util.FlxColor;
+import funkin.graphics.shaders.OverlayBlend;
+import funkin.graphics.shaders.RuntimeRainShader;
+import funkin.modding.base.ScriptedFlxRuntimeShader;
+import openfl.filters.BlurFilter;
+import openfl.filters.ShaderFilter;
+import funkin.util.FlxTweenUtil;
+import flixel.addons.display.FlxTiledSprite;
+import flixel.math.FlxAngle;
+import StringTools;
+import flixel.math.FlxMath;
 
 class PhillyTrainErectStage extends Stage
 {
@@ -36,6 +46,15 @@ class PhillyTrainErectStage extends Stage
   }
 
   var LIGHT_COUNT:Int = 5;
+
+  var rainShader:RuntimeRainShader = new RuntimeRainShader();
+	var rainShaderFilter:ShaderFilter;
+	var blurFilter:BlurFilter = new BlurFilter(6, 6);
+
+	// as song goes on, these are used to make the rain more intense throught the song
+	// these values are also used for the rain sound effect volume intensity!
+	var rainShaderStartIntensity:Float;
+	var rainShaderEndIntensity:Float;
 
   var lightShader:FlxRuntimeShader;
   var trainSound:FunkinSound;
@@ -64,6 +83,28 @@ class PhillyTrainErectStage extends Stage
     canSkipCutscene = false;
     playerShoots = false;
     explode = true;
+
+		rainShader.scale = FlxG.height / 400; // adjust this value so that the rain looks nice
+
+		FlxG.console.registerObject("rainShader", rainShader);
+		switch (PlayState.instance.currentSong.id)
+		{
+			case "pico":
+				rainShaderStartIntensity = 0.4;
+				rainShaderEndIntensity = 0.6;
+			case "philly-nice":
+				rainShaderStartIntensity = 0.6;
+				rainShaderEndIntensity = 0.7;
+			case "blammed":
+				rainShaderStartIntensity = 0.7;
+				rainShaderEndIntensity = 0.8;
+		}
+
+		rainShader.intensity = rainShaderStartIntensity;
+
+		rainShaderFilter = new ShaderFilter(rainShader);
+		FlxG.camera.filters = [rainShaderFilter];
+
   }
 
   public override function onCountdownStart(event:CountdownScriptEvent):Void
@@ -397,6 +438,43 @@ class PhillyTrainErectStage extends Stage
     	switch(PlayState.instance.currentVariation)
       {
     	  case 'pico':
+
+        rainShader.rainColor = 0xFF0B2B33;
+
+        colorShader = new AdjustColorShader();
+        colorShader.hue = 6;
+        colorShader.saturation = -36;
+        colorShader.contrast = 0;
+        colorShader.brightness = -15;
+
+        getNamedProp('train').shader = colorShader;
+        getNamedProp('city').shader = colorShader;
+        getNamedProp('behindTrain').shader = colorShader;
+        getNamedProp('street').shader = colorShader;
+        getNamedProp('hatch').shader = colorShader;
+
+        mist1 = new FlxBackdrop(Paths.image('phillyStreets/phillySmog', 'weekend1'), 0x01);
+			  mist1.setPosition(-650, -100);
+			  mist1.scrollFactor.set(1.1, 1.1);
+			  mist1.zIndex = 400;
+   			mist1.blend = 0;
+			  mist1.color = 0xFF313E3F;
+			  mist1.alpha = 0.4;
+			  mist1.velocity.x = 1700;
+
+        scrollingSky = new FlxTiledSprite(Paths.image('phillyStreets/phillySkybox', 'weekend1'), 3153, 798, true, false);
+			  scrollingSky.setPosition(-650, -445);
+			  scrollingSky.scrollFactor.set(0, 0);
+			  scrollingSky.zIndex = 14;
+			  scrollingSky.scale.set(0.5, 0.5);
+			  scrollingSky.alpha = 0.5;
+			  //scrollingSky.blend = 12;
+
+
+			  PlayState.instance.currentStage.add(scrollingSky);
+			  PlayState.instance.currentStage.refresh(); // Apply z-index.
+
+        scrollingSky.shader = colorShader;
         
         default:
       }
@@ -427,6 +505,22 @@ class PhillyTrainErectStage extends Stage
         getBoyfriend().shader.color = lightsColor;
         getDad().shader.color = lightsColor;
         getGirlfriend().shader.color = lightsColor;
+
+        if (FlxG.sound.music != null)
+			  {
+			    var remappedIntensityValue:Float = FlxMath.remapToRange(Conductor.instance.songPosition, 0, FlxG.sound.music.length, rainShaderStartIntensity, rainShaderEndIntensity);
+			    rainShader.intensity = remappedIntensityValue*1.15;
+			    rainShader.updateViewInfo(FlxG.width, FlxG.height, FlxG.camera);
+			    rainShader.update(event.elapsed);
+			  }
+			  else
+			  {
+			    rainShader.intensity = rainShaderStartIntensity*1.15;
+			    rainShader.updateViewInfo(FlxG.width, FlxG.height, FlxG.camera);
+			    rainShader.update(event.elapsed);
+			  }
+
+        if(scrollingSky != null) scrollingSky.scrollX += FlxG.elapsed * 66;
       }
       
     //aBotShader.distance = shaderInput;
@@ -499,15 +593,16 @@ class PhillyTrainErectStage extends Stage
     	case 'pico':
         var rim = new DropShadowShader();
         rim.color = lightsColor;
-        rim.setAdjustColor(-5, -26, 0, -16);	//brightness -> hue -> contrast -> saturation
+        rim.setAdjustColor(-15, -26, 0, -36);	//brightness -> hue -> contrast -> saturation
         character.shader = rim;
         rim.attachedSprite = character;
-        rim.angle = 90;
+        
         rim.strength = 1.05;
 
         switch (charType)
         {
         case CharacterType.BF:
+        rim.angle = 65;
 
           character.animation.onFrameChange.add(function() {
             if (getBoyfriend() != null)
@@ -516,6 +611,7 @@ class PhillyTrainErectStage extends Stage
             }
           });
           case CharacterType.GF:
+          rim.angle = 90;
 
             character.animation.onFrameChange.add(function() {
               if (getGirlfriend() != null)
@@ -533,17 +629,18 @@ class PhillyTrainErectStage extends Stage
 						    aBotShader.strength = rim.strength;
 						    aBotShader.color = rim.color;
 
-                aBotShader.setAdjustColor(-5, -26, 0, -16);	//brightness -> hue -> contrast -> saturation
+                aBotShader.setAdjustColor(-25, -26, 0, -36);	//brightness -> hue -> contrast -> saturation
 
                 //if (FlxG.save.data.betterAbot == true) aBotShader.loadAltMask('assets/shared/images/characters/abot/aBotSystem_Mask_Spritesheet.png');
                 //if (FlxG.save.data.betterAbot == false) aBotShader.loadAltMask('assets/shared/images/characters/abot/aBotSystem_Mask.png');
-                aBotShader.loadAltMask('assets/shared/images/characters/abot/aBotSystem_Mask.png');
-                aBotShader.maskThreshold = 1;
-                aBotShader.useAltMask = true;
+                //aBotShader.loadAltMask('assets/shared/images/characters/abot/aBotSystem_Mask.png');
+                //aBotShader.maskThreshold = 1;
+                //aBotShader.useAltMask = true;
 					
 						    getGirlfriend().scriptCall('addShaderAbot', [aBotShader]);
               }
           case CharacterType.DAD:
+          rim.angle = 135;
 
             character.animation.onFrameChange.add(function() {
               if (getDad() != null)
@@ -587,12 +684,12 @@ class PhillyTrainErectStage extends Stage
       
     if (PlayState.instance.currentVariation == 'pico')
     {
-      getBoyfriend().shader.distance = 15;
-      getDad().shader.distance = 15;
-      getGirlfriend().shader.distance = 15;
-      FlxTween.tween(getBoyfriend().shader, {distance: 0}, ((Conductor.instance.beatLengthMs / 1000) * 2) + 0.5, {ease: FlxEase.quadInOut});
-      FlxTween.tween(getDad().shader, {distance: 0}, ((Conductor.instance.beatLengthMs / 1000) * 2) + 0.5, {ease: FlxEase.quadInOut});
-      FlxTween.tween(getGirlfriend().shader, {distance: 0}, ((Conductor.instance.beatLengthMs / 1000) * 2) + 0.5, {ease: FlxEase.quadInOut});
+      getBoyfriend().shader.distance = 17;
+      getDad().shader.distance = 17;
+      getGirlfriend().shader.distance = 17;
+      FlxTween.tween(getBoyfriend().shader, {distance: 9}, ((Conductor.instance.beatLengthMs / 1000) * 2) + 0.675, {ease: FlxEase.quadInOut});
+      FlxTween.tween(getDad().shader, {distance: 9}, ((Conductor.instance.beatLengthMs / 1000) * 2) + 0.675, {ease: FlxEase.quadInOut});
+      FlxTween.tween(getGirlfriend().shader, {distance: 9}, ((Conductor.instance.beatLengthMs / 1000) * 2) + 0.675, {ease: FlxEase.quadInOut});
     }
       if (PlayState.instance.currentVariation == 'pico') switch(curLight)
       {

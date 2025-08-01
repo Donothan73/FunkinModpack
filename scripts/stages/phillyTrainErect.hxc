@@ -63,6 +63,8 @@ class PhillyTrainErectStage extends Stage
   var aBotShader:DropShadowScreenspace;
   var cutsceneMusic:FunkinSound;
   var lightsColor:FlxColor;
+  var mist1;
+  var mist2;
 
   var hasPlayedInGameCutscene:Bool = false;
   var cutsceneSkipped:Bool = false;
@@ -454,25 +456,38 @@ class PhillyTrainErectStage extends Stage
         getNamedProp('street').shader = colorShader;
         getNamedProp('hatch').shader = colorShader;
 
-        mist1 = new FlxBackdrop(Paths.image('phillyStreets/phillySmog', 'weekend1'), 0x01);
+        mist1 = new FlxTiledSprite(Paths.image('phillyStreets/erect/mistFront', 'weekend1'), (2048*2), 1280, true, false);
 			  mist1.setPosition(-650, -100);
-			  mist1.scrollFactor.set(1.1, 1.1);
-			  mist1.zIndex = 49;
-   			//mist1.blend = 0;
-			  mist1.color = 0xFF313E3F;
-			  mist1.alpha = 1;
+			  mist1.scrollFactor.set(1, 1);
+			  mist1.zIndex = 400;
+   			mist1.blend = 0;
+			  mist1.alpha = 0.5;
+        mist1.shader = colorShader;
+
+        PlayState.instance.currentStage.add(mist1);
+			  PlayState.instance.currentStage.refresh(); // Apply z-index.
+
+        mist2 = new FlxTiledSprite(Paths.image('phillyStreets/erect/mistBack', 'weekend1'), (2048*2), 1280, true, false);
+			  mist2.setPosition(-650, -400);
+			  mist2.scrollFactor.set(0.5, 0.5);
+			  mist2.zIndex = 49;
+   			mist2.blend = 14;
+			  mist2.alpha = 1;
+        mist2.shader = colorShader;
+
+        PlayState.instance.currentStage.add(mist2);
+			  PlayState.instance.currentStage.refresh(); // Apply z-index.
 
         scrollingSky = new FlxTiledSprite(Paths.image('phillyStreets/phillySkybox', 'weekend1'), 3153, 718, true, false);
 			  scrollingSky.setPosition(-650, -345);
 			  scrollingSky.scrollFactor.set(0, 0);
 			  scrollingSky.zIndex = 14;
 			  scrollingSky.scale.set(0.5, 0.5);
-			  scrollingSky.alpha = 0.5;
+			  scrollingSky.alpha = 0.75;
 			  //scrollingSky.blend = 12;
 
 
 			  PlayState.instance.currentStage.add(scrollingSky);
-        PlayState.instance.currentStage.add(mist1);
 			  PlayState.instance.currentStage.refresh(); // Apply z-index.
 
         scrollingSky.shader = colorShader;
@@ -522,6 +537,8 @@ class PhillyTrainErectStage extends Stage
 			  }
 
         if(scrollingSky != null) scrollingSky.scrollX += FlxG.elapsed * 66;
+        if(mist1 != null) mist1.scrollX += FlxG.elapsed * 15;
+        if(mist2 != null) mist2.scrollX += FlxG.elapsed * 30;
       }
       
     //aBotShader.distance = shaderInput;
@@ -628,8 +645,9 @@ class PhillyTrainErectStage extends Stage
 						    aBotShader.angle = rim.angle;
 						    aBotShader.threshold = rim.threshold;
 						    aBotShader.strength = rim.strength;
-						    aBotShader.color = rim.color;
 
+                getGirlfriend().x = getGirlfriend().x - 75;
+						  
                 aBotShader.setAdjustColor(-25, -26, 0, -36);	//brightness -> hue -> contrast -> saturation
 
                 //if (FlxG.save.data.betterAbot == true) aBotShader.loadAltMask('assets/shared/images/characters/abot/aBotSystem_Mask_Spritesheet.png');
@@ -641,7 +659,7 @@ class PhillyTrainErectStage extends Stage
 						    getGirlfriend().scriptCall('addShaderAbot', [aBotShader]);
               }
           case CharacterType.DAD:
-          rim.angle = 135;
+          rim.angle = 65;
 
             character.animation.onFrameChange.add(function() {
               if (getDad() != null)
@@ -688,9 +706,18 @@ class PhillyTrainErectStage extends Stage
       getBoyfriend().shader.distance = 17;
       getDad().shader.distance = 17;
       getGirlfriend().shader.distance = 17;
+
       FlxTween.tween(getBoyfriend().shader, {distance: 9}, ((Conductor.instance.beatLengthMs / 1000) * 2) + 0.675, {ease: FlxEase.quadInOut});
       FlxTween.tween(getDad().shader, {distance: 9}, ((Conductor.instance.beatLengthMs / 1000) * 2) + 0.675, {ease: FlxEase.quadInOut});
       FlxTween.tween(getGirlfriend().shader, {distance: 9}, ((Conductor.instance.beatLengthMs / 1000) * 2) + 0.675, {ease: FlxEase.quadInOut});
+
+      getBoyfriend().shader.strength = 1.05;
+      getDad().shader.strength = 1.05;
+      getGirlfriend().shader.strength = 1.05;
+
+      FlxTween.tween(getBoyfriend().shader, {strength: 0.95}, ((Conductor.instance.beatLengthMs / 1000) * 2) + 0.675, {ease: FlxEase.quadInOut});
+      FlxTween.tween(getDad().shader, {distance: 0.95}, ((Conductor.instance.beatLengthMs / 1000) * 2) + 0.675, {ease: FlxEase.quadInOut});
+      FlxTween.tween(getGirlfriend().shader, {distance: 0.95}, ((Conductor.instance.beatLengthMs / 1000) * 2) + 0.675, {ease: FlxEase.quadInOut});
     }
       if (PlayState.instance.currentVariation == 'pico') switch(curLight)
       {

@@ -1,1 +1,54 @@
 # Donothan's Friday Night Funkin' Fixes & Tweaks
+
+# CHANGE LOG
+
+- Restored GO animation in the countdown
+- Swapped the color of Pico's result screen from yellow to blue
+- Renamed "South" to its original name "Spooky Down South"
+- Renamed "South - Erect " to "Spooky Down South"
+- Renamed "South" to "Spooky Down South (Pico Mix)"
+- Renamed "Stress (Pico Mix)" to Saruky's name "Stress (Philly Mix)"
+- Fixed layering in Mommy Mearest's sprite
+- Fixed layering in the Parents Christmas sprite
+- Added the hatch sprite in week 3
+- Added the hatch sprite in week 3 erect
+- Restored week 6's old school house
+- Added week 6's old school house to the erect stage
+- Restored week 6's tree trunk sprite
+- Added week 6's tree trunk sprite to the erect stage
+- Changed the zoom on week 6's stage
+- Changed the zoom on week 3's stage
+- Changed the zoom on week 1's stage
+- Added a Pico Variant to the Main Stage Erect stage
+- Added a Pico Variant to the Spooky Mansion Erect stage
+- Added a Pico Variant to the Philly (Train) Erect stage
+- Added a Pico Variant to the Limo Ride Erect stage
+- Added a Pico Variant to the Christmas Mall Erect stage
+- Added a Pico Variant to the Dating School Erect stage
+- Added a Pico Variant to the Tankman Battefield Erect stage
+- Added a Boyfriend Variant to the Philly (Streets) Erect stage
+- Restored Weekend 1's blowing paper animation
+- Unblurred Blazin's background
+- Added knockback in Blazin's fight
+- Restored the glow of the lights on Pico's gun in his Christmas sprite
+- Altered Nene's Christmas sprite to better match the Newground's skin
+- Added a Christmas skin for A-Bot similar to Girlfriend's Christmas sprite
+- Changed Bopbeebo's Album Cover
+- Changed Fresh's Album Cover
+- Changed Monster's Album Cover
+- Changed Winter Horrorland's Album Cover
+- Changed Senpai's Album Cover
+- Changed Roses's Album Cover
+- Changed Thorns's Album Cover
+- Changed Ugh's Album Cover
+- Changed Blammed Erect's Album Cover
+- Changed High Erect's Album Cover
+- Restored Ugh's in game cutscene
+- Restored Gun's in game cutscene
+- Restored Stress's in game cutscene
+- Removed Stress (Pico Mix)'s video cutscene in favor of a in game cutscene
+- Added an intro in Ugh's in game cutscene
+- Added an Easter Egg in both Stress's in game cutscenes
+- Added Pixel Girlfriend's Cheer Animation
+- Added Pixel Girlfriend's Cry Animation
+- Restored Pixel Boyfriends's Peace Animation

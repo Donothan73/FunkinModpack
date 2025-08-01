@@ -22,6 +22,11 @@ class FunkinOnALoopSettings extends Module {
         {
             FlxG.save.data.freeplayCutscenes = true;
         }
+
+        if (FlxG.save.data.betterAbot == null)
+        {
+            FlxG.save.data.betterAbot = true;
+        }
     }
 
     function onStateChangeEnd(event)
@@ -41,6 +46,13 @@ class FunkinOnALoopSettings extends Module {
                         }
                         , FlxG.save.data.week6pixel);
             
+                        preferences.createPrefItemCheckbox('Better A-Bot', 'Switches from using a texture atlas to a spritesheet for A-Bot, for better looking shaders.', function(value:Bool):Void
+                        {
+                        FlxG.save.data.betterAbot = value; 
+                        FlxG.save.flush();
+                        }
+                        , FlxG.save.data.betterAbot);
+
                         preferences.createPrefItemCheckbox('Freeplay Cutscenes', 'Toggles cutscenes playing in a song while playing in Freeplay.', function(value:Bool):Void
                         {
                         FlxG.save.data.freeplayCutscenes = value; 

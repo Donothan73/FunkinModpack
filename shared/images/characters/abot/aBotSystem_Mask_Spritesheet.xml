@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="aBotSystem_Mask.png">
+	<!-- Created with Adobe Animate version 24.0.9.74 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="Abot System0000" x="5" y="5" width="812" height="358" frameX="-2" frameY="-1" frameWidth="814" frameHeight="359"/>
+	<SubTexture name="Abot System0001" x="819" y="5" width="814" height="359"/>
+	<SubTexture name="Abot System0002" x="819" y="5" width="814" height="359"/>
+	<SubTexture name="Abot System0003" x="5" y="366" width="812" height="358" frameX="-2" frameY="-1" frameWidth="814" frameHeight="359"/>
+	<SubTexture name="Abot System0004" x="819" y="366" width="812" height="358" frameX="-2" frameY="-1" frameWidth="814" frameHeight="359"/>
+	<SubTexture name="Abot System0005" x="819" y="366" width="812" height="358" frameX="-2" frameY="-1" frameWidth="814" frameHeight="359"/>
+	<SubTexture name="Abot System0006" x="819" y="366" width="812" height="358" frameX="-2" frameY="-1" frameWidth="814" frameHeight="359"/>
+	<SubTexture name="Abot System0007" x="819" y="366" width="812" height="358" frameX="-2" frameY="-1" frameWidth="814" frameHeight="359"/>
+	<SubTexture name="Abot System0008" x="819" y="366" width="812" height="358" frameX="-2" frameY="-1" frameWidth="814" frameHeight="359"/>
+	<SubTexture name="Abot System0009" x="819" y="366" width="812" height="358" frameX="-2" frameY="-1" frameWidth="814" frameHeight="359"/>
+	<SubTexture name="Abot System0010" x="819" y="366" width="812" height="358" frameX="-2" frameY="-1" frameWidth="814" frameHeight="359"/>
+	<SubTexture name="Abot System0011" x="819" y="366" width="812" height="358" frameX="-2" frameY="-1" frameWidth="814" frameHeight="359"/>
+	<SubTexture name="Abot System0012" x="819" y="366" width="812" height="358" frameX="-2" frameY="-1" frameWidth="814" frameHeight="359"/>
+	<SubTexture name="Abot System0013" x="819" y="366" width="812" height="358" frameX="-2" frameY="-1" frameWidth="814" frameHeight="359"/>
+	<SubTexture name="Abot System0014" x="819" y="366" width="812" height="358" frameX="-2" frameY="-1" frameWidth="814" frameHeight="359"/>
+	<SubTexture name="Abot System0015" x="819" y="366" width="812" height="358" frameX="-2" frameY="-1" frameWidth="814" frameHeight="359"/>
+</TextureAtlas>

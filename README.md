@@ -27,7 +27,7 @@
 - Added a Pico Variant to the Dating School Erect stage
 - Added a Pico Variant to the Tankman Battefield Erect stage
 - Added a Boyfriend Variant to the Philly (Streets) Erect stage
-- Restored Weekend 1's blowing paper animation
+- Restored Philly (Streets) Erect's blowing paper animation
 - Unblurred Blazin's background
 - Added knockback in Blazin's fight
 - Restored the glow of the lights on Pico's gun in his Christmas sprite

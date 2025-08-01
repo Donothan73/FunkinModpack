@@ -93,13 +93,13 @@ class TankmanBattlefieldErectStage extends Stage
 						aBotShader.angle = rim.angle;
 						aBotShader.threshold = rim.threshold;
 						aBotShader.strength = rim.strength;
-						aBotShader.color = 0xFF4F7415;
+						aBotShader.color = rim.color;
 
             aBotShader.setAdjustColor(-36, -10, 15, -40);	//brightness -> hue -> contrast -> saturation
 
-						aBotShader.distance = 11;
-						aBotShader.angle = 90;
-						aBotShader.strength = 1.15;
+						//aBotShader.distance = 11;
+						//aBotShader.angle = 90;
+						//aBotShader.strength = 1.15;
             aBotShader.loadAltMask('assets/shared/images/characters/abot/aBotSystem_Mask.png');
             aBotShader.maskThreshold = 0.4;
             aBotShader.useAltMask = true;

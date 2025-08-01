@@ -9,6 +9,7 @@ import funkin.graphics.adobeanimate.FlxAtlasSprite;
 import flixel.FlxG;
 import funkin.audio.FunkinSound;
 import funkin.play.character.SparrowCharacter;
+import funkin.play.PlayStatePlaylist;
 import funkin.play.GameOverSubState;
 import funkin.play.character.BaseCharacter;
 import funkin.play.character.CharacterDataParser;
@@ -36,24 +37,35 @@ class BFHoldingGFCharacter extends MultiSparrowCharacter
     }
   }
 
-   function changeVisibility(soloBf:Bool):Void
+   function changeVisibility():Void
    {
-        if (soloBf == true) this.visible = false;
-            if (soloBf != true)
-            {
+        if (this.visible == true)
+        {
+            this.visible = false;
+            singleBf.visible = true;
+        } else {
             this.visible = true;
             singleBf.visible = false;
-            }
+        }
+   }
+
+   function getBf():BaseCharacter
+   {
+     return singleBf;
    }
 
   function onCreate(event:ScriptEvent)
   {
     super.onCreate(event);
     singleBf = CharacterDataParser.fetchCharacter('bf');
-    singleBf.zIndex = 199;
+    singleBf.zIndex = this.zIndex + 103;
     singleBf.alpha = 1;
     singleBf.flipX = false;
-    if (PlayState.instance.currentSong.id == 'stress')this.visible = false;
+    if (PlayState.instance.currentSong.id == 'stress' )
+        {
+            if (PlayStatePlaylist.isStoryMode == true && PlayState.instance.currentVariation != 'erect') this.visible = false;
+            if (FlxG.save.data.freeplayCutscenes == true && PlayState.instance.currentVariation != 'erect') this.visible = false;
+        }
     singleBf.x = this.x;
     singleBf.y = this.y;
 

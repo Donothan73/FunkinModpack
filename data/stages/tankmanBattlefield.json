@@ -5,7 +5,7 @@
   "props": [
     {
       "name": "tankSky",
-      "assetPath": "tankSky",
+      "assetPath": "tankSky-long",
       "position": [-2000, -400],
       "scale": [4, 1],
       "zIndex": 10,
@@ -20,7 +20,7 @@
     },
     {
       "name": "mountains",
-      "assetPath": "mountains2",
+      "assetPath": "mountains2-long",
       "position": [-500, -35],
       "scale": [1.2, 1.2],
       "zIndex": 11,
@@ -36,7 +36,7 @@
     },
     {
       "name": "ruins",
-      "assetPath": "cityruins2",
+      "assetPath": "cityruins2-long",
       "position": [-200, 150],
       "scale": [1.1, 1.1],
       "zIndex": 13,

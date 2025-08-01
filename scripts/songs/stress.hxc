@@ -54,18 +54,27 @@ class StressSong extends Song
   var tankmanGroup:TankmanSpriteGroup = null;
   var tankCutscene:ScriptedFlxAtlasSprite;
   var girlCutscene:ScriptedFlxAtlasSprite;
+  var girlFaceplant:ScriptedFlxAtlasSprite;
+  var noGf:bool;
 
   public function new()
   {
     super('stress');
 
     hasPlayedCutscene = false;
+    hasPlayedCutscene = false;
+    cutsceneSkipped = false;
+    canSkipCutscene = false;
 
   }
 
   public function onSongLoaded(event:SongLoadScriptEvent):Void
   {
     super.onSongLoaded(event);
+
+    hasPlayedCutscene = false;
+    cutsceneSkipped = false;
+    canSkipCutscene = false;
 
   }
 
@@ -153,44 +162,77 @@ class StressSong extends Song
 
   function bfCutscene():Void
   {
+    skipText = new FlxText(936 * FullScreenScaleMode.wideScale.x, 618 * FullScreenScaleMode.wideScale.y, 0,
+      'Skip [ ' + PlayState.instance.controls.getDialogueNameFromToken("CUTSCENE_ADVANCE", true) + ' ]', 20);
+    if (FlxG.onMobile)
+    {
+      skipText.text = 'Skip [Pause Button]';
+      skipText.x -= 136;
+    }
+    skipText.setFormat(Paths.font('vcr.ttf'), 40, 0xFFFFFFFF, "right", FlxTextBorderStyle.OUTLINE, 0xFF000000);
+    skipText.scrollFactor.set();
+    skipText.borderSize = 2;
+    skipText.alpha = 0;
+    PlayState.instance.currentStage.add(skipText);
 
-    FlxTween.tween(PlayState.instance.camHUD, {alpha: 0}, 1);
-    PlayState.instance.tweenCameraZoom(0.85, 5, true, FlxEase.quadInOut);
+    skipText.cameras = [PlayState.instance.camCutscene];
+
+    PlayState.instance.currentStage.refresh(); // Apply z-index.
+
+    var distortoMus:FunkinSound;
+    distortoMus = FunkinSound.load(Paths.music('DISTORTO'));
+
+    if (!cutsceneSkipped) PlayState.instance.isInCutscene = true;
+
+    if (!cutsceneSkipped) FlxTween.tween(PlayState.instance.camHUD, {alpha: 0}, 1);
+    if (!cutsceneSkipped) PlayState.instance.tweenCameraZoom(0.85, 5, true, FlxEase.quadInOut);
     if (!cutsceneSkipped) PlayState.instance.tweenCameraToPosition(645, 490, 5, FlxEase.expoOut);
 
     new FlxTimer().start(0.15, function(tmr) 
     {
-      StressCutsceneSnd = FunkinSound.load(Paths.sound('stressCutscene'), 1);
-      StressCutsceneSnd.volume = 1;
-      StressCutsceneSnd.play(false);
+      if (!cutsceneSkipped) StressCutsceneSnd = FunkinSound.load(Paths.sound('stressCutscene'), 1);
+      if (!cutsceneSkipped) StressCutsceneSnd.volume = 1;
+      if (!cutsceneSkipped) StressCutsceneSnd.play(false);
     });
 
     //create tankman and start animation
-    PlayState.instance.currentStage.getDad().visible = false;
-    var tankCutscene:ScriptedFlxAtlasSprite = ScriptedFlxAtlasSprite.init('StressIntroTankman', 0, 0);
-    tankCutscene.x = tankCutscene.x + 432;
-    tankCutscene.y = tankCutscene.y + 545;
-    tankCutscene.zIndex = PlayState.instance.currentStage.getDad().zIndex;
-    PlayState.instance.currentStage.add(tankCutscene);
-    PlayState.instance.currentStage.refresh(); // Apply z-index.
-    tankCutscene.scriptCall('playCutscene');
+    if (!cutsceneSkipped) PlayState.instance.currentStage.getDad().visible = false;
+    if (!cutsceneSkipped) tankCutscene = ScriptedFlxAtlasSprite.init('StressIntroTankman', 0, 0);
+    if (!cutsceneSkipped) tankCutscene.x = tankCutscene.x + 432;
+    if (!cutsceneSkipped) tankCutscene.y = tankCutscene.y + 545;
+    if (!cutsceneSkipped) tankCutscene.zIndex = PlayState.instance.currentStage.getDad().zIndex;
+    if (!cutsceneSkipped) PlayState.instance.currentStage.add(tankCutscene);
+    if (!cutsceneSkipped) PlayState.instance.currentStage.refresh(); // Apply z-index.
+    if (!cutsceneSkipped) tankCutscene.scriptCall('playCutscene');
 
     //create purple gf and start animation
-    PlayState.instance.currentStage.getGirlfriend().visible = false;
-    //PlayState.instance.currentStage.getGirlfriend().alpha = 0.5;
-    var girlCutscene:ScriptedFlxAtlasSprite = ScriptedFlxAtlasSprite.init('StressIntroGirlfriend', 0, 0);
-    girlCutscene.x = - 525;
-    girlCutscene.y = - 375;
-    girlCutscene.zIndex = PlayState.instance.currentStage.getGirlfriend().zIndex;
-    PlayState.instance.currentStage.add(girlCutscene);
-    PlayState.instance.currentStage.refresh(); // Apply z-index.
-    girlCutscene.scriptCall('playCutscene');
+    if (!cutsceneSkipped) PlayState.instance.currentStage.getGirlfriend().visible = false;
+    //if (!cutsceneSkipped) PlayState.instance.currentStage.getGirlfriend().alpha = 0.5;
+    if (!cutsceneSkipped) girlCutscene = ScriptedFlxAtlasSprite.init('StressIntroGirlfriend', 0, 0);
+    if (!cutsceneSkipped) girlCutscene.x = - 525;
+    if (!cutsceneSkipped) girlCutscene.y = - 375;
+    if (!cutsceneSkipped) girlCutscene.zIndex = PlayState.instance.currentStage.getGirlfriend().zIndex;
+    if (!cutsceneSkipped) PlayState.instance.currentStage.add(girlCutscene);
+    if (!cutsceneSkipped) PlayState.instance.currentStage.refresh(); // Apply z-index.
+    if (!cutsceneSkipped) girlCutscene.scriptCall('playCutscene');
+
+    new FlxTimer().start(15, function(tmr) 
+    {
+    if (!cutsceneSkipped) PlayState.instance.tweenCameraZoom(1.25, 2.25, true, FlxEase.quadInOut);
+    if (!cutsceneSkipped) PlayState.instance.tweenCameraToPosition(645, 350, 1.5, FlxEase.expoOut);
+    });
+
+    new FlxTimer().start(17.25, function(tmr) 
+    {
+    if (!cutsceneSkipped) PlayState.instance.tweenCameraZoom(0.9, 0.5, true, FlxEase.quadInOut);
+    if (!cutsceneSkipped) PlayState.instance.tweenCameraToPosition(645, 490, 0.5, FlxEase.expoOut);
+    });
 
 
     if (!cutsceneSkipped) new FlxTimer().start(17.25, function(tmr) 
     {
       //catch gf of let her fall?
-       if (FlxG.random.bool(50) == true)
+       if (FlxG.random.bool(97.5) == true) //DONT CHANGE THIS it'll make it more rewarding if you get it by chance
        {
         //Catch her
         if (!cutsceneSkipped) PlayState.instance.currentStage.getBoyfriend().scriptCall('changeVisibility', false);
@@ -198,9 +240,33 @@ class StressSong extends Song
        }
        else
        {
+        //gf faceplants in the ground :( something was too big for bf to carry this time. Look at her on the ground there :/
         if (!cutsceneSkipped) PlayState.instance.currentStage.getBoyfriend().scriptCall('changeVisibility', true);
-        if (!cutsceneSkipped) PlayState.instance.currentStage.getBoyfriend().playAnimation('bfCatch', true, true);
+        if (!cutsceneSkipped) PlayState.instance.currentStage.getBoyfriend().scriptCall('getBf').visible = true;
+        if (!cutsceneSkipped) PlayState.instance.currentStage.getBoyfriend().scriptCall('getBf').playAnimation('dodge', true, true);
+        if (!cutsceneSkipped) PlayState.instance.currentStage.getBoyfriend().alpha = 0;
+        if (!cutsceneSkipped) noGf = true;
+        //if (!cutsceneSkipped) distortoMus.play(false); //debug I couldnt tell if it was working
+        //if (!cutsceneSkipped) distortoMus.looped = true;
+        //if (!cutsceneSkipped) distortoMus.volume = 0.5;
+        if (!cutsceneSkipped) girlFaceplant = ScriptedFlxAtlasSprite.init('StressIntroGirlfriendFaceplant', 0, 0);
+        if (!cutsceneSkipped) girlFaceplant.x = 512;
+        if (!cutsceneSkipped) girlFaceplant.y = 375;
+        if (!cutsceneSkipped) PlayState.instance.currentStage.add(girlFaceplant);
+        if (!cutsceneSkipped) girlFaceplant.zIndex = PlayState.instance.currentStage.getBoyfriend().zIndex + 10;
+        if (!cutsceneSkipped) PlayState.instance.currentStage.refresh(); // Apply z-index.
+        if (!cutsceneSkipped) girlFaceplant.scriptCall('playCutscene');
        }
+    });
+
+    new FlxTimer().start(18.5, function(tmr) 
+    {
+    if (!cutsceneSkipped && noGf != true) PlayState.instance.currentStage.getBoyfriend().playAnimation('idle', true, true);
+    });
+
+    new FlxTimer().start(33, function(tmr) 
+    {
+    if (!cutsceneSkipped) PlayState.instance.currentStage.getBoyfriend().playAnimation('singUPmiss', true, true);
     });
 
       //cutscene over. let's stress
@@ -209,7 +275,7 @@ class StressSong extends Song
       if (!cutsceneSkipped) 
       {
         var bf =  PlayState.instance.currentStage.getBoyfriend();
-        if (!cutsceneSkipped) PlayState.instance.tweenCameraToPosition(bf.x - 160, bf.y + 80, 2, FlxEase.expoOut);
+        PlayState.instance.tweenCameraToPosition(bf.x - 160, bf.y + 80, 2, FlxEase.expoOut);
         PlayState.instance.isInCutscene = false;
         PlayState.instance.currentStage.getDad().visible = true;
         PlayState.instance.currentStage.getGirlfriend().visible = true;
@@ -238,34 +304,16 @@ class StressSong extends Song
 
   function startVideo(usePicoVideo:Bool)
   {
-    skipText = new FlxText(936 * FullScreenScaleMode.wideScale.x, 618 * FullScreenScaleMode.wideScale.y, 0,
-      'Skip [ ' + PlayState.instance.controls.getDialogueNameFromToken("CUTSCENE_ADVANCE", true) + ' ]', 20);
-    if (FlxG.onMobile)
-    {
-      skipText.text = 'Skip [Pause Button]';
-      skipText.x -= 136;
-    }
-    skipText.setFormat(Paths.font('vcr.ttf'), 40, 0xFFFFFFFF, "right", FlxTextBorderStyle.OUTLINE, 0xFF000000);
-    skipText.scrollFactor.set();
-    skipText.borderSize = 2;
-    skipText.alpha = 0;
-    PlayState.instance.currentStage.add(skipText);
-
-    skipText.cameras = [PlayState.instance.camCutscene];
-
-    PlayState.instance.currentStage.refresh(); // Apply z-index.
-
     if (usePicoVideo == true) picoCutscene();
     if (usePicoVideo != true) bfCutscene();
-
-  /**
-   * Don't replay the cutscene between restarts.
-   */
+  }
   function onSongRetry(event:ScriptEvent)
   {
     super.onSongRetry(event);
 
     hasPlayedCutscene = true;
+    cutsceneSkipped = true;
+    canSkipCutscene = false;
 
     // resets the tankmen!
     if (tankmanGroup != null)
@@ -287,6 +335,9 @@ class StressSong extends Song
     super.onCreate(event);
 
     hasPlayedCutscene = false;
+    hasPlayedCutscene = false;
+    cutsceneSkipped = false;
+    canSkipCutscene = false;
   }
 
   var hasPlayedEndCutscene:Bool = false;
@@ -325,11 +376,38 @@ class StressSong extends Song
     {
       
         PlayState.instance.isInCutscene = false;
-  
+  if (PlayState.instance.currentVariation == 'default')
+    {
         cutsceneSkipped = true;
         canSkipCutscene = false;
         FlxTween.tween(PlayState.instance.camHUD, {alpha: 1}, 1);
-      
+        var bf =  PlayState.instance.currentStage.getBoyfriend();
+        if (!cutsceneSkipped) PlayState.instance.tweenCameraToPosition(bf.x - 160, bf.y + 80, 2, FlxEase.expoOut);
+        PlayState.instance.isInCutscene = false;
+        PlayState.instance.currentStage.getDad().visible = true;
+        PlayState.instance.currentStage.getGirlfriend().visible = true;
+        //PlayState.instance.currentStage.getBoyfriend().visible = true;
+        if (tankCutscene != null) tankCutscene.visible = false;
+        if (girlCutscene != null) girlCutscene.visible = false;
+        noGf = false;
+        PlayState.instance.currentStage.getBoyfriend().scriptCall('changeVisibility');
+        PlayState.instance.currentStage.getBoyfriend().scriptCall('getBf').visible = false;
+        PlayState.instance.currentStage.getBoyfriend().alpha = 1;
+        if (tankCutscene != null) tankCutscene.destroy();
+        if (girlCutscene != null) girlCutscene.destroy();
+        FlxTween.tween(skipText, {alpha: 0}, 0.5, {ease: FlxEase.quadOut});
+        cutsceneSkipped = true;
+        canSkipCutscene = false;
+        if (StressCutsceneSnd != null) StressCutsceneSnd.stop();
+        FlxTween.tween(PlayState.instance.camHUD, {alpha: 1}, 1);
+          new FlxTimer().start(0.5, function(tmr) {
+          PlayState.instance.startCountdown();
+          PlayState.instance.tweenCameraZoom(0.9, 1, true, FlxEase.quadInOut);
+          PlayState.instance.currentStage.getBoyfriend().danceEvery = 1;
+          PlayState.instance.currentStage.getDad().danceEvery = 1;
+          PlayState.instance.currentStage.getGirlfriend().danceEvery = 1;
+        });
+      }
     }
 
     if (PlayState.instance.isInCutscene)
@@ -460,5 +538,4 @@ class StressSong extends Song
       tankmanGroup = null;
     }
   }
-}
 }

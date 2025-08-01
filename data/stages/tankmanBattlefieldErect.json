@@ -137,8 +137,7 @@
     { 
     "zIndex": 100,
     "position": [800.5, 775],
-    "cameraOffsets": [0, 0],
-    "scroll": [1, 1]
+    "cameraOffsets": [0, 0]
     }
   },
   "directory": "week7"

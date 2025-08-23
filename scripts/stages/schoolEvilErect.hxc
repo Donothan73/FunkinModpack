@@ -5,6 +5,7 @@ import funkin.graphics.shaders.WiggleEffectType;
 import flixel.addons.effects.FlxTrail;
 import funkin.play.Countdown;
 import funkin.play.character.CharacterType;
+import flixel.FlxG;
 import funkin.graphics.shaders.DropShadowShader;
 
 class SchoolEvilErectStage extends Stage
@@ -37,8 +38,8 @@ class SchoolEvilErectStage extends Stage
     getNamedProp('backspike').shader = wiggleSpike;
 
     //PlayState.instance.camHUD.shader = wiggleHUD;
-    PlayState.instance.camHUD.pixelPerfectRender = true;
-    PlayState.instance.camGame.pixelPerfectRender = true;
+    if (FlxG.save.data.week6pixel == true) PlayState.instance.camHUD.pixelPerfectRender = true;
+    if (FlxG.save.data.week6pixel == true) PlayState.instance.camGame.pixelPerfectRender = true;
   }
 
   override function addCharacter(character:BaseCharacter, charType:CharacterType):Void

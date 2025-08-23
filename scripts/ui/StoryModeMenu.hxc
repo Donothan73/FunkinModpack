@@ -1,123 +1,917 @@
-import funkin.ui.title.TitleState;
-import flixel.FlxCamera;
-import flixel.math.FlxMath;
-import flixel.FlxSprite;
-import flixel.math.FlxAngle;
-import flixel.math.FlxPoint;
-import flixel.text.FlxText;
-import flixel.tweens.FlxEase;
-import flixel.tweens.FlxTween;
-import flixel.util.FlxSpriteUtil;
-import flixel.util.FlxTimer;
-import flixel.util.FlxSort;
-import funkin.util.Constants;
-import funkin.graphics.adobeanimate.FlxAtlasSprite;
-import funkin.graphics.FunkinSprite;
-import funkin.ui.freeplay.charselect.PlayableCharacter;
+import funkin.ui.MusicBeatState;
 import funkin.ui.MusicBeatSubState;
-import funkin.graphics.shaders.AdjustColorShader;
-import flixel.addons.display.FlxTiledSprite;
-import flixel.addons.display.FlxBackdrop;
-import funkin.PlayerSettings;
-import funkin.modding.module.Module;
-import funkin.modding.events.ScriptEvent;
+import funkin.ui.story.LevelTitle;
+import funkin.ui.story.Level;
+import funkin.ui.story.LevelProp;
 import funkin.modding.base.ScriptedMusicBeatSubState;
-import funkin.modding.base.ScriptedFlxRuntimeShader;
-import funkin.modding.base.ScriptedMusicBeatState;
-import funkin.util.ReflectUtil;
+import funkin.modding.base.ScriptedFlxSprite;
+import funkin.modding.base.ScriptedFlxSpriteGroup;
+import flixel.addons.transition.FlxTransitionableState;
+import flixel.FlxSprite;
+import flixel.FlxState;
+import funkin.audio.FunkinSound;
+import flixel.text.FlxText;
+import flixel.input.touch.FlxTouch;
+import funkin.api.discord.DiscordClient;
+import funkin.ui.FullScreenScaleMode;
 import flixel.FlxG;
-import funkin.util.WindowUtil;
+import funkin.graphics.FunkinSprite;
 import funkin.Preferences;
-import flixel.addons.effects.FlxTrail;
-import funkin.effects.FunkTrail;
+import flixel.util.FlxTimer;
+import funkin.graphics.shaders.RuntimeCustomBlendShader;
+import funkin.graphics.FunkinCamera;
+import flixel.addons.display.FlxBackdrop;
+import flixel.effects.FlxFlicker;
+import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
+import flixel.text.FlxBitmapText;
+import flixel.tweens.FlxEase;
+import flixel.math.FlxRect;
+import openfl.geom.Rectangle;
+import flixel.tweens.FlxTween;
+import flixel.text.FlxText;
+import flixel.graphics.frames.FlxBitmapFont;
+import funkin.PlayerSettings;
+import flixel.util.FlxGradient;
+import funkin.input.Controls;
+import funkin.Paths;
+import flixel.addons.plugin.FlxScrollingText;
+import funkin.modding.PolymodHandler;
+import flixel.util.FlxColor;
+import funkin.api.discord.DiscordClient;
+import funkin.data.story.level.LevelRegistry;
+import funkin.data.freeplay.player.PlayerRegistry;
+import funkin.data.freeplay.style.FreeplayStyleRegistry;
+import funkin.data.song.SongRegistry;
+import funkin.play.PlayStatePlaylist;
+import funkin.util.MathUtil;
+import funkin.util.SwipeUtil;
+import funkin.util.TouchUtil;
+import openfl.utils.Assets;
+import flixel.group.FlxTypedGroup;
+import funkin.util.tools.MapTools;
+import flixel.util.FlxStringUtil;
+import funkin.ui.freeplay.BGScrollingText;
+import flixel.math.FlxMath;
+import funkin.save.Save;
+import funkin.Highscore;
+import funkin.ui.transition.LoadingState;
+import funkin.ui.transition.stickers.StickerSubState;
+import funkin.data.freeplay.player.PlayerData;
+import funkin.ui.freeplay.charselect.PlayableCharacter;
+import funkin.util.SortUtil;
+import funkin.util.tools.ISingleton;
 
-class LudumDareTitleScreen extends Module
+class StoryModeMenu extends MusicBeatSubState
 {  
-  var finished:Bool = false;
+  //Sprites
+  var bg:FlxSprite;
+  var cameraBG:FunkinCamera;
+  var cameraScroll:FunkinCamera;
+  var cameraUI:FunkinCamera;
+  var Header:FlxSprite;
+  var Bottom:FlxSprite;
+  var backButton:FlxSprite;
+  var menuName:FlxText;
+  var ostName:FlxText;
+  var bgText:FlxTypedGroup;
+  var scrollingText:StoryScrollingText = null;
+  var difficultySprite:FlxSprite;
+  var difficultySprites:Array<FlxSprite>;
+  var levelTitles:FlxTypedGroup<LevelTitle>;
 
-  var backer:FlxSprite;
-  var background:FlxSprite;
-  var backerY:float;
-  var _timer:Float = 0;
-  var transitioning:bool = false;
+  //Defaults
+  var rememberedDifficulty:String = FlxG.save.data.rememberedDifficulty;
+  var rememberedlevelId:String = FlxG.save.data.rememberedlevelId;
+  var rememberedCharacterId:String = FlxG.save.data.rememberedCharacterId;
+  var rememberedVariation:String = FlxG.save.data.rememberedVariation;
 
-  var evilTrail:FunkTrail;
-
+  //Current Data
+  var currentDifficultyId:String = 'normal';
+  var currentLevelId:String = 'tutorial';
+  var currentVariation:string = rememberedVariation;
+  var currentLevel:Level;
+  var isLevelUnlocked:Bool;
+  var currentLevelTitle:LevelTitle;
+  var levelIds:Array<String>;
+  var difficultyList:Array<String>;
+  var weeksSelected:bool = false;
+  var difficultySelection:int;
+  var levelSelection:int;
+  var highScore:Int = 0;
+  var highScoreLerp:Int = 12345678;
+  var selectedLevel:Bool = false;
+  var playerIds:Array<String>;
+  var songTitles:Array<String>;
+  var levelVariations:Array<String>;
+  var playerList:Array<PlayableCharacter>;
+  var currentPlayer:PlayableCharacter;
+  var playerSelection:Int;
+  
   public function new()
   {
-    super('LudumDareTitleScreen');
+    super('StoryModeMenu');
+    //Preload difficulty sprites
+    FunkinSprite.cacheTexture(Paths.image('storymenu/difficulties/easy', 'images'));
+    FunkinSprite.cacheTexture(Paths.image('storymenu/difficulties/normal', 'images'));
+    FunkinSprite.cacheTexture(Paths.image('storymenu/difficulties/hard', 'images'));
+    FunkinSprite.cacheTexture(Paths.image('storymenu/difficulties/erect', 'images'));
+    FunkinSprite.cacheTexture(Paths.image('storymenu/difficulties/nightmare', 'images'));
+
+    cameraBG = new FunkinCamera('cameraBG', 0, 0, FlxG.width, FlxG.height);
+    cameraBG.bgColor = FlxColor.TRANSPARENT;
+    cameraScroll = new FunkinCamera('cameraScroll', 0, 0, FlxG.width, FlxG.height);
+    cameraScroll.bgColor = FlxColor.TRANSPARENT;
+    cameraUI = new FunkinCamera('cameraUI', 0, 0, FlxG.width, FlxG.height);
+    cameraUI.bgColor = FlxColor.TRANSPARENT;
+
+    FlxG.cameras.add(cameraBG, false);
+    FlxG.cameras.add(cameraScroll, false);
+    FlxG.cameras.add(cameraUI, false);
+
+    bg = FlxGradient.createGradientFlxSprite(FlxG.width, FlxG.height, [0xFFFECC5C, 0xFFF9BD45], 90); 
+    bg.scrollFactor.set();
+    bg.zIndex = 11;
+    add(bg);
+    bg.cameras = [cameraBG];
+
+    Header = new FlxSprite();
+    Header.makeGraphic((FlxG.width + 5), 144, 0xFF000000);
+    add(Header);
+    Header.cameras = [cameraUI];
+
+    Bottom = new FlxSprite();
+    Bottom.makeGraphic((FlxG.width + 5), 223, 0xFF000000);
+    Bottom.y = FlxG.height - Bottom.height;
+    add(Bottom);
+    Bottom.cameras = [cameraUI];
+
+    backButton = FunkinSprite.createSparrow(5, 25, "backspace");
+    backButton.animation.addByPrefix("idle", "backspace to exit white", 24, false);
+    backButton.animation.addByPrefix("back", "backspace PRESSED", 24, false);
+    backButton.animation.play("idle");
+    backButton.scale.set(0.65, 0.65); 
+    add(backButton);
+    backButton.cameras = [cameraUI];
+
+    menuName = new FlxText(8 - FullScreenScaleMode.gameNotchSize.x, 8, FlxG.width - 8 - 8, 'STORY MODE', 48);
+    menuName.alignment = 'left';
+    menuName.font = "5by7";
+    menuName.color = 0xFFffe1cd;
+    add(menuName);
+    menuName.cameras = [cameraUI];
+
+    ostName = new FlxText(8 - FullScreenScaleMode.gameNotchSize.x, 8, FlxG.width - 8 - 8, 'OFFICIAL', 48);
+    ostName.alignment = 'right';
+    ostName.font = "5by7";
+    ostName.color = 0xFFffe1cd;
+    add(ostName);
+    ostName.cameras = [cameraUI];
+
+    bgText =  new FlxTypedGroup();
+    add(bgText);
+
+    playerList = new Array();
+    levelIds = LevelRegistry.instance.listSortedLevelIds();
+    playerIds = PlayerRegistry.instance.listEntryIds();
+    playerIds.sort(SortUtil.defaultsThenAlphabetically(['bf', 'pico']));
+      for (playerID in playerIds)
+      {
+        if (PlayerRegistry.instance.isCharacterOwned(playerID) || playerID == 'bf')
+        {
+          var player = new PlayableCharacter(playerID);
+          playerList.push(player);
+        }
+        else
+        {
+
+        }
+      }
+    currentLevel = LevelRegistry.instance.fetchEntry(rememberedlevelId);
+    difficultySprites = new Array();
+
+    if (rememberedDifficulty == null) rememberedDifficulty = 'normal';
+    currentDifficultyId = rememberedDifficulty;
+
+    currentPlayer = playerList[0];
+    playerSelection = 0;
   }
 
-  override function onStateChangeEnd(event)
+  function create()
   {
-    super.onStateChangeEnd(event);
-    finished = false;
-  }
+    controls.active = true;
 
-  override function onUpdate(event:UpdateScriptEvent)
-  {
-	super.onUpdate(event);
-
-    if (FlxG.onMobile == false && ReflectUtil.getClassNameOf(FlxG.state) == "funkin.ui.title.TitleState")
+    levelIds = LevelRegistry.instance.listSortedLevelIds();
+    levelIds = levelIds.filter(function(id)
     {
-        FlxG.mouse.visible = false;
+      var levelData = LevelRegistry.instance.fetchEntry(id);
+      if (levelData == null) return false;
 
-        if (finished == false && FlxG.state.skippedIntro)
-        {
-            if(FlxG.state.logoBl != null && FlxG.state.gfDance != null && FlxG.state.titleText != null)
-            {
-
-		background = new FlxSprite(-27, 193).loadGraphic(Paths.image('stageback'));
-                background.screenCenter();
-		background.antialiasing = true;
-		background.zIndex = -1000;
-
-                FlxG.state.add(background);
+      return levelData.isVisible();
+    });
+    if (levelIds.length == 0) levelIds = ['tutorial']; // Make sure there's at least one level to display.
 
 
-        	backer = new FlxSprite(-27, 193).loadGraphic(Paths.image('OLdLOgoHQ'));
-		backer.scale.x = .45;
-		backer.scale.y = .45;
-                backer.screenCenter();
-		backer.antialiasing = true;
-		backer.shader = FlxG.state.swagShader.shader;
-		backerY = backer.y;
-		backer.zIndex = 100000;
+    tracklistText = new FlxText((FlxG.width /2 ), (FlxG.height - 35), 0, "Tracklist", 32);
+    tracklistText.setFormat('5by7', 32);
+    tracklistText.x = ((FlxG.width /2 ) - (tracklistText.width / 2));
+    tracklistText.alignment = 'RIGHT';
+    tracklistText.color = 0xFFE55777;
+    tracklistText.cameras = [cameraUI];
+    add(tracklistText);
 
+    scoreText = new FlxText((FlxG.width - 355), (FlxG.height - 215), 0, 'HIGH SCORE: 0');
+    scoreText.setFormat('5by7', 32);
+    scoreText.alignment = 'RIGHT';
+    scoreText.zIndex = 1000;
+    scoreText.cameras = [cameraUI];
+    add(scoreText);
 
-		evilTrail = new FunkTrail(backer, null, 20, 2, 1, 0.075);
-		evilTrail.color = 0x000000;
-		evilTrail.shader = FlxG.state.swagShader.shader;
-		//evilTrail.zIndex = backer.zIndex + 10;
-		evilTrail.zIndex = 190;
-		FlxG.state.add(evilTrail);
-                FlxG.state.add(backer);
+    levelTitleText = new FlxText((5), (FlxG.height - 215), 0, 'LEVEL 1');
+    levelTitleText.setFormat('5by7', 32, FlxColor.WHITE, 'LEFT');
+    levelTitleText.alpha = 1;
+    levelTitleText.zIndex = 1000;
+    levelTitleText.cameras = [cameraUI];
+    add(levelTitleText);
+    
+    generateBGtext();
 
-                FlxG.state.titleText.x = 126;
-                FlxG.state.titleText.y = 605;
+    leftLevelArrow = new FlxSprite(((FlxG.width / 2) - 270), 540);
+    leftLevelArrow.frames = Paths.getSparrowAtlas('storymenu/ui/arrows');
+    leftLevelArrow.animation.addByPrefix('idle', 'leftIdle0');
+    leftLevelArrow.animation.addByPrefix('press', 'leftConfirm0');
+    leftLevelArrow.animation.play('idle');
+    leftLevelArrow.cameras = [cameraUI];
+    add(leftLevelArrow);
 
-                FlxG.state.gfDance.visible = false;
-                FlxG.state.logoBl.visible = false;
+    rightLevelArrow = new FlxSprite(((FlxG.width / 2) + 230), 540);
+    rightLevelArrow.frames = leftLevelArrow.frames;
+    rightLevelArrow.animation.addByPrefix('idle', 'rightIdle0');
+    rightLevelArrow.animation.addByPrefix('press', 'rightConfirm0');
+    rightLevelArrow.animation.play('idle');
+    rightLevelArrow.cameras = [cameraUI];
+    add(rightLevelArrow);
 
-                finished = true;
+    leftDifficultyArrow = new FlxSprite(((FlxG.width / 2) - 215), 15);
+    leftDifficultyArrow.frames = Paths.getSparrowAtlas('storymenu/ui/arrows');
+    leftDifficultyArrow.animation.addByPrefix('idle', 'leftIdle0');
+    leftDifficultyArrow.animation.addByPrefix('press', 'leftConfirm0');
+    leftDifficultyArrow.animation.play('idle');
+    leftDifficultyArrow.cameras = [cameraUI];
+    add(leftDifficultyArrow);
 
-                //FlxG.state.titleText.destroy();
-                //FlxG.state.add(FlxG.state.titleText);
+    rightDifficultyArrow = new FlxSprite(((FlxG.width / 2) + 180), 15);
+    rightDifficultyArrow.frames = leftDifficultyArrow.frames;
+    rightDifficultyArrow.animation.addByPrefix('idle', 'rightIdle0');
+    rightDifficultyArrow.animation.addByPrefix('press', 'rightConfirm0');
+    rightDifficultyArrow.animation.play('idle');
+    rightDifficultyArrow.cameras = [cameraUI];
+    add(rightDifficultyArrow);
+    
+    levelDebugText = new FlxText(Math.max(FullScreenScaleMode.gameNotchSize.x, 10), 160, 0, ('Levels: ' + levelIds));
+    levelDebugText.setFormat('5by7', 32, FlxColor.WHITE, 'RIGHT');
+    levelDebugText.alpha = 1;
+    levelDebugText.zIndex = 1000;
+    levelDebugText.cameras = [cameraUI];
+    add(levelDebugText);
 
-            }
-        }
-	
-	if (backer != null && FlxG.state.transitioning == false)
-	{
-		_timer += event.elapsed;
-		backer.y = backerY + (Math.sin(_timer * 5)*40)-50;
-	}
+    difficultyDebugText = new FlxText(Math.max(FullScreenScaleMode.gameNotchSize.x, 10), 190, 0, ('Difficulties: ' + difficultyList));
+    difficultyDebugText.setFormat('5by7', 32, FlxColor.WHITE, 'RIGHT');
+    difficultyDebugText.alpha = 1;
+    difficultyDebugText.zIndex = 1000;
+    difficultyDebugText.cameras = [cameraUI];
+    add(difficultyDebugText);
 
-        if (FlxG.state.transitioning == true)
-        {
-                _timer += event.elapsed;
-                backer.y = backer.y - (_timer - 7);
-        }
+    curlevelDebugText = new FlxText(Math.max(FullScreenScaleMode.gameNotchSize.x, 10), 220, 0, ('Cur Levels: ' + currentLevelId));
+    curlevelDebugText.setFormat('5by7', 32, FlxColor.WHITE, 'RIGHT');
+    curlevelDebugText.alpha = 1;
+    curlevelDebugText.zIndex = 1000;
+    curlevelDebugText.cameras = [cameraUI];
+    add(curlevelDebugText);
+
+    curdifficultyDebugText = new FlxText(Math.max(FullScreenScaleMode.gameNotchSize.x, 10), 250, 0, ('Cur Difficulties: ' + currentDifficultyId));
+    curdifficultyDebugText.setFormat('5by7', 32, FlxColor.WHITE, 'RIGHT');
+    curdifficultyDebugText.alpha = 1;
+    curdifficultyDebugText.zIndex = 1000;
+    curdifficultyDebugText.cameras = [cameraUI];
+    add(curdifficultyDebugText);
+
+    variationDebugText = new FlxText(Math.max(FullScreenScaleMode.gameNotchSize.x, 10), 310, 0, ('Variations: ' + playerIds));
+    variationDebugText.setFormat('5by7', 32, FlxColor.WHITE, 'RIGHT');
+    variationDebugText.alpha = 1;
+    variationDebugText.zIndex = 1000;
+    variationDebugText.cameras = [cameraUI];
+    add(variationDebugText);
+
+    curVariationDebugText = new FlxText(Math.max(FullScreenScaleMode.gameNotchSize.x, 10), 280, 0, (('Cur Player: ' + currentPlayer) + ' - ' + ('Cur Variation: ' + currentVariation)));
+    curVariationDebugText.setFormat('5by7', 32, FlxColor.WHITE, 'RIGHT');
+    curVariationDebugText.alpha = 1;
+    curVariationDebugText.zIndex = 1000;
+    curVariationDebugText.cameras = [cameraUI];
+    add(curVariationDebugText);
+
+    listedVariationDebugText = new FlxText(Math.max(FullScreenScaleMode.gameNotchSize.x, 10), 340, 0, ('Level Variations: ' + levelVariations));
+    listedVariationDebugText.setFormat('5by7', 32, FlxColor.WHITE, 'RIGHT');
+    listedVariationDebugText.alpha = 1;
+    listedVariationDebugText.zIndex = 1000;
+    listedVariationDebugText.cameras = [cameraUI];
+    add(listedVariationDebugText);
+
+    levelTitles = new FlxTypedGroup();
+    levelTitles.zIndex = 15;
+    add(levelTitles);
+
+    levelDebugText.visible = !levelDebugText.visible;
+    difficultyDebugText.visible = !difficultyDebugText.visible;
+    curlevelDebugText.visible = !curlevelDebugText.visible;
+    curdifficultyDebugText.visible = !curdifficultyDebugText.visible;
+    variationDebugText.visible = !variationDebugText.visible;
+    curVariationDebugText.visible = !curVariationDebugText.visible;
+    listedVariationDebugText.visible = !listedVariationDebugText.visible;
+    
+    updateData();
+    buildLevelTitles();
+    buildDifficultySprite();
+    updateTracklist();
+    updateLevelText();
+  }
+
+   override function update(elapsed:Float):Void
+  {
+    super.update(elapsed);
+
+    handleKeyPresses();
+    highScoreLerp = Std.int(MathUtil.snap(MathUtil.smoothLerpPrecision(highScoreLerp, highScore, elapsed, 0.307), highScore, 1));
+    scoreText.text = 'LEVEL SCORE: '+ Math.round(highScoreLerp);
+
+    if (weeksSelected)
+    {
+      leftDifficultyArrow.alpha = 0.5;
+      rightDifficultyArrow.alpha = 0.5;
+      leftLevelArrow.alpha = 1;
+      rightLevelArrow.alpha = 1;
     }
+    else
+    {
+      leftDifficultyArrow.alpha = 1.0;
+      rightDifficultyArrow.alpha = 1.0;
+      leftLevelArrow.alpha = 0.5;
+      rightLevelArrow.alpha = 0.5;
+    }
+  }
+
+  function handleKeyPresses():Void
+  {
+    if (controls.active)
+    {
+      if (controls.active)
+      {
+        if (controls.UI_UP_P && weeksSelected == true|| SwipeUtil.swipeUp && weeksSelected == true)
+        {
+          weeksSelected = false;
+          FunkinSound.playOnce(Paths.sound('scrollMenu'), 0.4);
+        }
+
+        if (controls.UI_DOWN_P && weeksSelected == false || SwipeUtil.swipeDown && weeksSelected == false )
+        {
+          weeksSelected = true;
+          FunkinSound.playOnce(Paths.sound('scrollMenu'), 0.4);
+        }
+
+        if(FlxG.keys.justPressed.F1)
+        {
+          levelDebugText.visible = !levelDebugText.visible;
+          difficultyDebugText.visible = !difficultyDebugText.visible;
+          curlevelDebugText.visible = !curlevelDebugText.visible;
+          curdifficultyDebugText.visible = !curdifficultyDebugText.visible;
+          variationDebugText.visible = !variationDebugText.visible;
+          curVariationDebugText.visible = !curVariationDebugText.visible;
+          listedVariationDebugText.visible = !listedVariationDebugText.visible;
+        }
+
+        if (controls.FREEPLAY_CHAR_SELECT #if FEATURE_TOUCH_CONTROLS || TouchUtil.overlaps(ostName) #end)
+        {
+          changePlayers();
+        }
+
+        #if !html5
+        if (FlxG.mouse.wheel != 0)
+        {
+          changeSelection(-Math.round(FlxG.mouse.wheel));
+        }
+        #else
+        if (FlxG.mouse.wheel < 0)
+        {
+          changeSelection(-Math.round(FlxG.mouse.wheel / 8));
+        }
+        else if (FlxG.mouse.wheel > 0)
+        {
+          changeSelection(-Math.round(FlxG.mouse.wheel / 8));
+        }
+        #end
+
+        if (controls.UI_RIGHT_P #if FEATURE_TOUCH_CONTROLS
+          || (SwipeUtil.swipeRight && TouchUtil.touch != null && TouchUtil.touch.deltaViewY < 10 && TouchUtil.touch.deltaViewY > -10)
+          || (TouchUtil.pressAction(rightDifficultyArrow, null, false)) #end)
+        {
+          #if FEATURE_TOUCH_CONTROLS
+          @:privateAccess
+          if (TouchUtil.touch != null
+            && !TouchUtil.pressAction(rightDifficultyArrow, null, false)) TouchUtil.touch._startY = TouchUtil.touch.viewY;
+          #end
+          changeSelection(1);
+        }
+
+        if (controls.UI_LEFT_P #if FEATURE_TOUCH_CONTROLS
+          || (SwipeUtil.swipeLeft && TouchUtil.touch != null && TouchUtil.touch.deltaViewY < 10 && TouchUtil.touch.deltaViewY > -10)
+          || (TouchUtil.pressAction(leftDifficultyArrow, null, false)) #end)
+        {
+          #if FEATURE_TOUCH_CONTROLS
+          @:privateAccess
+          if (TouchUtil.touch != null
+            && !TouchUtil.pressAction(leftDifficultyArrow, null, false)) TouchUtil.touch._startY = TouchUtil.touch.viewY;
+          #end
+          changeSelection(-1);
+        }
+
+        if (controls.UI_RIGHT #if FEATURE_TOUCH_CONTROLS || TouchUtil.overlaps(rightDifficultyArrow) #end)
+        {
+          if (weeksSelected != true) rightDifficultyArrow.animation.play('press');
+          if (weeksSelected == true) rightLevelArrow.animation.play('press');
+        }
+        else
+        {
+          if (weeksSelected != true) rightDifficultyArrow.animation.play('idle');
+          if (weeksSelected == true) rightLevelArrow.animation.play('idle');
+        }
+
+        if (controls.UI_LEFT #if FEATURE_TOUCH_CONTROLS || TouchUtil.overlaps(leftDifficultyArrow) #end)
+        {
+          if (weeksSelected != true) leftDifficultyArrow.animation.play('press');
+          if (weeksSelected == true) leftLevelArrow.animation.play('press');
+        }
+        else
+        {
+          if (weeksSelected != true) leftDifficultyArrow.animation.play('idle');
+          if (weeksSelected == true) leftLevelArrow.animation.play('idle');
+        }
+      }
+
+      if (controls.ACCEPT #if FEATURE_TOUCH_CONTROLS || TouchUtil.overlaps(levelTitles.members[levelList.indexOf(currentLevelId)]) #end)
+      {
+        selectLevel();
+      }
+
+      #if FEATURE_TOUCH_CONTROLS
+      if (TouchUtil.justReleased && !TouchUtil.overlaps(leftDifficultyArrow) && !SwipeUtil.justSwipedAny)
+      {
+        for (i in 0...levelTitles.members.length)
+        {
+          final item = levelTitles.members[i];
+          final selectedItem = levelTitles.members[levelList.indexOf(currentLevelId)];
+
+          if (!TouchUtil.pressAction(item, null, false)) continue;
+
+          (item == selectedItem) ? selectLevel() : changeLevel(i - levelList.indexOf(currentLevelId));
+        }
+      }
+      #end
+    }
+
+    if (controls.BACK && controls.active #if FEATURE_TOUCH_CONTROLS || TouchUtil.overlaps(backButton) && controls.active #end) returnToMainMenu();
+  }
+
+  function returnToMainMenu():Void
+  {
+    
+    backButton.animation.play("back");
+    backButton.y = backButton.y - backButton.height / 6;
+    backButton.x = backButton.x - 15;
+    controls.active = false;
+
+    new FlxTimer().start(1, _ -> {
+      FlxG.switchState(() -> new funkin.ui.mainmenu.MainMenuState());
+    });
+  }
+
+  function updateLevelData():Void
+  {
+    levelIds = LevelRegistry.instance.listSortedLevelIds();
+
+    var levelScore:Null<SaveScoreData> = Save.instance.getLevelScore(currentLevelId, currentDifficultyId);
+    highScore = levelScore?.score ?? 0;
+
+    currentLevel = LevelRegistry.instance.fetchEntry(currentLevelId);
+    if (currentLevel == null) throw 'Could not fetch data for level: ${currentLevelId}';
+    isLevelUnlocked = currentLevel == null ? false : currentLevel.isUnlocked();
+
+    //Does level have current variation??
+    for (i in 0...levelIds.length)
+    {
+      var level:Level = LevelRegistry.instance.fetchEntry(levelIds[i]);
+      level = currentLevel;
+      var levelSongs:Array;
+      var firstSong:Song;
+      var availableVariations:Array;
+      levelSongs = level.getSongs();
+      song = SongRegistry.instance.fetchEntry(levelSongs[0]);
+      availableVariations = song.getVariationsByCharacter(currentPlayer);
+      levelVariations = song.get_variations();
+    }
+
+    for (levelTitleItem in levelTitles.members)
+      {
+        levelTitleItem.scriptCall('changeVariation', currentVariation, currentPlayer, levelVariations);
+      };
+
+    listedVariationDebugText.text = ('Level Variations: ' + levelVariations);
+  }
+
+  function updateData():Void
+  {
+    updateLevelData();
+
+    currentVariation = currentPlayer.id;
+    if (currentDifficultyId == 'erect' || currentDifficultyId == 'nightmare') currentVariation = 'erect';
+    if (currentPlayer.id == 'bf') currentVariation = 'default';
+    curVariationDebugText.text = (('Cur Player: ' + currentPlayer) + ' - ' + ('Cur Variation: ' + currentVariation));
+
+    difficultyList = currentLevel.getDifficulties();
+    if (playerIds[playerSelection] != 'bf')
+    {
+      difficultyList.remove('erect');
+      difficultyList.remove('nightmare');
+      difficultySelection = difficultyList.length - 1;
+      currentDifficultyId = difficultyList[difficultySelection];
+    }
+    if(difficultyDebugText != null) difficultyDebugText.text = ('Difficulties: ' + difficultyList);
+    if(difficultySelection >= difficultyList.length)
+    {
+      difficultySelection = currentLevel.getDifficulties().length-1;
+      currentDifficultyId = difficultyList[difficultySelection];
+      difficultyDebugText.text = ('Difficulties: ' + difficultyList);
+      curdifficultyDebugText.text = ('Cur Difficulties: ' + currentDifficultyId + ' - ' + difficultySelection);
+    }
+  }
+
+  function changeSelection(change:Int = 0):Void
+  {
+    updateData();
+    updateTracklist();
+
+    if (weeksSelected == true)
+    {
+      changeLevels(change);
+    }
+    else
+    {
+      changeDifficulty(change);
+    }
+  }
+
+  function changeDifficulty(change:Int = 0):Void
+  {
+    var currentIndex:Int = difficultyList.indexOf(currentDifficultyId);
+    var prevIndex:Int = currentIndex;
+
+    currentIndex += change;
+  
+    // Dont wrap around
+    //if (currentIndex < 0) currentIndex = 0;
+    //if (currentIndex >= difficultyList.length) currentIndex = difficultyList.length - 1;
+    // Wrap around
+    if (currentIndex < 0) currentIndex = difficultyList.length - 1;
+    if (currentIndex >= difficultyList.length) currentIndex = 0;
+
+    difficultySelection = currentIndex;
+    
+
+    var previousDifficultyId:String = currentLevelId;
+    currentDifficultyId = difficultyList[currentIndex];
+    rememberedDifficulty = currentDifficultyId;
+
+    updateData();
+
+    if (currentIndex != prevIndex) FunkinSound.playOnce(Paths.sound('scrollMenu'), 0.4);
+
+
+    curdifficultyDebugText.text = ('Cur Difficulties: ' + currentDifficultyId + ' - ' + difficultySelection);
+
+
+    updateData();
+    buildDifficultySprite(change);
+    updateTracklist();
+    updateLevelText();
+  }
+
+  function buildLevelTitles():Void
+  {
+    levelTitles.clear();
+
+    for (levelIndex in 0...levelIds.length)
+    {
+      var levelId:String = levelIds[levelIndex];
+      var level:Level = LevelRegistry.instance.fetchEntry(levelId);
+      if (level == null || !level.isVisible()) continue;
+
+      // TODO: Readd lock icon if unlocked is false.
+
+      var levelTitleItem = ScriptedFlxSpriteGroup.init('StoryTitle', ((FlxG.width / 2) + 450 * (levelIndex)), FlxG.height - 145 , level);
+      levelTitleItem.targetX = (FlxG.width/2) - (levelTitleItem.title.width/2);
+      levelTitleItem.alpha = 0.95;
+      if (levelIndex == 0) levelTitleItem.y = FlxG.height - 175;
+      if (levelIndex == 0) levelTitleItem.alpha = 1;
+      levelTitleItem.targetY = levelTitleItem.y;
+      levelTitleItem.index = (levelIndex);
+      levelTitleItem.x = levelTitleItem.targetX  + 450 * (levelIndex);
+      levelTitleItem.targetX = (levelTitleItem.x);
+      levelTitles.add(levelTitleItem);
+      levelTitles.cameras = [cameraUI];
+    }
+  }
+
+  function changePlayers(index:Int):Void
+  {
+    var currentIndex:Int = playerList.indexOf(currentPlayer);
+    var prevIndex:Int = currentIndex;
+    
+    currentIndex += 1;
+
+    //Wrap around
+    //if (currentIndex < 0) currentIndex = playerList.length - 1;
+    if (currentIndex >= playerList.length) currentIndex = 0;
+
+    currentPlayer = playerList[currentIndex];
+    playerSelection = currentIndex;
+
+    if (currentPlayer.id == 'bf' || currentPlayer.id == 'pico')
+    {
+     if (currentPlayer.id == 'bf') ostName.text = 'OFFICIAL';
+      if (currentPlayer.id == 'pico') ostName.text = 'OFFICIAL - PICO';
+    }
+    else
+    {
+      ostName.text = 'MOD - ' + currentPlayer.getName();
+      ostName.text = ostName.text.toUpperCase();
+    }
+
+    updateData();
+    changeLevels();
+    updateLevelText();
+    changeDifficulty();
+  }
+
+  function changeLevels(change:Int = 0):Void
+  {
+    var currentIndex:Int = levelIds.indexOf(currentLevelId);
+    var prevIndex:Int = currentIndex;
+
+    currentIndex += change;
+  
+    // Dont wrap around
+    if (currentIndex < 0) currentIndex = 0;
+    if (currentIndex >= levelIds.length) currentIndex = levelIds.length - 1;
+    // Wrap around
+    //if (currentIndex < 0) currentIndex = levelIds.length - 1;
+    //if (currentIndex >= levelIds.length) currentIndex = 0;
+
+    levelSelection = currentIndex;
+    
+    var previousLevelId:String = currentLevelId;
+    currentLevelId = levelIds[currentIndex];
+    rememberedLevelId = currentLevelId;
+
+    updateData(change);
+
+    if (currentIndex != prevIndex) FunkinSound.playOnce(Paths.sound('scrollMenu'), 0.4);
+
+    if (currentIndex != prevIndex)
+    {
+      
+      for (levelTitleItem in levelTitles.members)
+      {
+      levelTitleItem.targetX = (levelTitleItem.targetX - (change * 450));
+      if (levelTitleItem.index == currentIndex)
+        {
+          levelTitleItem.targetY = FlxG.height - 175;
+          levelTitleItem.alpha = 1;
+        }
+      else
+        {
+          levelTitleItem.targetY = FlxG.height - 145;
+          levelTitleItem.alpha = 0.75;
+        }
+        levelTitleItem.scriptCall('updatePosition', levelTitleItem);
+      };
+
+      if(difficultySelection >= difficultyList.length)
+      {
+        difficultySelection = currentLevel.getDifficulties().length-1;
+        currentDifficultyId = difficultyList[difficultySelection];
+        difficultyDebugText.text = ('Difficulties: ' + difficultyList);
+        curdifficultyDebugText.text = ('Cur Difficulties: ' + currentDifficultyId + ' - ' + difficultySelection);
+        changeDifficulty(0);
+        remove(difficultySprite);
+        difficultySprite.destroy();
+        buildDifficultySprite(0, currentDifficultyId);
+      }
+    }
+
+    curlevelDebugText.text = ('Cur Levels: ' + currentLevelId + ' - ' + levelSelection);
+
+    if (currentIndex != prevIndex)updateTracklist();
+    if (currentIndex != prevIndex)updateLevelText();
+    if (currentIndex != prevIndex)generateBGtext();
+  }
+
+  function updateTracklist():Void
+  {
+    tracklistText.text = '';
+    tracklistText.text += currentLevel.getSongDisplayNames(currentDifficultyId).join(', ');
+    tracklistText.x = ((FlxG.width /2 ) - (tracklistText.width / 2));
+  }
+
+  function updateLevelText():Void
+  {
+    levelTitleText.text = currentLevel.getTitle();
+
+    if (playerList[playerSelection] != 'bf' && playerList[playerSelection] != 'PlayableCharacter(bf)') levelTitleText.text = (currentLevel.getTitle() + ' - ' + currentPlayer.getName().toUpperCase() + ' - MIX');
+    if (currentDifficultyId == 'erect' || currentDifficultyId == 'nightmare') levelTitleText.text = (currentLevel.getTitle() + ' - ERECT');
+    
+    //updateBGText();
+    //generateBGtext();
+  }
+
+  function generateBGtext(text:FlxText)
+  {
+    bgText.killMembers();
+    for (i in 0...(Math.round((FlxG.height - (Header.height + Bottom.height - 16)) / 64) + 1))
+    {
+      var scrollingText = ScriptedFlxSpriteGroup.init('StoryScrollingText', (0), (Header.height - 12 + ((i * 64)+12)), currentLevel.getTitle(), (Header.width), false, 32);
+      scrollingText.speed = 0.5;
+      scrollingText.alpha = 0.15;
+      scrollingText.color = 0xFFC68700;
+      if (FlxMath.isOdd(i)) scrollingText.alpha = 0.15;
+      add(scrollingText);
+      scrollingText.cameras = [cameraBG];
+      bgText.add(scrollingText);
+    }
+  }
+
+  function selectLevel():Void
+  {
+    if (!currentLevel.isUnlocked())
+    {
+      FunkinSound.playOnce(Paths.sound('cancelMenu'));
+      return;
+    }
+
+    if (selectedLevel) return;
+
+    selectedLevel = true;
+
+    if (playerList[playerSelection] != 'bf') currentVariation = playerIds[playerSelection];
+
+    if (currentPlayer.id == 'bf') currentVariation = 'default';
+
+    if (currentDifficultyId == 'erect' || currentDifficultyId == 'nightmare') currentVariation = 'erect';
+
+    FunkinSound.playOnce(Paths.sound('confirmMenu'));
+
+    levelTitles.members[levelSelection].isFlashing = true;
+
+    //for (prop in levelProps.members)
+    //{
+      //prop.playConfirm();
+    //}
+
+    Paths.setCurrentLevel(currentLevel.id);
+
+    switch (currentVariation)
+    {
+      default:
+        var targetInstrumental:string = 'default';
+        PlayStatePlaylist.playlistSongIds = currentLevel.getSongs();
+        PlayStatePlaylist.isStoryMode = true;
+        PlayStatePlaylist.campaignScore = 0;
+
+        var targetSongId:String = PlayStatePlaylist.playlistSongIds.shift();
+
+        var targetSong:Song = SongRegistry.instance.fetchEntry(targetSongId);
+
+        PlayStatePlaylist.campaignId = currentLevel.id;
+        PlayStatePlaylist.campaignTitle = currentLevel.getTitle();
+        PlayStatePlaylist.campaignDifficulty = currentDifficultyId;
+
+        //Highscore.talliesLevel = new funkin.Highscore.Tallies();
+
+        new FlxTimer().start(1, function(tmr:FlxTimer) {
+          FlxTransitionableState.skipNextTransIn = false;
+          FlxTransitionableState.skipNextTransOut = false;
+
+          var targetVariation:String = currentVariation; //targetSong.getFirstValidVariation(PlayStatePlaylist.campaignDifficulty);
+
+          if (playerList[playerSelection] != 'bf') targetInstrumental = playerIds[playerSelection];
+
+          LoadingState.loadPlayState(
+            {
+              targetSong: targetSong,
+              targetDifficulty: PlayStatePlaylist.campaignDifficulty,
+              targetVariation: targetVariation,
+              targetInstrumental: targetInstrumental
+            }, true);
+        });
+      case ('erect'):
+        var targetInstrumental:string = 'erect';
+        PlayStatePlaylist.playlistSongIds = currentLevel.getSongs();
+        PlayStatePlaylist.isStoryMode = true;
+        PlayStatePlaylist.campaignScore = 0;
+
+        var targetSongId:String = PlayStatePlaylist.playlistSongIds.shift();
+
+        var targetSong:Song = SongRegistry.instance.fetchEntry(targetSongId);
+
+        //targetSong.listAltInstrumentalIds(currentDifficultyId)[0] = targetInstrumental;
+
+        PlayStatePlaylist.campaignId = currentLevel.id + '-erect';
+        PlayStatePlaylist.campaignTitle = currentLevel.getTitle();
+        PlayStatePlaylist.campaignDifficulty = currentDifficultyId;
+
+        //Highscore.talliesLevel = new funkin.Highscore.Tallies();
+
+        new FlxTimer().start(1, function(tmr:FlxTimer) {
+          FlxTransitionableState.skipNextTransIn = false;
+          FlxTransitionableState.skipNextTransOut = false;
+
+          var targetVariation:String = 'erect';
+
+          LoadingState.loadPlayState(
+            {
+              targetSong: targetSong,
+              targetDifficulty: PlayStatePlaylist.campaignDifficulty,
+              targetVariation: targetVariation,
+              targetInstrumental: targetInstrumental
+            }, true);
+        });
+    }
+  }
+
+  function updateBGText():Void
+  {
+    bgText.forEach(function(scrollingText)
+    {
+      scrollingText.scrollingText = levelTitleText.text;
+      scrollingText.placementOffset = levelTitleText.text.length;
+    });
+  }
+
+  var diff = rememberedDifficulty;
+
+  function buildDifficultySprite(change:Int, forceDifficulty:String):Void
+  {
+    if (diff != currentDifficultyId || diff == null)
+    {
+      diff = currentDifficultyId;
+      if (forceDifficulty != null) diff = forceDifficulty;
+      remove(difficultySprite);
+
+      if (difficultySprite == null || true)
+      {
+          difficultySprite = new FlxSprite(leftDifficultyArrow.x + leftDifficultyArrow.width + 10, leftDifficultyArrow.y);
+
+          if (Assets.exists(Paths.file('images/storymenu/difficulties/'+diff+'.xml')))
+          {
+            difficultySprite.frames = Paths.getSparrowAtlas('storymenu/difficulties/'+diff);
+            difficultySprite.animation.addByPrefix('idle', 'idle0', 24, true);
+            if (Preferences.flashingLights) difficultySprite.animation.play('idle');
+          }
+          else
+          {
+            difficultySprite.loadGraphic(Paths.image('storymenu/difficulties/'+diff));
+          }
+      }
+
+      difficultySprite.alpha = 1;
+      difficultySprite.y = leftDifficultyArrow.y + 15;
+      if (diff == 'nightmare') difficultySprite.y -= 5;
+      difficultySprite.x = (FlxG.width / 2) - (difficultySprite.width / 2);
+
+      if (change == -1)
+      {
+        difficultySprite.alpha = 0;
+        difficultySprite.x += 35;
+        FlxTween.tween(difficultySprite, {x: ((FlxG.width / 2) - (difficultySprite.width / 2)), alpha: 1}, 0.07);
+      }
+
+      if (change == 1)
+      {
+        difficultySprite.alpha = 0;
+        difficultySprite.x -= 35;
+        FlxTween.tween(difficultySprite, {x: ((FlxG.width / 2) - (difficultySprite.width / 2)), alpha: 1}, 0.07);
+      }
+
+      difficultySprite.cameras = [cameraUI];
+      add(difficultySprite);
+    } 
   }
 }

@@ -3,6 +3,7 @@ import funkin.ui.options.PreferencesMenu;
 import funkin.ui.options.OptionsState;
 import flixel.FlxG;
 import Std;
+import funkin.util.Constants;
 
 //Shout out to JugieNoob for the og code !!!
 
@@ -21,6 +22,30 @@ class FunkinOnALoopSettings extends Module {
         if (FlxG.save.data.freeplayCutscenes == null)
         {
             FlxG.save.data.freeplayCutscenes = true;
+        }
+
+        if (FlxG.save.data.rememberedCharacterId == null)
+        {
+            FlxG.save.data.rememberedCharacterId = 'bf';
+            FlxG.save.flush();
+        }
+
+        if (FlxG.save.data.rememberedlevelId == null)
+        {
+            FlxG.save.data.rememberedlevelId = 'tutorial';
+            FlxG.save.flush();
+        }
+
+        if (FlxG.save.data.rememberedDifficulty == null)
+        {
+            FlxG.save.data.rememberedDifficulty = 'normal';
+            FlxG.save.flush();
+        }
+
+        if (FlxG.save.data.rememberedVariation == null)
+        {
+            FlxG.save.data.rememberedVariation = 'default';
+            FlxG.save.flush();
         }
 
         if (FlxG.save.data.betterAbot == null)

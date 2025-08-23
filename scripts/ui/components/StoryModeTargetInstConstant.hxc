@@ -1,0 +1,296 @@
+import funkin.play.PlayState;
+import funkin.play.PlayStatePlaylist;
+import funkin.modding.module.Module;
+import funkin.Paths;
+import flixel.addons.display.FlxTiledSprite;
+import flixel.FlxG;
+import flixel.text.FlxText;
+import funkin.ui.FullScreenScaleMode;
+
+import funkin.play.PauseSubState;
+import flixel.addons.transition.FlxTransitionableState;
+import flixel.addons.transition.Transition;
+import funkin.play.scoring.Scoring;
+import funkin.play.song.Song;
+import funkin.play.stage.Stage;
+import funkin.save.Save;
+import funkin.ui.mainmenu.MainMenuState;
+import funkin.ui.MusicBeatSubState;
+import funkin.ui.transition.LoadingState;
+import funkin.data.event.SongEventRegistry;
+import funkin.data.notestyle.NoteStyleRegistry;
+import funkin.data.song.SongRegistry;
+import funkin.data.stage.StageRegistry;
+import funkin.util.Constants;
+import funkin.Highscore;
+
+#if mobile
+import funkin.util.TouchUtil;
+import funkin.mobile.ui.FunkinHitbox;
+import funkin.mobile.input.ControlsHandler;
+import funkin.mobile.ui.FunkinHitbox.FunkinHitboxControlSchemes;
+#if FEATURE_MOBILE_ADVERTISEMENTS
+import funkin.mobile.util.AdMobUtil;
+#end
+#end
+#if FEATURE_DISCORD_RPC
+import funkin.api.discord.DiscordClient;
+#end
+#if FEATURE_NEWGROUNDS
+import funkin.api.newgrounds.Medals;
+import funkin.api.newgrounds.Leaderboards;
+#end
+
+//Exists for story mode, keeps the instrumental variation consistent for each song through the week.
+
+class StoryModeTargetInstConstant extends Module 
+{
+
+    var rightGoddamnNow:bool = false;
+
+    var songSet:Bool = false;
+
+    function new():void
+    {
+        super('StoryModeTargetInstConstant');
+
+        debugText = new FlxText(8 - FullScreenScaleMode.gameNotchSize.x, 8, FlxG.width - 8 - 8, 'STORY MODE', 48);
+        debugText.alignment = 'left';
+        debugText.font = "5by7";
+        debugText.color = 0xFFffe1cd;
+    }
+
+    public function onSongEnd(event:ScriptEvent):Void
+    {
+        super.onSongEnd(event);
+
+    if (PlayState.instance.currentVariation != 'default' && PlayStatePlaylist.isStoryMode() == true) // && PlayState.instance.isInCutscene == false)
+    {
+
+      event.cancel();
+    
+    var P = PlayState.instance;
+    var isNewHighscore = false;
+
+    if (PlayStatePlaylist.isStoryMode)
+    {
+
+        if (FlxG.sound.music != null) FlxG.sound.music.volume = 0;
+        P.vocals.volume = 0;
+        P.mayPauseGame = false;
+        P.isSongEnd = true;
+
+        // Prevent ghost misses while the song is ending.
+        P.disableKeys = true;
+
+        #if mobile
+        // Hide the buttons while the song is ending.
+        if (P.hitbox != null) P.hitbox.visible = false;
+        P.pauseButton.visible = false;
+        P.pauseCircle.visible = false;
+        #end
+
+        P.deathCounter = 0;
+
+        // TODO: This line of code makes me sad, but you can't really fix it without a breaking migration.
+        // `easy`, `erect`, `normal-pico`, etc.
+        var suffixedDifficulty = (P.currentVariation != Constants.DEFAULT_VARIATION
+        && P.currentVariation != 'erect') ? '$P.currentDifficulty-${P.currentVariation}' : P.currentDifficulty;
+
+        var prevScoreData:Null<SaveScoreData> = Save.instance.getSongScore(P.currentSong.id, suffixedDifficulty);
+
+        if (P.currentSong != null && P.currentSong.validScore)
+        {
+            // crackhead double thingie, sets whether was new highscore, AND saves the song!
+            var data =
+            {
+            score: P.songScore,
+            tallies:
+            {
+              sick: Highscore.tallies.sick,
+              good: Highscore.tallies.good,
+              bad: Highscore.tallies.bad,
+              shit: Highscore.tallies.shit,
+              missed: Highscore.tallies.missed,
+              combo: Highscore.tallies.combo,
+              maxCombo: Highscore.tallies.maxCombo,
+              totalNotesHit: Highscore.tallies.totalNotesHit,
+              totalNotes: Highscore.tallies.totalNotes,
+            },
+            };
+
+        // adds current song data into the tallies for the level (story levels)
+        Highscore.talliesLevel = Highscore.combineTallies(Highscore.tallies, Highscore.talliesLevel);
+
+        #if FEATURE_NEWGROUNDS
+            Leaderboards.submitSongScore(P.currentSong.id, suffixedDifficulty, songScore);
+        #end
+
+        if (!P.isPracticeMode && !P.isBotPlayMode)
+        {
+            #if FEATURE_NEWGROUNDS
+                Events.logCompleteSong(P.currentSong.id, P.currentVariation);
+            #end
+
+            isNewHighscore = Save.instance.isSongHighScore(P.currentSong.id, suffixedDifficulty, data);
+
+            // If no high score is present, save both score and rank.
+            // If score or rank are better, save the highest one.
+            // If neither are higher, nothing will change.
+            Save.instance.applySongRank(P.currentSong.id, suffixedDifficulty, data);
+
+            if (isNewHighscore) {}
+        }
+    }
+
+    #if FEATURE_NEWGROUNDS
+    // Only award medals if we are LEGIT.
+    if (!P.isPracticeMode && !P.isBotPlayMode && !P.isChartingMode && P.currentSong.validScore)
+    {
+      // Award a medal for beating at least one song on any difficulty on a Friday.
+      if (Date.now().getDay() == 5) Medals.award(FridayNight);
+
+      // Determine the score rank for this song we just finished.
+      var scoreRank:ScoringRank = Scoring.calculateRank(
+        {
+          score: songScore,
+          tallies:
+            {
+              sick: Highscore.tallies.sick,
+              good: Highscore.tallies.good,
+              bad: Highscore.tallies.bad,
+              shit: Highscore.tallies.shit,
+              missed: Highscore.tallies.missed,
+              combo: Highscore.tallies.combo,
+              maxCombo: Highscore.tallies.maxCombo,
+              totalNotesHit: Highscore.tallies.totalNotesHit,
+              totalNotes: Highscore.tallies.totalNotes,
+            }
+        });
+
+      // Award various medals based on variation, difficulty, song ID, and scoring rank.
+      if (scoreRank == ScoringRank.SHIT) Medals.award(LossRating);
+      if (scoreRank >= ScoringRank.PERFECT && currentDifficulty == 'hard') Medals.award(PerfectRatingHard);
+      if (scoreRank == ScoringRank.PERFECT_GOLD && currentDifficulty == 'hard') Medals.award(GoldPerfectRatingHard);
+      if (Constants.DEFAULT_DIFFICULTY_LIST_ERECT.contains(currentDifficulty)) Medals.award(ErectDifficulty);
+      if (scoreRank == ScoringRank.PERFECT_GOLD && currentDifficulty == 'nightmare') Medals.award(GoldPerfectRatingNightmare);
+      if (currentVariation == 'pico' && !PlayStatePlaylist.isStoryMode) Medals.award(FreeplayPicoMix);
+      if (currentVariation == 'pico' && currentSong.id == 'stress') Medals.award(FreeplayStressPico);
+
+      Events.logEarnRank(scoreRank.toString());
+    }
+    #end
+
+      PlayStatePlaylist.campaignScore += P.songScore;
+
+      // Pop the next song ID from the list.
+      // Returns null if the list is empty.
+      var targetSongId:String = PlayStatePlaylist.playlistSongIds.shift();
+
+      if (targetSongId == null ||SongRegistry)
+      {
+        if (P.currentSong.validScore)
+        {
+          var data =
+            {
+              score: PlayStatePlaylist.campaignScore,
+              tallies:
+                {
+                  // TODO: Sum up the values for the whole week!
+                  sick: 0,
+                  good: 0,
+                  bad: 0,
+                  shit: 0,
+                  missed: 0,
+                  combo: 0,
+                  maxCombo: 0,
+                  totalNotesHit: 0,
+                  totalNotes: 0,
+                },
+            };
+
+          #if FEATURE_NEWGROUNDS
+          // Award a medal for beating a Story level.
+          Medals.awardStoryLevel(PlayStatePlaylist.campaignId);
+
+          // Submit the score for the Story level to Newgrounds.
+          Leaderboards.submitLevelScore(PlayStatePlaylist.campaignId, PlayStatePlaylist.campaignDifficulty, PlayStatePlaylist.campaignScore);
+
+          Events.logCompleteLevel(PlayStatePlaylist.campaignId);
+          #end
+
+          if (Save.instance.isLevelHighScore(PlayStatePlaylist.campaignId, PlayStatePlaylist.campaignDifficulty, data))
+          {
+            Save.instance.setLevelScore(PlayStatePlaylist.campaignId, PlayStatePlaylist.campaignDifficulty, data);
+            isNewHighscore = true;
+          }
+        }
+
+        if (isSubState)
+        {
+          this.close();
+        }
+        else
+        {
+          if (rightGoddamnNow)
+          {
+            moveToResultsScreen(isNewHighscore);
+          }
+          else
+          {
+            zoomIntoResultsScreen(isNewHighscore);
+          }
+        }
+      }
+      else
+      {
+        var difficulty:String = '';
+
+        trace('Loading next song ($targetSongId : $difficulty)');
+
+        FlxTransitionableState.skipNextTransIn = true;
+        FlxTransitionableState.skipNextTransOut = true;
+
+        if (FlxG.sound.music != null) FlxG.sound.music.stop();
+        P.vocals.stop();
+
+    
+          var targetSong:Song = SongRegistry.instance.fetchEntry(targetSongId);
+          var targetVariation:String = P.currentVariation;
+          var targetInstrumental:String = P.currentInstrumental;
+          if (!targetSong.hasDifficulty(PlayStatePlaylist.campaignDifficulty, P.currentVariation))
+          {
+            targetVariation = targetSong.getFirstValidVariation(PlayStatePlaylist.campaignDifficulty) ?? Constants.DEFAULT_VARIATION;
+          }
+          P.remove(P.currentStage);
+          LoadingState.loadPlayState(
+            {
+              targetSong: targetSong,
+              targetDifficulty: PlayStatePlaylist.campaignDifficulty,
+              targetVariation: targetVariation,
+              cameraFollowPoint: P.cameraFollowPoint.getPosition(),
+              targetInstrumental: targetInstrumental
+            });
+      }
+    }
+    else
+    {
+      if (isSubState)
+      {
+        this.close();
+      }
+      else
+      {
+        if (rightGoddamnNow)
+        {
+          moveToResultsScreen(isNewHighscore, prevScoreData);
+        }
+        else
+        {
+          zoomIntoResultsScreen(isNewHighscore, prevScoreData);
+        }
+      }
+    }
+    }
+    }
+}

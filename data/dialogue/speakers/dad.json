@@ -1,0 +1,17 @@
+{
+  "version": "1.0.0",
+  "name": "Dad",
+  "assetPath": "dad_Dialogue",
+  "flipX": true,
+  "isPixel": false,
+  "scale": 1.05,
+  "offsets": [10, 76],
+  "animations": [
+    {
+      "name": "idle",
+      "prefix": "idle",
+      "frameRate": 24,
+      "looped": true
+    }
+  ]
+}

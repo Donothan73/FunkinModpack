@@ -1,0 +1,14 @@
+import funkin.ui.FullScreenScaleMode;
+import funkin.play.cutscene.dialogue.DialogueBox;
+import flixel.FlxSprite;
+
+class DefaultDialogueBox extends DialogueBox
+{
+  public function new()
+  {
+    super('default');
+
+    //this.zIndex = 1;
+    //this.visible = true;
+  }
+}

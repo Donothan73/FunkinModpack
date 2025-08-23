@@ -6,6 +6,8 @@ import funkin.graphics.adobeanimate.FlxAtlasSprite;
 import funkin.modding.base.ScriptedFlxAtlasSprite;
 import funkin.play.notes.notestyle.NoteStyle;
 import funkin.data.notestyle.NoteStyleRegistry;
+import funkin.Conductor;
+import flixel.util.FlxTimer;
 
 
 class CountdownSprites extends Module 
@@ -13,6 +15,8 @@ class CountdownSprites extends Module
 	
 	var styleMatch:bool = false;
 	var goSprite:ScriptedFlxAtlasSprite;
+	var readySprite:ScriptedFlxAtlasSprite;
+	var setSprite:ScriptedFlxAtlasSprite;
  	var noteStyleId:String;
 	var noteStyle:NoteStyle;
 
@@ -31,26 +35,54 @@ class CountdownSprites extends Module
 		if (noteStyleId == 'funkin')
 		{
 			styleMatch = true;
-			goSprite = ScriptedFlxAtlasSprite.init('CountdownGO', -2000, -1500);
+			readySprite = ScriptedFlxAtlasSprite.init('CountdownSprite', 0, 0, 'READY');
+			setSprite = ScriptedFlxAtlasSprite.init('CountdownSprite', 0, 0, 'SET');
+			goSprite = ScriptedFlxAtlasSprite.init('CountdownSprite', 0, 0, 'GO');
 		}
 	}
 
 	public function onCountdownStep(event:CountdownScriptEvent)
 	{
 		super.onCountdownStep(event);
-		if (styleMatch == true && event.step == 'GO')
+		if (styleMatch == true)
+		switch(event.step)
 		{
-			PlayState.instance.currentStage.add(goSprite);
-			goSprite.cameras = [PlayState.instance.camCutscene];
-			goSprite.screenCenter();
-			goSprite.x = goSprite.x - 235;
-			goSprite.y = goSprite.y - 175;
-			goSprite.scriptCall('playCutscene');
+			case 'GO':
+				PlayState.instance.currentStage.add(goSprite);
+				goSprite.cameras = [PlayState.instance.camCutscene];
+				//goSprite.screenCenter();
+				goSprite.x = goSprite.x + 40;
+				goSprite.y = goSprite.y - 225;
+				goSprite.scriptCall('playCutscene');
+
+			case 'ONE':
+				PlayState.instance.currentStage.add(setSprite);
+				setSprite.cameras = [PlayState.instance.camCutscene];
+				//setSprite.screenCenter();
+				setSprite.x = setSprite.x - 150;
+				setSprite.y = setSprite.y - 30;
+				setSprite.scriptCall('playCutscene');
+
+			case 'TWO':
+				PlayState.instance.currentStage.add(readySprite);
+				readySprite.cameras = [PlayState.instance.camCutscene];
+				//readySprite.screenCenter();
+				readySprite.x = readySprite.x - 225;
+				readySprite.scriptCall('playCutscene');
 		}	
 	}
 
 	public function onCountdownEnd(event:CountdownScriptEvent)
 	{
 		super.onCountdownEnd(event);
+		if (styleMatch == true)
+		{
+			new FlxTimer().start((((Conductor.instance.beatLengthMs / 1000) * 1)), function(tmr:FlxTimer)
+			{
+				readySprite.kill();
+				setSprite.kill();
+				goSprite.kill();
+			});
+		}
 	}	
 }

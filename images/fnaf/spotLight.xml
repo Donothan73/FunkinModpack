@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='utf-8'?>
+<TextureAtlas imagePath="spotLight.png">
+<SubTexture name="idle0000" x="0" y="0" width="132" height="149" frameX="0" frameY="0" frameWidth="128" frameHeight="145" />
+<SubTexture name="idle0001" x="132" y="0" width="132" height="149" frameX="0" frameY="0" frameWidth="128" frameHeight="145" />
+<SubTexture name="idle0002" x="264" y="0" width="132" height="149" frameX="0" frameY="0" frameWidth="128" frameHeight="145" />
+<SubTexture name="idle0003" x="0" y="149" width="132" height="149" frameX="0" frameY="0" frameWidth="128" frameHeight="145" />
+<SubTexture name="idle0004" x="132" y="149" width="132" height="149" frameX="0" frameY="0" frameWidth="128" frameHeight="145" />
+<SubTexture name="idle0005" x="264" y="149" width="132" height="149" frameX="0" frameY="0" frameWidth="128" frameHeight="145" />
+<SubTexture name="idle0006" x="396" y="0" width="132" height="149" frameX="0" frameY="0" frameWidth="128" frameHeight="145" />
+</TextureAtlas>

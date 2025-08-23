@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='utf-8'?>
+<TextureAtlas imagePath="cryingChild.png">
+<SubTexture name="idle0000" x="195" y="0" width="84" height="155" frameX="0" frameY="0" frameWidth="84" frameHeight="155" />
+<SubTexture name="idle0001" x="279" y="0" width="84" height="155" frameX="0" frameY="0" frameWidth="84" frameHeight="155" />
+<SubTexture name="right0000" x="0" y="162" width="83" height="155" frameX="0" frameY="0" frameWidth="83" frameHeight="155" />
+<SubTexture name="right0001" x="363" y="0" width="83" height="152" frameX="0" frameY="0" frameWidth="83" frameHeight="152" />
+<SubTexture name="up0000" x="83" y="162" width="82" height="155" frameX="0" frameY="0" frameWidth="82" frameHeight="155" />
+<SubTexture name="up0001" x="363" y="152" width="82" height="152" frameX="0" frameY="0" frameWidth="82" frameHeight="152" />
+<SubTexture name="left0000" x="165" y="162" width="83" height="155" frameX="0" frameY="0" frameWidth="83" frameHeight="155" />
+<SubTexture name="left0001" x="446" y="0" width="83" height="152" frameX="0" frameY="0" frameWidth="83" frameHeight="152" />
+<SubTexture name="down0000" x="248" y="162" width="83" height="155" frameX="0" frameY="0" frameWidth="83" frameHeight="155" />
+<SubTexture name="down0001" x="446" y="152" width="83" height="152" frameX="0" frameY="0" frameWidth="83" frameHeight="152" />
+<SubTexture name="cryFloor0000" x="529" y="364" width="131" height="77" frameX="0" frameY="0" frameWidth="131" frameHeight="77" />
+<SubTexture name="cryFloor0001" x="0" y="455" width="131" height="97" frameX="0" frameY="0" frameWidth="131" frameHeight="97" />
+<SubTexture name="cryKneel0000" x="0" y="317" width="89" height="138" frameX="0" frameY="0" frameWidth="89" frameHeight="138" />
+<SubTexture name="cryKneel0001" x="175" y="317" width="89" height="135" frameX="0" frameY="0" frameWidth="89" frameHeight="135" />
+<SubTexture name="cryKneel0002" x="89" y="317" width="86" height="138" frameX="0" frameY="0" frameWidth="86" frameHeight="138" />
+<SubTexture name="cryKneel0003" x="264" y="317" width="86" height="135" frameX="0" frameY="0" frameWidth="86" frameHeight="135" />
+<SubTexture name="scared0000" x="0" y="0" width="87" height="162" frameX="-32" frameY="-22" frameWidth="150" frameHeight="200" />
+<SubTexture name="scared0001" x="87" y="0" width="108" height="160" frameX="-31" frameY="-22" frameWidth="150" frameHeight="200" />
+<SubTexture name="chomp0000" x="131" y="455" width="170" height="95" frameX="0" frameY="0" frameWidth="170" frameHeight="95" />
+<SubTexture name="chomp0001" x="529" y="0" width="168" height="122" frameX="0" frameY="0" frameWidth="168" frameHeight="122" />
+<SubTexture name="chomp0002" x="529" y="122" width="132" height="121" frameX="0" frameY="-54" frameWidth="170" frameHeight="200" />
+<SubTexture name="sob0000" x="350" y="317" width="82" height="128" frameX="0" frameY="0" frameWidth="82" frameHeight="128" />
+<SubTexture name="sob0001" x="529" y="243" width="83" height="121" frameX="0" frameY="0" frameWidth="83" frameHeight="121" />
+</TextureAtlas>

@@ -306,6 +306,22 @@ class NeneCarCharacter extends MultiSparrowCharacter {
 			}
 		}
 
+			//move with nene as the car moves
+			abot.x = this.x - 100;
+			abot.y = this.y + 216; // 764 - 740
+
+			abotViz.x = abot.x + 200;
+			abotViz.y = abot.y + 84;
+
+			eyeWhites.x = abot.x + 40;
+			eyeWhites.y = abot.y + 250;
+
+			pupil.x = abot.x - 507;
+			pupil.y = abot.y - 492;
+
+			stereoBG.x = abot.x + 150;
+			stereoBG.y = abot.y + 30;
+
 		// refreshes just for the zIndex shit!
 		if (!refershedLol)
 		{

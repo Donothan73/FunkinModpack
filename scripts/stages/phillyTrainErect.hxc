@@ -80,8 +80,8 @@ class PhillyTrainErectStage extends Stage
   {
     super.onCreate(event);
 
-    //hasPlayedInGameCutscene = false;
-    hasPlayedInGameCutscene = true;
+    hasPlayedInGameCutscene = false;
+    //hasPlayedInGameCutscene = true;
     cutsceneSkipped = false;
     canSkipCutscene = false;
     playerShoots = false;
@@ -106,7 +106,7 @@ class PhillyTrainErectStage extends Stage
 		rainShader.intensity = rainShaderStartIntensity;
 
 		rainShaderFilter = new ShaderFilter(rainShader);
-		FlxG.camera.filters = [rainShaderFilter];
+		if ((PlayState.instance.currentVariation) == 'pico') FlxG.camera.filters = [rainShaderFilter];
 
   }
 

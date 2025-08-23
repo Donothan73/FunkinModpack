@@ -1,0 +1,32 @@
+import flixel.FlxG;
+import flixel.FlxSprite;
+import funkin.play.PlayState;
+import funkin.play.stage.Stage;
+import funkin.graphics.adobeanimate.FlxAtlasSprite;
+import funkin.modding.base.ScriptedFlxAtlasSprite;
+import flixel.FlxG;
+import openfl.display.BitmapData;
+import flixel.graphics.FlxGraphic;
+import flixel.math.FlxAngle;
+import flixel.util.FlxGradient;
+
+class MallXmasStage extends Stage
+{
+	function new()
+	{
+		super('mallXmas');
+	}
+
+    override function buildStage()
+	{
+		super.buildStage();
+
+        var bg:FlxSprite = FlxGradient.createGradientFlxSprite(3102, 825, [0xFF5489FF, 0xFF4568FC], 90, true);
+        bg.zIndex = -10;
+        bg.x = -630 - 300;
+        bg.y = -492;
+        bg.cameras = [PlayState.instance.camGame];
+        PlayState.instance.currentStage.add(bg);
+
+    }
+}

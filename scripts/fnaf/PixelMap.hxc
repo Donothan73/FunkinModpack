@@ -1,0 +1,573 @@
+import funkin.ui.MusicBeatState;
+import funkin.ui.MusicBeatSubState;
+import funkin.modding.base.ScriptedFlxSprite;
+import funkin.modding.base.ScriptedFlxSpriteGroup;
+import flixel.math.FlxPoint;
+import flixel.FlxObject;
+import flixel.FlxSprite;
+import funkin.ui.MusicBeatSubState;
+import funkin.audio.FunkinSound;
+import funkin.ui.TextMenuList;
+import funkin.ui.debug.charting.ChartEditorState;
+import funkin.util.logging.CrashHandler;
+import flixel.addons.transition.FlxTransitionableState;
+import funkin.util.FileUtil;
+import flixel.FlxObject;
+import flixel.FlxSubState;
+import flixel.FlxSprite;
+import funkin.input.Controls;
+import flixel.effects.FlxFlicker;
+import flixel.math.FlxPoint;
+import flixel.util.FlxColor;
+import flixel.tweens.FlxEase;
+import funkin.graphics.FunkinCamera;
+import funkin.graphics.FunkinSprite;
+import funkin.audio.FunkinSound;
+import funkin.util.SwipeUtil;
+import flixel.tweens.FlxTween;
+import funkin.ui.MusicBeatState;
+import funkin.ui.FullScreenScaleMode;
+import flixel.FlxG;
+import funkin.modding.base.ScriptedMusicBeatSubState;
+import funkin.modding.base.ScriptedFlxRuntimeShader;
+import funkin.modding.base.ScriptedMusicBeatState;
+import flixel.addons.display.FlxBackdrop;
+import flixel.addons.display.FlxTiledSprite;
+import funkin.PlayerSettings;
+import flixel.util.FlxSort;
+import flixel.math.FlxRect;
+import funkin.util.SortUtil;
+import flixel.math.FlxMath;
+
+class PixelMap extends MusicBeatState
+{
+    //cameras
+    var cameraBG:FunkinCamera;
+    var cameraProps:FunkinCamera;
+    var cameraChars:FunkinCamera;
+    var cameraHud:FunkinCamera;
+    var deadzone:FlxRect;
+    var camFocusPoint:FlxObject;
+
+    //Characters
+    var cc:FunkinSprite;
+    var springBonnie:FunkinSprite;
+    var fredBear:FunkinSprite;
+
+    //Props
+    var overlay:FlxTiledSprite;
+    var fredbearBackground:FlxTiledSprite;
+    var fredbearFloor:FlxTiledSprite;
+    var fredbearCeiling:FlxTiledSprite;
+
+    //Gameplay crap 
+    var moveVertical:Float;
+    var leftBounds:Float;
+    var rightBounds:Float;
+    var upBounds:Float;
+    var downBounds:Float;
+    var roomTitle:string;
+
+
+  function new():Void
+  {
+    super('PixelMap');
+    
+    FunkinSound.stopAllAudio();
+
+    buildCharacters();
+
+    cameraBG = new FunkinCamera('cameraBG', 0, 0, FlxG.width, FlxG.height, 1);
+    cameraProps = new FunkinCamera('cameraProps', 0, 0, FlxG.width, FlxG.height, 1);
+    cameraChars = new FunkinCamera('cameraChars', 0, 0, FlxG.width, FlxG.height, 1);
+    cameraHud = new FunkinCamera('cameraHud', 0, 0, FlxG.width, FlxG.height, 1);
+
+    deadzone = new FlxRect(0,0,FlxG.width, FlxG.height);
+
+    FlxG.cameras.add(cameraBG, false);
+    FlxG.cameras.add(cameraProps, false);
+    FlxG.cameras.add(cameraChars, false);
+    FlxG.cameras.add(cameraHud, false);
+
+    cameraBG.bgColor = FlxColor.TRANSPARENT;
+    cameraProps.bgColor = FlxColor.TRANSPARENT;
+    cameraChars.bgColor = FlxColor.TRANSPARENT;
+    cameraHud.bgColor = FlxColor.TRANSPARENT;
+
+    cameraBG.pixelPerfectRender = true;
+    cameraProps.pixelPerfectRender = true;
+    cameraChars.pixelPerfectRender = true;
+    cameraHud.pixelPerfectRender = true;
+
+    //cameraBG.deadzone = deadzone;
+    //cameraProps.deadzone = deadzone;
+    //cameraChars.deadzone = deadzone;
+
+    // Create an object for the camera to track.
+    camFocusPoint = new FlxObject(FlxG.width/2, FlxG.height/2);
+    add(camFocusPoint);
+
+    overlay = new FlxTiledSprite(Paths.image('fnaf/overlay'), FlxG.width, FlxG.height, true, true);
+    overlay.zIndex = 10000;
+    add(overlay);
+    overlay.cameras = [cameraHud, cameraBG, cameraChars, cameraProps];
+
+    cc.cameras = [cameraChars];
+    cameraBG.target = camFocusPoint;
+    cameraProps.target = cc;
+    cameraChars.target = cc;
+    roomTitle = 'outsideFredbear';
+    attemptTransition('up');
+  }
+
+  function updateDeadzone(x:Float, y:Float, width:Float, height:Float):Void
+  {
+    deadzone = new FlxRect(0, 0, width, height);
+    cameraBG.deadzone = deadzone;
+    cameraProps.deadzone = deadzone;
+    cameraChars.deadzone = deadzone;
+    cameraHud.deadzone = deadzone;
+
+    cameraBG.setScrollBoundsRect(x, y, width, height);
+    cameraProps.setScrollBoundsRect(x, y, width, height);
+    cameraChars.setScrollBoundsRect(x, y, width, height);
+    cameraHud.setScrollBoundsRect(x, y, width, height);
+  }
+
+  function buildCharacters():Void
+  {
+    cc = FunkinSprite.createSparrow(0, 25, "fnaf/cryingChild");
+    cc.animation.addByPrefix('idle', 'idle', 2, true);
+    cc.animation.addByPrefix('right', 'right', 2, true);
+    cc.animation.addByPrefix('left', 'left', 2, true);
+    cc.animation.addByPrefix('up', 'up', 2, true);
+    cc.animation.addByPrefix('down', 'down', 2, true);
+    cc.animation.addByPrefix('scared', 'scared', 2, true);
+    cc.animation.addByPrefix('cryFloor', 'cryFloor', 2, true);
+    cc.animation.play('idle');
+    cc.updateHitbox();
+    add(cc);
+
+    springBonnie = FunkinSprite.createSparrow(0, 25, "fnaf/rabbitNormal");
+    springBonnie.animation.addByPrefix('idle', 'idle', 2, true);
+    springBonnie.animation.play('idle');
+    springBonnie.updateHitbox();
+    add(springBonnie);
+    springBonnie.visible = false;
+
+    fredBear = FunkinSprite.createSparrow(0, 25, "fnaf/bearNormal");
+    fredBear.animation.addByPrefix('idle', 'idle', 2, true);
+    fredBear.animation.addByPrefix('chomp', 'chomp', 2, true);
+    fredBear.animation.addByPrefix('costume', 'costume', 2, true);
+    fredBear.animation.play('idle');
+    fredBear.updateHitbox();
+    add(fredBear);
+    fredBear.visible = false;
+  }
+
+  function clearStage():Void
+  {
+    springBonnie.visible = false;
+    fredBear.visible = false;
+
+    for (i in 0...this.members.length)
+    {
+      member = members[i];
+      if (member != cc && member != null && member != springBonnie && member != fredBear && member != overlay) member.destroy();
+    }
+  }
+
+  function buildFredbears(version:Int):Void
+  {
+    moveVertical = false;
+
+    fredbearBackground = new FlxTiledSprite(Paths.image('fnaf/map/1040'), 1005, 337*2, true, true);
+    add(fredbearBackground);
+    fredbearBackground.x = (FlxG.width/2) - (fredbearBackground.width/2);
+    fredbearBackground.cameras = [cameraBG];
+    fredbearBackground.zIndex = 0;
+
+    fredbearFloor = new FlxTiledSprite(Paths.image('fnaf/map/1039'), 1005, 108, true, false);
+    fredbearFloor.y = FlxG.height - 108;
+    add(fredbearFloor);
+    fredbearFloor.x = (FlxG.width/2) - (fredbearFloor.width/2);
+    fredbearFloor.cameras = [cameraBG];
+    fredbearFloor.zIndex = 1;
+
+    switch (version)
+    {
+    case 0:
+
+      fredbearConfetti = new FlxSprite(fredbearBackground.x + 70, 5+68).loadGraphic(Paths.image('fnaf/map/1054'));
+      add(fredbearConfetti);
+      fredbearConfetti.zIndex = 5;
+      fredbearConfetti.cameras = [cameraProps];
+
+      fredbearConfetti2 = new FlxSprite(fredbearBackground.x + fredbearBackground.width - 370, 140+68).loadGraphic(Paths.image('fnaf/map/1054'));
+      add(fredbearConfetti2);
+      fredbearConfetti2.zIndex = 5;
+      fredbearConfetti2.cameras = [cameraProps];
+      
+      fredbearPoster = new FlxSprite(fredbearBackground.x + 25, 75+68).loadGraphic(Paths.image('fnaf/map/1049'));
+      add(fredbearPoster);
+      fredbearPoster.zIndex = 10;
+      fredbearPoster.cameras = [cameraProps];
+
+      fredbearWall = new FlxSprite(fredbearBackground.x + fredbearBackground.width - 100, 0).loadGraphic(Paths.image('fnaf/map/1041'));
+      add(fredbearWall);
+      fredbearWall.cameras = [cameraBG];
+
+      freadbearGreenStreamer = new FlxSprite(fredbearWall.x - 268, FlxG.height - 108 - 646).loadGraphic(Paths.image('fnaf/map/1052'));
+      add(freadbearGreenStreamer);
+      freadbearGreenStreamer.zIndex = 15;
+      freadbearGreenStreamer.cameras = [cameraProps];
+
+      freadbearPurpleStreamer = new FlxSprite(fredbearBackground.x + 90, FlxG.height - 108 - 646).loadGraphic(Paths.image('fnaf/map/1050'));
+      add(freadbearPurpleStreamer);
+      freadbearPurpleStreamer.zIndex = 15;
+      freadbearPurpleStreamer.cameras = [cameraProps];
+
+      fredbearDoor = new FlxSprite(fredbearBackground.x + 295, FlxG.height - 108-457).loadGraphic(Paths.image('fnaf/map/180'));
+      add(fredbearDoor);
+      fredbearDoor.zIndex = 5;
+      fredbearDoor.cameras = [cameraProps];
+
+      freadbearTable = new FlxSprite(fredbearBackground.x + 435, FlxG.height - 108-457).loadGraphic(Paths.image('fnaf/map/1046'));
+      add(freadbearTable);
+      freadbearTable.zIndex = 25;
+      freadbearTable.y = fredbearFloor.y - freadbearTable.height;
+      freadbearTable.cameras = [cameraProps];
+
+      fredbearBalloons = new FlxSprite(fredbearBackground.x + 525, FlxG.height - 108 - 457 - 388).loadGraphic(Paths.image('fnaf/map/1047'));
+      add(fredbearBalloons);
+      fredbearBalloons.zIndex = 50;
+      fredbearBalloons.y = freadbearTable.y - fredbearBalloons.height + 25;
+      fredbearBalloons.cameras = [cameraProps];
+
+      fredbearBackground.scrollX = -132;
+
+      rightBounds = fredbearBackground.x + fredbearBackground.width - cc.width;
+      leftBounds = fredbearBackground.x;
+      upBounds = 68-13;
+      downBounds = FlxG.height - fredbearFloor.height;
+      roomTitle = 'freadbearEntrance';
+
+    case 1:
+
+      fredbearConfetti = new FlxSprite(fredbearBackground.x + 70, 5+68).loadGraphic(Paths.image('fnaf/map/1054'));
+      add(fredbearConfetti);
+      fredbearConfetti.zIndex = 5;
+      fredbearConfetti.cameras = [cameraProps];
+
+      fredbearConfetti2 = new FlxSprite(fredbearBackground.x + fredbearBackground.width - 370, 140+68).loadGraphic(Paths.image('fnaf/map/1054'));
+      add(fredbearConfetti2);
+      fredbearConfetti2.zIndex = 5;
+      fredbearConfetti2.cameras = [cameraProps];
+
+      fredbearOrangeStreamer = new FlxSprite(fredbearBackground.x + 525, FlxG.height - 108 - 646).loadGraphic(Paths.image('fnaf/map/1053'));
+      add(fredbearOrangeStreamer);
+      fredbearOrangeStreamer.zIndex = 15;
+      fredbearOrangeStreamer.cameras = [cameraProps];
+
+      fredbearRedStreamer = new FlxSprite(fredbearBackground.x + 90, FlxG.height - 108 - 646).loadGraphic(Paths.image('fnaf/map/1051'));
+      add(fredbearRedStreamer);
+      fredbearRedStreamer.zIndex = 15;
+      fredbearRedStreamer.cameras = [cameraProps];
+
+      freadbearTable = new FlxSprite(fredbearBackground.x + 35, FlxG.height - 108-457).loadGraphic(Paths.image('fnaf/map/1046'));
+      add(freadbearTable);
+      freadbearTable.zIndex = 20;
+      freadbearTable.y = fredbearFloor.y - freadbearTable.height;
+      freadbearTable.cameras = [cameraProps];
+
+      freadbearTable2 = new FlxSprite(fredbearBackground.x + 635, FlxG.height - 108-457).loadGraphic(Paths.image('fnaf/map/1046'));
+      add(freadbearTable2);
+      freadbearTable2.zIndex = 20;
+      freadbearTable2.y = fredbearFloor.y - freadbearTable2.height;
+      freadbearTable2.cameras = [cameraProps];
+
+      fredbearBalloons = new FlxSprite(fredbearBackground.x + 125, FlxG.height - 108 - 457 - 388).loadGraphic(Paths.image('fnaf/map/1047'));
+      add(fredbearBalloons);
+      fredbearBalloons.zIndex = 50;
+      fredbearBalloons.y = freadbearTable.y - fredbearBalloons.height + 25;
+      fredbearBalloons.cameras = [cameraProps];
+
+      fredbearBalloons2 = new FlxSprite(fredbearBackground.x + 700, FlxG.height - 108 - 457 - 388).loadGraphic(Paths.image('fnaf/map/1048'));
+      add(fredbearBalloons2);
+      fredbearBalloons2.zIndex = 50;
+      fredbearBalloons2.y = freadbearTable.y - fredbearBalloons2.height + 25;
+      fredbearBalloons2.cameras = [cameraProps];
+
+      fredbearBackground.scrollX = -132;
+
+      rightBounds = fredbearBackground.x + fredbearBackground.width - cc.width;
+      leftBounds = fredbearBackground.x;
+      upBounds = 68-13;
+      downBounds = FlxG.height - fredbearFloor.height;
+      roomTitle = 'freadbearMiddle';
+
+    case 2:
+
+      fredbearWall = new FlxTiledSprite(Paths.image('fnaf/map/1041'), 58, fredbearBackground.height, true, true);
+      add(fredbearWall);
+      fredbearWall.x = fredbearBackground.x;
+      fredbearWall.y = fredbearFloor.y - fredbearWall.height;
+      fredbearWall.cameras = [cameraBG];
+      fredbearWall.zIndex = 10;
+
+      fredbearStage = new FlxSprite(fredbearBackground.x + 58, FlxG.height - 108 - 457 - 388).loadGraphic(Paths.image('fnaf/map/1043'));
+      add(fredbearStage);
+      fredbearStage.zIndex = 50;
+      fredbearStage.y = fredbearFloor.y - fredbearStage.height;
+      fredbearStage.cameras = [cameraProps];
+
+      springBonnie.visible = true;
+      springBonnie.zIndex = 55;
+      springBonnie.x = fredbearBackground.x + 58 + 0;
+      springBonnie.y = fredbearStage.y - springBonnie.height+6;
+      springBonnie.cameras = [cameraChars, cameraProps];
+
+      fredBear.visible = true;
+      fredBear.zIndex = 60;
+      fredBear.x = fredbearBackground.x + 58 + 200;
+      fredBear.y = fredbearStage.y - fredBear.height+6;
+      fredBear.cameras = [cameraChars, cameraProps];
+
+      spotLight1 = FunkinSprite.createSparrow(0, 25, "fnaf/spotLight");
+      spotLight1.animation.addByPrefix('idle', 'idle', 1, true);
+      spotLight1.animation.play('idle', true, false, -1);
+      spotLight1.updateHitbox();
+      add(spotLight1);
+      spotLight1.zIndex = 60;
+      spotLight1.x = fredbearBackground.x + 58 + 425;
+      spotLight1.cameras = [cameraProps];
+
+      spotLight2 = FunkinSprite.createSparrow(0, 25, "fnaf/spotLight");
+      spotLight2.animation.addByPrefix('idle', 'idle', 1, true);
+      spotLight2.animation.play('idle', true, false, -1);
+      spotLight2.updateHitbox();
+      add(spotLight2);
+      spotLight2.zIndex = 60;
+      spotLight2.x = fredbearBackground.x + 58 + 525;
+      spotLight2.cameras = [cameraProps];
+
+      spotLight3 = FunkinSprite.createSparrow(0, 25, "fnaf/spotLight");
+      spotLight3.animation.addByPrefix('idle', 'idle', 1, true);
+      spotLight3.animation.play('idle', true, false, -1);
+      spotLight3.updateHitbox();
+      add(spotLight3);
+      spotLight3.zIndex = 60;
+      spotLight3.x = fredbearBackground.x + 58 + 625;
+      spotLight3.cameras = [cameraProps];
+
+      spotLight4 = FunkinSprite.createSparrow(0, 25, "fnaf/spotLight");
+      spotLight4.animation.addByPrefix('idle', 'idle', 1, true);
+      spotLight4.animation.play('idle', true, false, -1);
+      spotLight4.updateHitbox();
+      add(spotLight4);
+      spotLight4.zIndex = 60;
+      spotLight4.x = fredbearBackground.x + 58 + 725;
+      spotLight4.cameras = [cameraProps];
+
+      freadbearTable = new FlxSprite(fredbearBackground.x + 635, FlxG.height - 108-457).loadGraphic(Paths.image('fnaf/map/1046'));
+      add(freadbearTable);
+      freadbearTable.zIndex = 20;
+      freadbearTable.y = fredbearFloor.y - freadbearTable.height;
+      freadbearTable.cameras = [cameraProps];
+
+      fredbearConfetti = new FlxSprite(fredbearBackground.x + 70, 5+68).loadGraphic(Paths.image('fnaf/map/1054'));
+      add(fredbearConfetti);
+      fredbearConfetti.zIndex = 5;
+      fredbearConfetti.cameras = [cameraProps];
+
+      fredbearConfetti2 = new FlxSprite(fredbearBackground.x + fredbearBackground.width - 400, 5+68).loadGraphic(Paths.image('fnaf/map/1054'));
+      add(fredbearConfetti2);
+      fredbearConfetti2.zIndex = 5;
+      fredbearConfetti2.cameras = [cameraProps];
+
+      freadbearPurpleStreamer = new FlxSprite(fredbearBackground.x + 720, FlxG.height - 108 - 646).loadGraphic(Paths.image('fnaf/map/1050'));
+      add(freadbearPurpleStreamer);
+      freadbearPurpleStreamer.zIndex = 15;
+      freadbearPurpleStreamer.cameras = [cameraProps];
+
+      fredbearBalloons = new FlxSprite(fredbearBackground.x + 700, FlxG.height - 108 - 457 - 388).loadGraphic(Paths.image('fnaf/map/1048'));
+      add(fredbearBalloons);
+      fredbearBalloons.zIndex = 50;
+      fredbearBalloons.y = freadbearTable.y - fredbearBalloons.height + 25;
+      fredbearBalloons.cameras = [cameraProps];
+
+      fredbearBackground.scrollX = -132;
+
+      rightBounds = fredbearBackground.x + fredbearBackground.width - cc.width;
+      leftBounds = fredbearBackground.x + 58 + 448;
+      upBounds = 68-13;
+      downBounds = FlxG.height - fredbearFloor.height;
+      roomTitle = 'freadbearEnd';
+
+    }
+
+    fredbearCeiling = new FlxTiledSprite(Paths.image('fnaf/map/1042'), 1005, 68-13, true, true);
+    fredbearCeiling.x = (FlxG.width/2) - (fredbearCeiling.width/2);
+    add(fredbearCeiling);
+    fredbearCeiling.cameras = [cameraBG, cameraProps];
+    fredbearCeiling.zIndex = 75;
+
+    sort(SortUtil.byZIndex, FlxSort.ASCENDING);
+
+    updateDeadzone(0, 0, FlxG.width, FlxG.height);
+  }
+
+  function buildOutsideFredbears():Void
+  {
+    roomTitle = 'outsideFredbear';
+    moveVertical = true;
+
+    fredbearFront = new FlxTiledSprite(Paths.image('fnaf/map/1032'), 1005, 343, true, true);
+    add(fredbearFront);
+    fredbearFront.x = (FlxG.width/2) - (fredbearFront.width/2);
+    fredbearFront.cameras = [cameraBG];
+    fredbearFront.zIndex = 1;
+    fredbearFront.scrollX = -2;
+
+    fredbearStreet = new FlxTiledSprite(Paths.image('fnaf/map/1031'), 1005, 222*2, true, true);
+    add(fredbearStreet);
+    fredbearStreet.x = fredbearFront.x;
+    fredbearStreet.y = fredbearFront.height;
+    fredbearStreet.cameras = [cameraBG];
+    fredbearStreet.zIndex = 0;
+    fredbearStreet.scrollX = -2;
+
+    fredbearDoormat = new FlxSprite(fredbearFront.x+630,343).loadGraphic(Paths.image('fnaf/map/1044'));
+    add(fredbearDoormat);
+    fredbearDoormat.zIndex = 5;
+    fredbearDoormat.cameras = [cameraProps];
+
+    orangeCar = new FlxSprite(1005-182,343+60).loadGraphic(Paths.image('fnaf/map/1034'));
+    add(orangeCar);
+    orangeCar.zIndex = 8;
+    orangeCar.cameras = [cameraProps];
+    orangeCar.clipRect = new FlxRect(0, 0, 319, 600);
+
+    greenCar = new FlxSprite(1005-80,283).loadGraphic(Paths.image('fnaf/map/1033'));
+    add(greenCar);
+    greenCar.zIndex = 7;
+    greenCar.cameras = [cameraProps];
+    greenCar.clipRect = new FlxRect(0, 0, 217, 600);
+
+    rightBounds = fredbearFront.x + fredbearFront.width - cc.width -5;
+    leftBounds = fredbearFront.x+5;
+    upBounds = 212;
+    downBounds = FlxG.height - cc.height;
+
+    sort(SortUtil.byZIndex, FlxSort.ASCENDING);
+
+    updateDeadzone(0, 0, FlxG.width, FlxG.height);
+
+  }
+
+  var step:Int = 0;
+
+  override function update(elapsed:Float)
+  {
+    super.update(elapsed);
+
+    step += 1;
+
+    if(step == 1)
+    {
+      handleInputs();
+      step = 0;
+      overlay.scrollY += 50*elapsed;
+    }
+  }
+
+  function handleInputs():Void
+  {
+    var currentX:float = cc.x;
+    var currentY:float = cc.y;
+
+    if (PlayerSettings.player1.controls.UI_RIGHT && cc.x < rightBounds)
+    {
+      cc.x += 1000*elapsed;
+      cc.animation.play('right');
+      if (cc.x > rightBounds) attemptTransition('right');
+    }
+    if (PlayerSettings.player1.controls.UI_LEFT && cc.x > leftBounds)
+    {
+      cc.x += -1000*elapsed;
+      cc.animation.play('left');
+      if (cc.x < leftBounds) attemptTransition('left');
+    }
+
+    if (PlayerSettings.player1.controls.UI_DOWN && moveVertical == true && cc.y < downBounds)
+    {
+      cc.y += 1000*elapsed;
+      cc.animation.play('down');
+    }
+    if (PlayerSettings.player1.controls.UI_UP && moveVertical == true && cc.y > upBounds)
+    {
+      cc.y += -1000*elapsed;
+      cc.animation.play('up');
+      
+    }
+
+    if (currentX == cc.x && currentY == cc.y) cc.animation.play('idle');
+  }
+
+  function attemptTransition(direction:String)
+  {
+    switch(roomTitle)
+    {
+      default:
+      case 'freadbearEntrance':
+        switch(direction)
+        {
+          case 'left':
+            clearStage();
+            buildFredbears(1);
+            cc.y = fredbearFloor.y - cc.height + 2;
+            cc.x = 975;
+          case 'right':
+            clearStage();
+            buildOutsideFredbears();
+            cc.y = 200;
+            cc.x = 975;
+        }
+      case 'freadbearMiddle':
+        switch(direction)
+        {
+          case 'left':
+            clearStage();
+            buildFredbears(2);
+            cc.y = fredbearFloor.y - cc.height + 2;
+            cc.x = 975;
+          case 'right':
+            clearStage();
+            buildFredbears(0);
+            cc.y = fredbearFloor.y - cc.height + 2;
+            cc.x = fredbearBackground.x + 40;
+        }
+      case 'freadbearEnd':
+        switch(direction)
+        {
+          default:
+          case 'right':
+            clearStage();
+            buildFredbears(1);
+            cc.y = fredbearFloor.y - cc.height + 2;
+            cc.x = fredbearBackground.x + 40;
+        }
+      case 'outsideFredbear':
+        switch(direction)
+        {
+          case 'up':
+            clearStage();
+            buildFredbears(0);
+            cc.y = fredbearFloor.y - cc.height + 2;
+            cc.x = 975;
+          default:
+        }
+    }
+  }
+
+}

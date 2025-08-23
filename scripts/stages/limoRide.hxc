@@ -5,9 +5,36 @@ import funkin.audio.FunkinSound;
 import funkin.play.stage.Stage;
 import funkin.play.PlayState;
 import funkin.graphics.shaders.OverlayBlend;
+import funkin.modding.base.ScriptedFlxSpriteGroup;
+import flixel.addons.display.FlxBackdrop;
+import flixel.addons.display.FlxTiledSprite;
+import funkin.Conductor;
+import flixel.math.FlxMath;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
 
 class LimoRideStage extends Stage
 {
+
+	var lampHead:FlxTiledSprite;
+	var lampPole:FlxTiledSprite;
+	var street:FlxTiledSprite;
+	var killerLampHead:FlxSprite;
+	var killerLampPole:FlxSprite;
+
+	var backerX:float = 2000;
+	var poleX:float = -250;
+	var movingLimo:bool = false;
+	var limoSpeed:Float;
+	var dancersDead:bool = false;
+
+
+	// as song goes on, these are used to make the rain more intense throught the song
+	// these values are also used for the rain sound effect volume intensity!
+	var initMph:Float;
+	var finalMph:Float;
+	var mph:Float;
+
 	function new()
 	{
 		super('limoRide');
@@ -34,7 +61,222 @@ class LimoRideStage extends Stage
 		// I don't know what it's for, but it's not used in the game.
 		// If you want to re-add it, go find it in version control.
 
+			lampHead = new FlxTiledSprite(Paths.image('limo/highwayLight'), 3480, 339, true, false);
+			lampHead.setPosition(-100, -45);
+			lampHead.scrollFactor.set(0.1, .4);
+			lampHead.zIndex = 18;
+			lampHead.scale.set(1.5, 1.5);
+			//lampHead.alpha = 1;
+			lampHead.blend = 1;
+
+			PlayState.instance.currentStage.add(lampHead);
+			PlayState.instance.currentStage.refresh(); // Apply z-index.
+
+			lampPole = new FlxTiledSprite(Paths.image('highwayPoleTall'), 3480, 959, true, false);
+			//lampPole = new FlxTiledSprite(Paths.image('limo/tallHighwayPole'), 3480, 959, true, false);
+			lampPole.setPosition(-90, -15);
+			lampPole.scrollFactor.set(0.1, .4);
+			lampPole.zIndex = 16;
+			lampPole.scale.set(1.5, 1.5);
+
+			killerLampHead = new FlxSprite().loadGraphic(Paths.image('highwayLightClose'));
+			killerLampHead.setPosition(-250, 170);
+			killerLampHead.scrollFactor.set(0.4, 0.4);
+			killerLampHead.zIndex = 431;
+			killerLampHead.blend = 1;
+
+			PlayState.instance.currentStage.add(killerLampHead);
+			PlayState.instance.currentStage.refresh(); // Apply z-index
+
+			killerLampPole = new FlxSprite().loadGraphic(Paths.image('highwayPole'));
+			killerLampPole.setPosition(-50, 215);
+			killerLampPole.scrollFactor.set(0.4, 0.4);
+			killerLampPole.zIndex = 19;
+			killerLampPole.blend = 1;
+
+			PlayState.instance.currentStage.add(killerLampPole);
+			PlayState.instance.currentStage.refresh(); // Apply z-index
+
+			street = new FlxTiledSprite(Paths.image('limo/street'), 2165, 322, true, false);
+			street.setPosition(-650, FlxG.height - 35);
+			street.scrollFactor.set(0.1, .4);
+			street.zIndex = 19;
+			street.scale.set(1, 1);
+
+			PlayState.instance.currentStage.add(street);
+			PlayState.instance.currentStage.refresh(); // Apply z-index
+
+			PlayState.instance.currentStage.add(lampPole);
+			PlayState.instance.currentStage.refresh(); // Apply z-index.
+
+			switch (PlayState.instance.currentSong.id)
+			{
+			case "satin-panties":
+				initMph = 60;
+				finalMph = 75;
+			case "high":
+				initMph = 75;
+				finalMph = 100;
+			case "milf":
+				initMph = 100;
+				finalMph = 125;
+			default:
+				initMph = FlxG.random.int(70, 100);
+				finalMph = initMph+FlxG.random.int(5, 30);
+			}
+
+			mph = initMph;
+
 		resetFastCar();
+	}
+
+	var _timer:Float = 0;
+	var limoCooldown:bool = true;
+	var dancerSpeed:float = 1;
+
+	function killHenchmen():Void
+	{
+
+		//FlxTween.num(-250, FlxG.width + 250, 3.0, function(num) { poleX = num; });
+
+		getGirlfriend().playAnimation('duck');
+		getDad().playAnimation('singDOWN');
+		getBoyfriend().playAnimation('dodge');
+
+		//dancer 1
+		new FlxTimer().start((((Conductor.instance.beatLengthMs / 2000) * 0.1)), function(tmr:FlxTimer)
+		{
+			getNamedProp('limoDancer1').danceEvery = 0;
+			getNamedProp('limoDancer1').playAnimation('hit1', true);
+		});
+
+		//dancer 2
+		new FlxTimer().start((((Conductor.instance.beatLengthMs / 2000) * 0.3)), function(tmr:FlxTimer)
+		{
+			getNamedProp('limoDancer2').danceEvery = 0;
+			getNamedProp('limoDancer2').playAnimation('hit1', true);
+		});
+
+		//dancer 3
+		new FlxTimer().start((((Conductor.instance.beatLengthMs / 2000) * 0.5)), function(tmr:FlxTimer)
+		{
+			getNamedProp('limoDancer3').danceEvery = 0;
+			getNamedProp('limoDancer3').playAnimation('hit1', true);
+		});
+
+		//dancer 4
+		new FlxTimer().start((((Conductor.instance.beatLengthMs / 2000) * 0.7)), function(tmr:FlxTimer)
+		{
+			getNamedProp('limoDancer4').danceEvery = 0;
+			getNamedProp('limoDancer4').playAnimation('hit1', true);
+		});
+
+		//dancer 5
+		new FlxTimer().start((((Conductor.instance.beatLengthMs / 2000) * 0.9)), function(tmr:FlxTimer)
+		{
+			getNamedProp('limoDancer5').danceEvery = 0;
+			getNamedProp('limoDancer5').playAnimation('hit1', true);
+			dancerSpeed = mph*0.5;
+			dancersDead = true;
+		});
+
+		FunkinSound.playOnce(Paths.sound('Henchmen_Wipe'), 0.8);
+		if (FlxG.random.bool(15)) FunkinSound.playOnce(Paths.sound('Henchmen_hit'), 1);
+		new FlxTimer().start(((Conductor.instance.beatLengthMs / 1000) * 6), function(tmr:FlxTimer)
+		{
+			retrieveLimo();
+		});
+	}
+
+	function restoreLimo():Void
+	{
+		backerX = FlxG.width + 200;
+		poleX = -550;
+		dancersDead = false;
+		movingLimo = true;
+		limoSpeed = -mph/10;
+
+		getNamedProp('limoDancer1').playAnimation('danceLeft', true);
+		getNamedProp('limoDancer2').playAnimation('danceLeft', true);
+		getNamedProp('limoDancer3').playAnimation('danceLeft', true);
+		getNamedProp('limoDancer4').playAnimation('danceLeft', true);
+		getNamedProp('limoDancer5').playAnimation('danceLeft', true);
+
+		getNamedProp('limoDancer1').danceEvery = 1;
+		getNamedProp('limoDancer2').danceEvery = 1;
+		getNamedProp('limoDancer3').danceEvery = 1;
+		getNamedProp('limoDancer4').danceEvery = 1;
+		getNamedProp('limoDancer5').danceEvery = 1;
+
+
+		new FlxTimer().start(((Conductor.instance.beatLengthMs / 1000) * 54), function(tmr:FlxTimer)
+		{
+			limoCooldown = false;
+		});
+	}
+
+	function retrieveLimo():Void
+	{
+		//backerX = 0;
+		limoCooldown = true;
+		movingLimo = true;
+		limoSpeed = mph/7.5;
+
+		new FlxTimer().start(((Conductor.instance.beatLengthMs / 1000) * 24), function(tmr:FlxTimer)
+		{
+			restoreLimo();
+		});
+	}
+
+	function onUpdate(event:UpdateScriptEvent):Void
+	{
+		super.onUpdate(event);
+
+		_timer += event.elapsed;
+
+		if (FlxG.sound.music != null)
+		{
+			var remappedMph:Float = FlxMath.remapToRange(Conductor.instance.songPosition, 0, FlxG.sound.music.length, initMph, finalMph);
+			mph = remappedMph;
+		}
+
+		if (movingLimo == true)
+		{
+			backerX += limoSpeed + (Math.sin(_timer)*(backerX/100)*.5);
+			if (backerX <= 0 && dancersDead == false) movingLimo = false;
+			if (backerX >= (FlxG.width + 250) && dancersDead == true) movingLimo = false;
+		}
+
+		if(lampHead != null) lampHead.scrollX += FlxG.elapsed * mph * 50;
+		if(lampPole != null) lampPole.scrollX += FlxG.elapsed * mph * 50;
+		if(street != null) street.scrollX += FlxG.elapsed * mph * 52.5;
+
+		getNamedProp('limo').x = -120 + (Math.sin(_timer*1.5)*mph/2);
+		getBoyfriend().x = 1017 + (Math.sin(_timer*1.5)*mph/2);
+		getDad().x = 129 + (Math.sin(_timer*1.5)*mph/2);
+		getGirlfriend().x = 587 + (Math.sin(_timer*1.5)*mph/2);
+
+		killerLampHead.x = poleX + (Math.sin(_timer*1.5)*mph/2);
+		killerLampPole.x = (poleX + 200) + (Math.sin(_timer*1.5)*mph/2);
+
+		getNamedProp('bgLimo').x = backerX + -200 + (Math.sin(_timer*1.25)*mph/2.25);
+		if (dancersDead == true)
+		{
+			getNamedProp('limoDancer1').x = getNamedProp('limoDancer1').x + dancerSpeed;
+			getNamedProp('limoDancer2').x = getNamedProp('limoDancer2').x + dancerSpeed;
+			getNamedProp('limoDancer3').x = getNamedProp('limoDancer3').x + dancerSpeed;
+			getNamedProp('limoDancer4').x = getNamedProp('limoDancer4').x + dancerSpeed;
+			getNamedProp('limoDancer5').x = getNamedProp('limoDancer5').x + dancerSpeed;
+		}
+		else
+		{
+			getNamedProp('limoDancer1').x = backerX + 100 + (Math.sin(_timer*1.25)*mph/2.25);
+			getNamedProp('limoDancer2').x = backerX + 400 + (Math.sin(_timer*1.25)*mph/2.25);
+			getNamedProp('limoDancer3').x = backerX + 700 + (Math.sin(_timer*1.25)*mph/2.25);
+			getNamedProp('limoDancer4').x = backerX + 1000 + (Math.sin(_timer*1.25)*mph/2.25);
+			getNamedProp('limoDancer5').x = backerX + 1300 + (Math.sin(_timer*1.25)*mph/2.25);
+		}
+		
 	}
 
 	function onBeatHit(event:SongTimeScriptEvent)
@@ -43,8 +285,9 @@ class LimoRideStage extends Stage
 		// otherwise boppers will not work.
 		super.onBeatHit(event);
 
-		if (FlxG.random.bool(10) && fastCarCanDrive)
-			fastCarDrive();
+		if (FlxG.random.bool(50) && fastCarCanDrive) fastCarDrive();
+
+		if (event.beat % 4 == 0 && FlxG.random.bool(45) && !dancersDead && !movingLimo && !limoCooldown) killHenchmen();
 	}
 
 	var fastCarCanDrive:Bool = false;
@@ -71,7 +314,7 @@ class LimoRideStage extends Stage
 		FunkinSound.playOnce(Paths.soundRandom('carPass', 0, 1), 0.7);
 
 		var fastCar = getNamedProp('fastCar');
-		fastCar.velocity.x = (FlxG.random.int(170, 220) / FlxG.elapsed) * 3;
+		fastCar.velocity.x = (FlxG.random.int(170, 220) / FlxG.elapsed) * 3 * mph/10/2;
 		fastCarCanDrive = false;
 		new FlxTimer().start(2, function(tmr:FlxTimer)
 		{
@@ -109,5 +352,6 @@ class LimoRideStage extends Stage
 	function onCountdownStart(event:ScriptEvent) {
 		super.onCountdownStart(event);
 		resetFastCar();
+		restoreLimo();
 	}
 }

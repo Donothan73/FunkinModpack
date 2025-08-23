@@ -1,0 +1,36 @@
+import funkin.play.PlayState;
+import funkin.play.stage.Stage;
+import flixel.FlxG;
+import flixel.FlxSprite;
+import funkin.Conductor;
+import funkin.play.stage.Bopper;
+import funkin.graphics.adobeanimate.FlxAtlasSprite;
+import funkin.graphics.adobeanimate.FlxAtlasSprite;
+import flixel.math.FlxPoint;
+import funkin.graphics.FunkinSprite;
+
+class MainStageStage extends Stage
+{
+	var crowd:FlxAtlasSprite;
+
+	function new()
+	{
+		super('mainStage');
+	}
+
+	function buildStage()
+	{
+		super.buildStage();
+
+		crowd = new FlxAtlasSprite(0,0, Paths.animateAtlas("crowd", "week1"));
+		crowd.playAnimation('crowd', true, true, true);
+		//PlayState.instance.currentStage.add(crowd);
+		crowd.zIndex = 400;
+		PlayState.instance.currentStage.refresh;
+		crowd.scale.x = 1.75;
+		crowd.scale.y = 1.75;
+		crowd.y = 400;
+		crowd.x = -300;
+		crowd.scrollFactor.set(0.95, 1.1);
+	}
+}

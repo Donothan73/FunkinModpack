@@ -8,6 +8,7 @@ import funkin.util.Constants;
 import funkin.play.PlayStatePlaylist;
 import flixel.util.FlxTimer;
 import funkin.effects.RetroCameraFade;
+import funkin.save.Save;
 
 class ThornsSong extends Song
 {

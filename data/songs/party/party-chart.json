@@ -1,0 +1,24 @@
+{
+  "version": "2.0.0",
+  "scrollSpeed": {
+    "easy": 1,
+    "hard": 1,
+    "normal": 1
+  },
+  "events": [
+    {
+      "t": 0,
+      "e": "SetCameraBop",
+      "v": {
+	"rate": 1,
+	"intensity": 2
+}
+    }
+  ],
+  "notes": {
+    "easy": [    ],
+    "hard": [    ],
+    "normal": [    ]
+  },
+  "generatedBy": "Friday Night Funkin' - v0.7.3"
+}

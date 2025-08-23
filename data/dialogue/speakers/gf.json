@@ -1,0 +1,33 @@
+{
+  "version": "1.0.0",
+  "name": "Girlfriend",
+  "assetPath": "gf_Dialogue",
+  "flipX": true,
+  "isPixel": false,
+  "scale": 0.75,
+  "offsets": [0, 120],
+  "animations": [
+    {
+      "name": "talkEnter",
+      "prefix": "gf_ yap",
+      "frameRate": 24,
+      "looped": true
+    },
+    {
+      "name": "talk",
+      "prefix": "gf_ yap"
+    },
+    {
+      "name": "woah",
+      "prefix": "gf_ woah"
+    },
+    {
+      "name": "rizz",
+      "prefix": "gf_ rizzy"
+    },
+    {
+      "name": "womp",
+      "prefix": "gf_ womp"
+    }
+  ]
+}

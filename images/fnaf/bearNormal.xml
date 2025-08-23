@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<TextureAtlas imagePath="bearNormal.png">
+<SubTexture name="chomp0000" x="0" y="0" width="228" height="434" frameX="-32" frameY="0" frameWidth="324" frameHeight="424" />
+<SubTexture name="idle0000" x="684" y="0" width="228" height="416" frameX="-32" frameY="-18" frameWidth="324" frameHeight="424" />
+<SubTexture name="idle0001" x="228" y="0" width="228" height="434" frameX="-32" frameY="0" frameWidth="324" frameHeight="424" />
+<SubTexture name="costume0000" x="456" y="0" width="228" height="434" frameX="-74" frameY="0" frameWidth="324" frameHeight="424" />
+</TextureAtlas>

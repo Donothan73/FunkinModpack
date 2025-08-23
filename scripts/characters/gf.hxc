@@ -90,7 +90,7 @@ class GirlfriendCharacter extends SparrowCharacter
 
 		super.playComboDropAnimation(comboCount);
 
-		if (comboLength > 0)
+		if (comboLength > 50)
 		{
 			shameBF();
 		}

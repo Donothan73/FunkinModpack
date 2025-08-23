@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='utf-8'?>
+<TextureAtlas imagePath="fredbearpixel.png">
+<SubTexture name="confirm0000" x="0" y="79" width="79" height="73" frameX="0" frameY="0" frameWidth="75" frameHeight="75" />
+<SubTexture name="confirm0001" x="79" y="0" width="79" height="76" frameX="0" frameY="0" frameWidth="75" frameHeight="75" />
+<SubTexture name="confirm0002" x="0" y="0" width="79" height="79" frameX="0" frameY="0" frameWidth="75" frameHeight="75" />
+<SubTexture name="confirm0003" x="79" y="79" width="79" height="70" frameX="0" frameY="0" frameWidth="75" frameHeight="75" />
+
+<SubTexture name="idle0000" x="0" y="0" width="0" height="0" frameX="0" frameY="0" frameWidth="0" frameHeight="0" />
+<SubTexture name="confirm-hold0003" x="79" y="79" width="79" height="70" frameX="0" frameY="0" frameWidth="75" frameHeight="75" />
+</TextureAtlas>

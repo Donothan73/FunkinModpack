@@ -1,0 +1,36 @@
+import flixel.tweens.FlxEase;
+import funkin.graphics.FunkinSprite;
+import flixel.tweens.FlxTween;
+import funkin.play.cutscene.dialogue.DialogueBox;
+import funkin.play.PlayState;
+import funkin.play.PlayStatePlaylist;
+import funkin.play.song.Song;
+import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.util.FlxTimer;
+import funkin.save.Save;
+import funkin.effects.RetroCameraFade;
+import funkin.modding.base.ScriptedMusicBeatState;
+
+class ThePartySongSong extends Song
+{
+
+  public function new()
+  {
+    super('party');
+  }
+
+  public override function isSongNew(currentDifficulty:String, currentVariation:String):Bool
+  {
+    return !Save.instance.hasBeatenSong(this.id, null, currentVariation);
+  }
+
+  public function onSongLoaded(event:SongLoadScriptEvent):Void
+  {
+    super.onSongLoaded(event);
+
+    FlxG.switchState(() -> ScriptedMusicBeatState.init('PixelMap'));
+
+  }
+
+}

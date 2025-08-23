@@ -1,0 +1,70 @@
+{
+  "version": "1.0.0",
+
+  "backdrop": {
+    "type": "solid",
+    "fadeTime": 0.5,
+    "color": "#4e414e28"
+  },
+
+  "music": {
+    "asset": "Lunchbox",
+    "fadeTime": 2.0,
+    "looped": true
+  },
+
+  "outro": {
+    "type": "fade",
+    "fadeTime": 0.25
+  },
+
+  "dialogue": [
+    {
+      "speaker": "dad",
+      "speakerAnimation": "idle",
+      "box": "default-ahh",
+      "boxAnimation": "enter-ahh",
+      "speed": 2.0,
+
+      "text": ["HEY!"]
+    },
+    {
+      "speaker": "dad",
+      "speakerAnimation": "idle",
+      "box": "default",
+      "boxAnimation": "idle",
+      "speed": 1.25,
+
+      "text": [
+        "You think you can just sing with my daughter like that?"
+      ]
+    },
+    {
+      "speaker": "dad",
+      "speakerAnimation": "idle",
+      "box": "default",
+      "boxAnimation": "idle",
+      "speed": 0.75,
+
+      "text": ["If you want to date her..."]
+    },
+    {
+      "speaker": "dad",
+      "speakerAnimation": "idle",
+      "box": "default-ahh",
+      "boxAnimation": "ahh",
+      "speed": 1.0,
+
+      "text": ["You're going to have to go through ME first!"]
+    },
+    {
+      "speaker": "gf",
+      "speakerAnimation": "womp",
+      "box": "default",
+      "boxAnimation": "idle",
+      "speed": 1.0,
+
+      "text": ["..."]
+    }
+  ]
+}

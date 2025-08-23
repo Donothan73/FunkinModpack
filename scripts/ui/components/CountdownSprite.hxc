@@ -1,0 +1,42 @@
+import funkin.graphics.adobeanimate.FlxAtlasSprite;
+import flixel.math.FlxPoint;
+import flixel.FlxSprite;
+import funkin.graphics.FunkinSprite;
+import funkin.play.PlayState;
+import flixel.FlxG;
+import funkin.Conductor;
+
+// a unique object for santa getting GOOOOOO
+
+class CountdownSprite extends FlxAtlasSprite
+{
+
+  public function new(x:Float, y:Float, name:String)
+  {
+    super(x, y, Paths.animateAtlas(name, "shared"), {
+      FrameRate: (Conductor.instance.beatLengthMs / 1000)*(Conductor.instance.bpm*0.5),
+      Reversed: false,
+      // ?OnComplete:Void -> Void,
+      ShowPivot: false,
+      Antialiasing: true,
+      ScrollFactor: new FlxPoint(0, 0),
+    });
+
+   // onAnimationFinish.add(finishCanAnimation);
+  }
+
+  public function playCutscene():Void {
+    this.visible = true;
+    this.x = FlxG.width/2 - 250;
+    this.y = FlxG.height/2 - 150;
+    this.playAnimation("GO!!", false, false, false, 0);
+    this.onAnimationComplete.add(onFinishAnim);
+
+  }
+
+  function onFinishAnim():Void
+  {
+    visible = false;
+    kill();
+  }
+}

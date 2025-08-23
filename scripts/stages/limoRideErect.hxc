@@ -41,6 +41,10 @@ class LimoRideErectStage extends Stage
 	var blurFilter:BlurFilter = new BlurFilter(6, 6);
 	var lightning:ScriptedFunkinSprite;
 
+	var limoSunset:FlxSprite;
+	var skyOverlay:OverlayBlend;
+	var sunOverlay:FlxSprite;
+
 	// as song goes on, these are used to make the rain more intense throught the song
 	// these values are also used for the rain sound effect volume intensity!
 	var rainShaderStartIntensity:Float;
@@ -87,7 +91,7 @@ class LimoRideErectStage extends Stage
 		rainShader.intensity = rainShaderStartIntensity;
 
 		rainShaderFilter = new ShaderFilter(rainShader);
-		FlxG.camera.filters = [rainShaderFilter];
+		if ((PlayState.instance.currentVariation) == 'pico') FlxG.camera.filters = [rainShaderFilter];
 	}
 	var rimBf = new DropShadowShader();
 	var rimGf = new DropShadowShader();
@@ -100,7 +104,7 @@ class LimoRideErectStage extends Stage
 
 		switch(PlayState.instance.currentVariation) 
 		{
-    		  case 'erect':
+    		  default:
 			switch(charType)
 			{
 				case CharacterType.BF:
@@ -214,32 +218,42 @@ class LimoRideErectStage extends Stage
 	var lampPole:FlxTiledSprite;
 	var bg:FlxSprite;
 
+	
+
 	function buildStage()
 	{
 		super.buildStage();
 
 		// Apply sky shader.
-		var skyOverlay:OverlayBlend = new OverlayBlend();
-		var sunOverlay:FlxSprite = new FlxSprite().loadGraphic(Paths.image('limo/limoOverlay'));
-		sunOverlay.setGraphicSize(Std.int(sunOverlay.width * 2));
-		sunOverlay.updateHitbox();
-		skyOverlay.funnyShit.input = sunOverlay.pixels;
-		var limoSunset:FlxSprite = getNamedProp('limoSunset');
-		if (limoSunset == null) {
-			trace('[WARN] Could not retrieve limoSunset');
-		} else {
-			//limoSunset.shader = skyOverlay;
-		}
+			var skyOverlay:OverlayBlend = new OverlayBlend();
+			var sunOverlay:FlxSprite = new FlxSprite().loadGraphic(Paths.image('limo/limoOverlay'));
+			sunOverlay.setGraphicSize(Std.int(sunOverlay.width * 2));
+			sunOverlay.updateHitbox();
+			skyOverlay.funnyShit.input = sunOverlay.pixels;
+			var limoSunset:FlxSprite = getNamedProp('limoShader');
+			if (limoSunset == null) {
+				trace('[WARN] Could not retrieve limoSunset');
+				} else {
+				getNamedProp('limoShader').shader = skyOverlay;
+			}
 
-		// There's some commented-out shader BS in the original code.
-		// I don't know what it's for, but it's not used in the game.
-		// If you want to re-add it, go find it in version control.
+			getNamedProp('limoShader').alpha = 0;
+			//getNamedProp('limoShader').blend = 12;
 
 		switch(PlayState.instance.currentVariation)
 		{
-    	case 'erect':
+    	default:
 
     		colorShader = new AdjustColorShader();
+
+			colorShader.hue = -30;
+    		colorShader.saturation = -20;
+    		colorShader.contrast = 0;
+    		colorShader.brightness = -30;
+
+			// There's some commented-out shader BS in the original code.
+			// I don't know what it's for, but it's not used in the game.
+			// If you want to re-add it, go find it in version control.
 
     		mist1 = new FlxBackdrop(Paths.image('limo/erect/mistMid'), 0x01);
 			mist1.setPosition(-650, -100);
@@ -302,6 +316,13 @@ class LimoRideErectStage extends Stage
 			mist5.alpha = 1;
 			mist5.velocity.x = 100;
 			mist5.scale.set(1.5, 1.5);
+
+			getNamedProp('limoDancer1').shader = colorShader;
+    		getNamedProp('limoDancer2').shader = colorShader;
+    		getNamedProp('limoDancer3').shader = colorShader;
+    		getNamedProp('limoDancer4').shader = colorShader;
+    		getNamedProp('limoDancer5').shader = colorShader;
+    		getNamedProp('fastCar').shader = colorShader;
 
 			PlayState.instance.currentStage.add(mist5);
 			PlayState.instance.currentStage.refresh(); // Apply z-index.
@@ -460,7 +481,7 @@ class LimoRideErectStage extends Stage
 
 		switch(PlayState.instance.currentVariation) 
 		{
-    	 case 'erect':
+    	 default:
 		  
 
 			_timer += event.elapsed;
@@ -549,6 +570,12 @@ class LimoRideErectStage extends Stage
 		getNamedProp('shootingStar').y = FlxG.random.int(-10,20);
 		getNamedProp('shootingStar').flipX = FlxG.random.bool(50);
 		getNamedProp('shootingStar').animation.play('shooting star');
+		var timer = new FlxTimer();
+		FlxTween.tween(getNamedProp('limoShader'), {alpha: 1 }, 0.5, {ease: FlxEase.easeIn});
+		timer.start(.6, function() 
+      	{
+		FlxTween.tween(getNamedProp('limoShader'), {alpha: 0 }, 2.0, {ease: FlxEase.easeOut});
+		});
 
 		shootingStarBeat = beat;
 		shootingStarOffset = FlxG.random.int(4, 8);

@@ -4,6 +4,7 @@ import funkin.graphics.shaders.WiggleEffectRuntime;
 import funkin.graphics.shaders.WiggleEffectType;
 import flixel.addons.effects.FlxTrail;
 import funkin.play.Countdown;
+import flixel.FlxG;
 
 class SchoolEvilStage extends Stage
 {
@@ -30,6 +31,9 @@ class SchoolEvilStage extends Stage
     getNamedProp('school').shader = wiggleSchool;
     getNamedProp('street').shader = wiggleGround;
     getNamedProp('trees').shader = wiggleTrees;
+
+    if (FlxG.save.data.week6pixel == true) PlayState.instance.camHUD.pixelPerfectRender = true;
+    if (FlxG.save.data.week6pixel == true) PlayState.instance.camGame.pixelPerfectRender = true;
   }
 
   override function addCharacter(char:BaseCharacter, charType:CharacterType)

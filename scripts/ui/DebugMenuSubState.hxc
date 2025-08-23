@@ -1,0 +1,235 @@
+import flixel.math.FlxPoint;
+import flixel.FlxObject;
+import flixel.FlxSprite;
+import funkin.ui.MusicBeatSubState;
+import funkin.audio.FunkinSound;
+import funkin.ui.TextMenuList;
+import funkin.ui.debug.charting.ChartEditorState;
+import funkin.util.logging.CrashHandler;
+import flixel.addons.transition.FlxTransitionableState;
+import funkin.util.FileUtil;
+
+import funkin.ui.MusicBeatSubState;
+import funkin.ui.mainmenu.MainMenuState;
+import funkin.ui.debug.DebugMenuSubState;
+import funkin.modding.module.Module;
+import flixel.FlxSubState;
+import flixel.FlxG;
+import funkin.util.WindowUtil;
+import funkin.play.PlayState;
+import funkin.ui.FullScreenScaleMode;
+import funkin.graphics.FunkinSprite;
+import funkin.util.ReflectUtil;
+import funkin.modding.base.ScriptedMusicBeatSubState;
+import funkin.ui.AtlasMenuList;
+import funkin.ui.freeplay.FreeplayState;
+import funkin.ui.MenuItem;
+
+import flixel.addons.transition.FlxTransitionableState;
+import funkin.ui.debug.DebugMenuSubState;
+import flixel.FlxObject;
+import flixel.FlxSubState;
+import flixel.FlxSprite;
+import flixel.effects.FlxFlicker;
+import flixel.math.FlxPoint;
+import flixel.util.FlxColor;
+import flixel.tweens.FlxEase;
+import funkin.graphics.FunkinCamera;
+import funkin.audio.FunkinSound;
+import funkin.util.SwipeUtil;
+import flixel.tweens.FlxTween;
+import funkin.ui.MusicBeatState;
+import flixel.util.FlxTimer;
+import funkin.ui.AtlasMenuList;
+import funkin.ui.freeplay.FreeplayState;
+import funkin.ui.title.TitleState;
+import funkin.ui.story.StoryMenuState;
+import funkin.ui.Prompt;
+import funkin.util.WindowUtil;
+import funkin.util.MathUtil;
+import funkin.util.TouchUtil;
+import flixel.group.FlxTypedSpriteGroup;
+import funkin.util.TouchUtil;
+import funkin.mobile.ui.FunkinBackButton;
+import funkin.mobile.input.ControlsHandler;
+
+class MobileDebugMenuSubState extends MusicBeatSubState
+{
+  var items:TextMenuList;
+  var CAMERA_MARGIN:Int = 850;
+
+  #if FEATURE_TOUCH_CONTROLS
+  var backButton:FunkinBackButton;
+  var goingBack:Bool = false;
+  #end
+
+  /**
+   * Camera focus point
+   */
+  var camFocusPoint:FlxObject;
+
+  override function create():Void
+  {
+    FlxTransitionableState.skipNextTransIn = true;
+    super.create();
+
+    bgColor = 0x00000000;
+
+    // Create an object for the camera to track.
+    camFocusPoint = new FlxObject(0, 0);
+    add(camFocusPoint);
+
+    // Follow the camera focus as we scroll.
+    FlxG.camera.follow(camFocusPoint, null, 0.06);
+
+    // Create the green background.
+    var menuBG = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
+    menuBG.color = 0xFF4CAF50;
+    menuBG.setGraphicSize(Std.int(menuBG.width * 1.1));
+    menuBG.updateHitbox();
+    menuBG.screenCenter();
+    menuBG.scrollFactor.set(0, 0);
+    add(menuBG);
+    FlxTransitionableState.skipNextTransIn = true;
+
+    add(items = new TextMenuList());
+
+    createItem("CHART EDITOR", function() 
+    {
+      FlxTransitionableState.skipNextTransIn = true;
+      FlxG.switchState(() -> new ChartEditorState());
+    });
+
+    createItem("STAGE EDITOR", function() 
+    {
+      FlxG.switchState(() -> new funkin.ui.debug.stageeditor.StageEditorState());
+    });
+
+    createItem("ANIMATION EDITOR", function() 
+    {
+      FlxG.switchState(() -> new funkin.ui.debug.anim.DebugBoundingState());
+    });
+
+    createItem("RESULTS TEST", function() 
+    {
+      FlxG.switchState(() -> new funkin.ui.debug.results.ResultsDebugSubState());
+    });
+
+    createItem("CHARACTER UNLOCK", function() 
+    {
+      switch(FlxG.random.int(0,1))
+      {
+        case 0:
+          FlxG.switchState(() -> new funkin.ui.charSelect.CharacterUnlockState('bf', (ScriptedMusicBeatSubState.init('MobileDebugMenuSubState'))));
+        case 1:
+          FlxG.switchState(() -> new funkin.ui.charSelect.CharacterUnlockState('pico', (ScriptedMusicBeatSubState.init('MobileDebugMenuSubState'))));
+      }
+    });
+
+    createItem("CHARACTER SELECT", function() 
+    {
+      FlxG.switchState(() -> new funkin.ui.charSelect.CharSelectSubState());
+    });
+
+    createItem("(!)STICKER TEST(!)", function() 
+    {
+      openSubState(new funkin.ui.transition.stickers.StickerSubState({}));
+    });
+
+    createItem("(!)WAVEFORM TEST(!)", function() 
+    {
+      FlxG.switchState(() -> new funkin.ui.debug.WaveformTestState());
+    });
+
+    createItem("(!)DIALOGUE TEST(!)", function() 
+    {
+      FlxG.switchState(() -> new funkin.ui.debug.dialogue.ConversationDebugState());
+    });
+
+    #if NO_FEATURE_TOUCH_CONTROLS
+      createItem("EXIT", exitDebugMenu);
+    #else
+      backButton = new FunkinBackButton(FlxG.width - 230, FlxG.height - 200, exitDebugMenu, 1.0);
+      backButton.onConfirmStart.add(function()
+      {
+        items.busy = true;
+        goingBack = true;
+        backButton.active = true;
+    });
+    add(backButton);
+    #end
+
+
+    var spacing = 110;
+    var top = (FlxG.height - (spacing * (items.length - 1))) / 2;
+		for (i in 0...items.length)
+    	{
+      		var menuItem = items.members[i];
+      		menuItem.x = (FlxG.with * 0) + (menuItem.getGraphicMidpoint().x /2);
+      		menuItem.y = top + spacing * i;
+      		menuItem.scrollFactor.x = #if !mobile 0.0 #else 0.4 #end; // we want a lil scroll on mobile, for the cute gyro effect
+      		// This one affects how much the menu items move when you scroll between them.
+      		menuItem.scrollFactor.y = 0.4;
+
+      		if (i == 1)
+      		{
+        		camFocusPoint.setPosition(menuItem.getGraphicMidpoint().x, menuItem.getGraphicMidpoint().y);
+      		}
+    	}
+    // Create an object for the camera to track.
+    camFocusPoint = new FlxObject(0, 0, 140, 70);
+    add(camFocusPoint);
+
+    // Follow the camera focus as we scroll.
+    FlxG.camera.follow(camFocusPoint, null, 0.085);
+    FlxG.camera.deadzone.set(0, CAMERA_MARGIN / 2, FlxG.camera.width, FlxG.camera.height - CAMERA_MARGIN + 40);
+    FlxG.camera.minScrollY = -CAMERA_MARGIN / 2;
+
+    // Move the camera when the menu is scrolled.
+    items.onChange.add(onMenuItemChange);
+
+    onMenuItemChange(items.members[0]);
+
+    #if FEATURE_TOUCH_CONTROLS
+    FlxG.touches.swipeThreshold.y = 100;
+    #end
+  }
+
+  override function update(elapsed:Float):Void
+  {
+    super.update(elapsed);
+
+    #if FEATURE_TOUCH_CONTROLS
+    backButton.active = (!goingBack) ? !items.busy : true;
+    #end
+
+    if (controls.BACK)
+    {
+      FunkinSound.playOnce(Paths.sound('cancelMenu'));
+      exitDebugMenu();
+    }
+  }
+
+  function createItem(name:String, callback:Void->Void, fireInstantly = false):TextMenuItem
+  {
+    var item = items.createItem(0, 100 + items.length * 100, name, 'BOLD', callback);
+    item.fireInstantly = fireInstantly;
+    item.screenCenter();
+    item.x = FlxG.with / 2 + (item.getGraphicMidpoint().x /2);
+    return item;
+  }
+
+  function onMenuItemChange(selected:MenuListItem)
+  {
+    if (#if mobile ControlsHandler.usingExternalInputDevice #else true #end) camFocusPoint.setPosition(FlxG.width/2 - (selected.getGraphicMidpoint().x /2),
+      selected.getGraphicMidpoint().y);
+  }
+
+  function exitDebugMenu()
+  {
+    // TODO: Add a transition?
+    this.close();
+    FlxG.switchState(() -> new MainMenuState());
+  }
+}
+

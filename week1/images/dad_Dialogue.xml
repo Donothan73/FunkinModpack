@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='utf-8'?>
+<TextureAtlas imagePath="dad_Dialogue.png">
+<SubTexture name="idle0000" x="0" y="0" width="407" height="534" frameX="-44" frameY="-7" frameWidth="460" frameHeight="550" />
+<SubTexture name="idle0001" x="407" y="0" width="407" height="534" frameX="-44" frameY="-7" frameWidth="460" frameHeight="550" />
+</TextureAtlas>

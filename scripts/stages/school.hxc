@@ -16,8 +16,8 @@ class SchoolStage extends Stage
 	{
 		super.buildStage();
 
-      getNamedProp('school').pixelPerfectRender = true;
-      getNamedProp('school').pixelPerfectPosition = true;
+      	if (FlxG.save.data.week6pixel == true) PlayState.instance.camHUD.pixelPerfectRender = true;
+    	if (FlxG.save.data.week6pixel == true) PlayState.instance.camGame.pixelPerfectRender = true;
 
 		if (PlayState.instance.currentSong.id.toLowerCase() == "roses")
 		{

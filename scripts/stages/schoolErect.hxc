@@ -2,6 +2,7 @@ import funkin.play.PlayState;
 import funkin.play.stage.Stage;
 import funkin.play.character.CharacterType;
 import funkin.graphics.shaders.DropShadowShader;
+import flixel.FlxG;
 
 class SchoolErectStage extends Stage
 {
@@ -30,6 +31,9 @@ class SchoolErectStage extends Stage
     freakRim.attachedSprite = getNamedProp('freaks');
     freakRim.distance = 5;
     freakRim.angle = 90;
+
+    if (FlxG.save.data.week6pixel == true) PlayState.instance.camHUD.pixelPerfectRender = true;
+    if (FlxG.save.data.week6pixel == true) PlayState.instance.camGame.pixelPerfectRender = true;
 
     getNamedProp('freaks').shader = freakRim;
 

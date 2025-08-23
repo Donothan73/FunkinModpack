@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='utf-8'?>
+<TextureAtlas imagePath="gf_Dialogue.png">
+<SubTexture name="gf_ womp0000" x="0" y="0" width="442" height="520" frameX="-103" frameY="-39" frameWidth="611" frameHeight="629" />
+<SubTexture name="gf_ rizzy0000" x="442" y="0" width="442" height="520" frameX="-103" frameY="-39" frameWidth="611" frameHeight="629" />
+<SubTexture name="gf_ woah0000" x="884" y="0" width="442" height="520" frameX="-103" frameY="-39" frameWidth="611" frameHeight="629" />
+<SubTexture name="gf_ yap0000" x="0" y="520" width="442" height="520" frameX="-103" frameY="-39" frameWidth="611" frameHeight="629" />
+<SubTexture name="gf_ yap0001" x="442" y="520" width="442" height="520" frameX="-103" frameY="-39" frameWidth="611" frameHeight="629" />
+</TextureAtlas>

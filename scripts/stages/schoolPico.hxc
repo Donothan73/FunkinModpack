@@ -47,8 +47,8 @@ class SchoolPicoStage extends Stage
   {
     super.buildStage();
 
-    PlayState.instance.camHUD.pixelPerfectRender = true;
-    PlayState.instance.camGame.pixelPerfectRender = true;
+    if (FlxG.save.data.week6pixel == true) PlayState.instance.camHUD.pixelPerfectRender = true;
+    if (FlxG.save.data.week6pixel == true) PlayState.instance.camGame.pixelPerfectRender = true;
 
     if (PlayState.instance.currentSong.id.toLowerCase() == "roses")
     {

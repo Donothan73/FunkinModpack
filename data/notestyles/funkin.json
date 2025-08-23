@@ -107,7 +107,7 @@
         "audioPath": "shared:gameplay/countdown/funkin/introTWO"
       },
       "assetPath": "shared:ui/countdown/funkin/ready",
-      "scale": 1.0,
+      "scale": 0.0,
       "isPixel": false
     },
     "countdownOne": {
@@ -115,7 +115,7 @@
         "audioPath": "shared:gameplay/countdown/funkin/introONE"
       },
       "assetPath": "shared:ui/countdown/funkin/set",
-      "scale": 1.0,
+      "scale": 0.0,
       "isPixel": false
     },
     "countdownGo": {

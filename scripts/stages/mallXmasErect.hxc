@@ -18,6 +18,7 @@ import funkin.play.character.BaseCharacter;
 import openfl.display.BitmapData;
 import flixel.graphics.FlxGraphic;
 import flixel.math.FlxAngle;
+import flixel.util.FlxGradient;
 
 class MallXmasErectStage extends Stage
 {
@@ -31,6 +32,14 @@ class MallXmasErectStage extends Stage
 	override function buildStage()
 	{
 		super.buildStage();
+
+		var bg:FlxSprite = FlxGradient.createGradientFlxSprite(3102, 825, [0xFF239FAA, 0xFF0084A3], 90, true);
+        bg.zIndex = -10;
+        bg.x = -630 - 300;
+        bg.y = -492;
+		bg.scale.set(1, 0.8);
+        bg.cameras = [PlayState.instance.camGame];
+        PlayState.instance.currentStage.add(bg);
 
 		switch(PlayState.instance.currentVariation) 
 		{

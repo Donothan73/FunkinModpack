@@ -1,0 +1,12 @@
+import flixel.FlxSprite;
+import flixel.FlxG;
+
+class StoryModeDifficultySprite extends FlxSprite
+{
+  public var difficultyId;
+
+  public function new():Void
+  {
+    super();
+  }
+}

@@ -1,0 +1,123 @@
+import flixel.FlxSprite;
+import flixel.group.FlxTypedSpriteGroup;
+import flixel.util.FlxColor;
+import funkin.util.MathUtil;
+import flixel.FlxG;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
+import funkin.util.FlxTweenUtil;
+import flixel.text.FlxText;
+import StringTools;
+import flixel.util.FlxStringUtil;
+import Std;
+import flixel.tweens.motion.QuadPath;
+import flixel.math.FlxPoint;
+import funkin.audio.FunkinSound;
+import funkin.Paths;
+import funkin.ui.freeplay.charselect.PlayableCharacter;
+import funkin.data.song.SongRegistry;
+import funkin.play.song.Song;
+
+class StoryTitle extends FlxTypedSpriteGroup
+{
+  static final LOCK_PAD:Int = 4;
+  public final level:Level;
+  public var targetX:Float;
+  public var targetY:Float;
+  public var index:Int;
+  public var defaultVariation:String;
+
+  var title:FlxSprite;
+  var lock:FlxSprite;
+
+  public function new(x:Int, y:Int, level:Level)
+  {
+    super(x, y);
+
+    this.level = level;
+
+    if (this.level == null) throw "Level cannot be null!";
+
+    buildLevelTitle();
+    buildLevelLock();
+    if(!level.isUnlocked()) showLock();
+
+  }
+
+  override function get_width():Float
+  {
+    if (length == 0) return 0;
+
+    if (lock.visible)
+    {
+      return title.width + lock.width + LOCK_PAD;
+    }
+    else
+    {
+      return title.width;
+    }
+  }
+
+  public var isFlashing:Bool = false;
+
+  var flashTick:Float = 0;
+  final flashFramerate:Float = 20;
+
+  function updatePosition(sprite):Void
+  {
+    FlxTween.tween(title, {x: targetX}, 0.5, {ease: FlxEase.quintOut});
+    FlxTween.tween(title, {y: targetY}, 0.5, {ease: FlxEase.quintOut});
+  }
+
+  public override function update(elapsed:Float):Void
+  {
+    if (lock != null) lock.x = (title.x + (title.width/2) - (lock.width/2));
+    if (lock != null) lock.y = title.y;
+
+    if (isFlashing)
+    {
+      flashTick += elapsed;
+      if (flashTick >= 1 / flashFramerate)
+      {
+        flashTick %= 1 / flashFramerate;
+        title.color = (title.color == FlxColor.WHITE) ? 0xFF33ffff : FlxColor.WHITE;
+      }
+    }
+  }
+
+
+  public function changeVariation(variation:String, player:PlayableCharacter, variations:Array):Void
+  {
+  
+
+  }
+
+
+  public function showLock():Void
+  {
+    lock.visible = true;
+    this.x -= (lock.width + LOCK_PAD) / 2;
+  }
+
+  public function hideLock():Void
+  {
+    lock.visible = false;
+    this.x += (lock.width + LOCK_PAD) / 2;
+  }
+
+  function buildLevelTitle():Void
+  {
+    title = level.buildTitleGraphic();
+    title.scale.x = 0.75;
+    title.scale.y = 0.75;
+    add(title);
+  }
+
+  function buildLevelLock():Void
+  {
+    lock = new FlxSprite(0, 0).loadGraphic(Paths.image('storymenu/ui/lock'));
+    lock.x = title.x + title.width + LOCK_PAD;
+    lock.visible = false;
+    add(lock);
+  }
+}

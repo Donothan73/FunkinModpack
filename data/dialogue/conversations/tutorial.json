@@ -1,0 +1,52 @@
+{
+  "version": "1.0.0",
+
+  "backdrop": {
+    "type": "solid",
+    "fadeTime": 0.5,
+    "color": "#5a313ab9"
+  },
+
+  "music": {
+    "asset": "Lunchbox",
+    "fadeTime": 2.0,
+    "looped": true
+  },
+
+  "outro": {
+    "type": "fade",
+    "fadeTime": 1.0
+  },
+
+  "dialogue": [
+    {
+      "speaker": "gf",
+      "speakerAnimation": "talk",
+      "box": "default",
+      "boxAnimation": "enter",
+      "speed": 0.5,
+
+      "text": ["Heyyyy"]
+    },
+    {
+      "speaker": "gf",
+      "speakerAnimation": "rizz",
+      "box": "default",
+      "boxAnimation": "idle",
+      "speed": 0.5,
+
+      "text": [
+        "You're pretty cute."
+      ]
+    },
+    {
+      "speaker": "gf",
+      "speakerAnimation": "talkEnter",
+      "box": "default",
+      "boxAnimation": "idle",
+      "speed": 0.5,
+
+      "text": ["Use the arrow keys to keep up with me singing."]
+    }
+  ]
+}

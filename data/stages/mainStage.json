@@ -1,0 +1,86 @@
+{
+  "props": [
+    {
+      "danceEvery": 0,
+      "zIndex": 10,
+      "position": [-600, -200],
+      "scale": [1, 1],
+      "animType": "sparrow",
+      "name": "stageBack",
+      "isPixel": false,
+      "assetPath": "stageback",
+      "scroll": [0.95, 0.95],
+      "animations": []
+    },
+    {
+      "danceEvery": 0,
+      "zIndex": 20,
+      "position": [-650, 600],
+      "scale": [1.1, 1.1],
+      "animType": "sparrow",
+      "name": "stageFront",
+      "isPixel": false,
+      "assetPath": "stagefront",
+      "scroll": [1, 1],
+      "animations": []
+    },
+    {
+      "danceEvery": 0,
+      "zIndex": 30,
+      "position": [-705, -200],
+      "scale": [1.05, 0.94],
+      "animType": "sparrow",
+      "name": "stageCurtains",
+      "isPixel": false,
+      "assetPath": "stagecurtains_long",
+      "scroll": [0.85, 0.75],
+      "animations": []
+    },
+    {
+      "danceEvery": 0,
+      "zIndex": 35,
+      "position": [-160, -125],
+      "scale": [1.25, 1.25],
+      "animType": "sparrow",
+      "name": "stageLightLeft",
+      "isPixel": false,
+      "assetPath": "stage_light",
+      "scroll": [0.8, 0.70],
+      "animations": []
+    },
+    {
+      "danceEvery": 0,
+      "zIndex": 35,
+      "position": [1460, -125],
+      "scale": [1.25, 1.25],
+      "animType": "sparrow",
+      "name": "stageLightRight",
+      "isPixel": false,
+      "flipX": true,
+      "assetPath": "stage_light",
+      "scroll": [0.8, 0.70],
+      "animations": []
+    }
+  ],
+  "cameraZoom": 0.75,
+  "version": "1.0.0",
+  "characters": {
+    "bf": {
+      "zIndex": 300,
+      "position": [1079.5, 815],
+      "cameraOffsets": [-125, -100]
+    },
+    "dad": {
+      "zIndex": 200,
+      "position": [335, 885],
+      "cameraOffsets": [150, -100]
+    },
+    "gf": {
+      "zIndex": 100,
+      "cameraOffsets": [0, 0],
+      "position": [751.5, 687]
+    }
+  },
+  "name": "Main Stage",
+  "directory": "week1"
+}

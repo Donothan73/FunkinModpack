@@ -117,7 +117,13 @@ class RosesSong extends Song
     // otherwise boppers will not work.
     super.onBeatHit(event);
 
-    if (event.beat == 180 && PlayStatePlaylist.isStoryMode)
+    var cutsceneBeat:Int;
+
+    if (PlayState.instance.currentVariation == '') cutsceneBeat = 180;
+    if (PlayState.instance.currentVariation == 'erect') cutsceneBeat = 206;
+    if (PlayState.instance.currentVariation == 'pico') cutsceneBeat = 185;
+
+    if (event.beat == cutsceneBeat && PlayStatePlaylist.isStoryMode)
     {
       trace('Hit end of song! Starting outro.');
 

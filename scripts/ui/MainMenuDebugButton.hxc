@@ -1,0 +1,113 @@
+import funkin.ui.MusicBeatSubState;
+import funkin.ui.mainmenu.MainMenuState;
+import funkin.ui.debug.DebugMenuSubState;
+import funkin.modding.module.Module;
+import flixel.FlxSubState;
+import flixel.FlxG;
+import funkin.util.WindowUtil;
+import funkin.play.PlayState;
+import funkin.ui.FullScreenScaleMode;
+import funkin.graphics.FunkinSprite;
+import funkin.util.ReflectUtil;
+import funkin.modding.base.ScriptedMusicBeatSubState;
+import funkin.PlayerSettings;
+import funkin.modding.base.ScriptedMusicBeatSubState;
+import funkin.modding.base.ScriptedFlxRuntimeShader;
+import funkin.modding.base.ScriptedMusicBeatState;
+
+class MainMenuDebugButton extends Module
+{
+
+	var backButton:FunkinSprite;
+	var mainMenu:ScriptedMusicBeatSubState;
+	var buttonAdded:bool = false;
+	var debugMenu:ScriptedMusicBeatSubState;
+
+	function new ()
+	{
+	        super("MainMenuDebugButton");
+	}
+
+
+	function onUpdate(event:UpdateScriptEvent):Void
+	{
+	    super.onUpdate(event);
+		
+
+
+		if (ReflectUtil.getClassNameOf(FlxG.state) == "funkin.ui.mainmenu.MainMenuState")
+    	{
+			if (!buttonAdded) createButton();
+
+			if (PlayerSettings.player1.controls.FREEPLAY_CHAR_SELECT)
+            {
+                  //FlxG.state.destroy();
+                  FlxG.switchState(() -> ScriptedMusicBeatState.init('PixelMap'));
+            }
+		}	
+			if(FlxG.keys.justPressed.NUMPADFIVE)
+				{
+				FlxG.switchState(() -> new funkin.ui.debug.results.ResultsDebugSubState());
+				FlxG.switchState(() -> new funkin.ui.mainmenu.MainMenuState());
+				}	
+
+			if(FlxG.keys.justPressed.F1)
+				{
+				FlxG.switchState(() -> new funkin.ui.mainmenu.MainMenuState());
+				//if (PlayState.instance != null) PlayState.instance.endSong();
+				//FlxG.resizeGame(2532, 1170);
+				//FlxG.resizeWindow(2657, 1098);
+				//FlxG.resizeWindow(2441, 1098);
+				//FullScreenScaleMode.instance.enabled = true;
+				//FullScreenScaleMode.instance.updateGameSize(2657, 1098);
+    			//FullScreenScaleMode.instance.updateDeviceSize(2657, 1098);
+    			//FullScreenScaleMode.instance.updateDeviceCutout(2657, 11710980);
+				}		
+	}
+
+	override function onStateChangeEnd(event)
+  	{
+    	super.onStateChangeEnd(event);
+    	buttonAdded = false;
+  	}
+
+
+	function createButton():Void
+	{
+		//debugButton = FunkinSprite.createSparrow(5, 25, "mainmenu/debugFace");
+    	//debugButton.animation.addByPrefix("idle", "idle", 24, false);
+    	//debugButton.animation.addByPrefix("hit", "hit", 24, false);
+    	//debugButton.animation.play("idle");
+    	//debugButton.scale.set(1, 1); 
+		//debugButton.scrollFactor(1, 1); 
+    	//FlxG.state.add(debugButton);
+
+		buttonAdded = true;
+
+		FlxG.state.createMenuItem('debug', 'mainmenu/debug', function() {
+			FlxG.state.canInteract = false;
+			FlxG.state.set_canInteract(false);
+			#if mobile
+      		FlxG.state.openSubState(ScriptedMusicBeatSubState.init('MobileDebugMenuSubState'));
+			#end
+			FlxG.state.startExitState(() -> (ScriptedMusicBeatSubState.init('MobileDebugMenuSubState')));
+    	});
+
+		var spacing = 160;
+    	var top = (FlxG.height - (spacing * (FlxG.state.menuItems.length - 1))) / 2;
+		for (i in 0...FlxG.state.menuItems.length)
+    	{
+      		var menuItem = FlxG.state.menuItems.members[i];
+      		menuItem.x = FlxG.width / 2;
+      		menuItem.y = top + spacing * i;
+      		menuItem.scrollFactor.x = #if !mobile 0.0 #else 0.4 #end; // we want a lil scroll on mobile, for the cute gyro effect
+      		// This one affects how much the menu items move when you scroll between them.
+      		menuItem.scrollFactor.y = 0.4;
+
+      		if (i == 1)
+      		{
+        		FlxG.state.camFollow.setPosition(menuItem.getGraphicMidpoint().x, menuItem.getGraphicMidpoint().y);
+      		}
+    	}
+	}
+}

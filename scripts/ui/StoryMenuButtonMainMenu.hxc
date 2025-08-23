@@ -35,6 +35,8 @@ class StoryMenuButtonMainMenu extends Module
 {
   //cool code in Spooky Mix mod kudos to them!
 
+  var mainMenu:ScriptedMusicBeatSubState;
+
   public function new()
   {
     super('StoryMenuButtonMainMenu');
@@ -44,32 +46,27 @@ class StoryMenuButtonMainMenu extends Module
   {
 	super.onUpdate(event);
 
+    if (ReflectUtil.getClassNameOf(FlxG.state) == "funkin.ui.story.StoryMenuState")
+    {   
+        FlxG.mouse.visible = false;
+        
+
+          FlxG.switchState(() -> mainMenu = ScriptedMusicBeatSubState.init('StoryModeMenu'));
+          //FlxG.state.startExitState(mainMenu = ScriptedMusicBeatSubState.init('StoryModeMenu'));
+    }
+
     if (ReflectUtil.getClassNameOf(FlxG.state) == "funkin.ui.mainmenu.MainMenuState")
     {   
         FlxG.mouse.visible = false;
+        
 
 
         if (PlayerSettings.player1.controls.ACCEPT && FlxG.state.menuItems.selectedIndex == 0)
         {
-            openingLink = true;
 
-            WindowUtil.openURL("https://creatorink.com/collections/pelo");
-
-            new FlxTimer().start(2, _ -> {
-                openingLink = false;
-            });
+           // FlxG.switchState(() -> mainMenu = ScriptedMusicBeatSubState.init('StoryModeMenu'));
+            //FlxG.state.startExitState(mainMenu = ScriptedMusicBeatSubState.init('StoryModeMenu'));
         }
-
-        if (openingLink == true)
-        {
-            FlxG.autoPause = false;
-        }
-        else 
-        {
-            FlxG.autoPause = Preferences.autoPause;
-        }
-
     }
-
   }
 }

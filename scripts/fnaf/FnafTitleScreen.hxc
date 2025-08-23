@@ -1,0 +1,70 @@
+import funkin.ui.MusicBeatState;
+import funkin.ui.MusicBeatSubState;
+import funkin.modding.base.ScriptedFlxSprite;
+import funkin.modding.base.ScriptedFlxSpriteGroup;
+import flixel.math.FlxPoint;
+import flixel.FlxObject;
+import flixel.FlxSprite;
+import funkin.ui.MusicBeatSubState;
+import funkin.audio.FunkinSound;
+import funkin.ui.TextMenuList;
+import funkin.ui.debug.charting.ChartEditorState;
+import funkin.util.logging.CrashHandler;
+import flixel.addons.transition.FlxTransitionableState;
+import funkin.util.FileUtil;
+import flixel.FlxObject;
+import flixel.FlxSubState;
+import flixel.FlxSprite;
+import flixel.effects.FlxFlicker;
+import flixel.math.FlxPoint;
+import flixel.util.FlxColor;
+import flixel.tweens.FlxEase;
+import funkin.graphics.FunkinCamera;
+import funkin.graphics.FunkinSprite;
+import funkin.audio.FunkinSound;
+import funkin.util.SwipeUtil;
+import flixel.tweens.FlxTween;
+import funkin.ui.MusicBeatState;
+import funkin.ui.FullScreenScaleMode;
+import flixel.FlxG;
+import funkin.modding.base.ScriptedMusicBeatSubState;
+import funkin.modding.base.ScriptedFlxRuntimeShader;
+import funkin.modding.base.ScriptedMusicBeatState;
+import funkin.PlayerSettings;
+
+class FnafTitleScreen extends MusicBeatState
+{
+
+  var logo:FunkinSprite;
+
+  function new():Void
+  {
+    super('FnafTitleScreen');
+
+    set_conductorInUse(false);
+
+    createBg();
+  }
+
+  function createBg():Void
+  {
+    logo = FunkinSprite.createSparrow(0, 25, "fnaf/titleScreen/title");
+    logo.animation.addByPrefix('start', 'title idle', 12, false);
+    logo.animation.play('start');
+    logo.x = FlxG.width - logo.width - 50;
+    logo.updateHitbox();
+
+    add(logo);
+  }
+
+  override function onUpdate(event:UpdateScriptEvent)
+  {
+	super.onUpdate(event);
+
+    if (PlayerSettings.player1.controls.FREEPLAY_CHAR_SELECT)
+            {
+                  //FlxG.state.destroy();
+                  FlxG.switchState(() -> ScriptedMusicBeatState.init('PixelMap'));
+            }
+  }
+}

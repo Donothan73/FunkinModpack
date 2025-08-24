@@ -5,7 +5,7 @@
   "props": [
     {
       "name": "bgWalls",
-      "assetPath": "christmas/bgWalls",
+      "assetPath": "christmas/bgWallsEdit",
       "position": [-630, -492],
       "scale": [0.8, 0.8],
       "scroll": [0.2, 0.2],

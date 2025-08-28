@@ -61,7 +61,7 @@ class FnafTitleScreen extends MusicBeatState
   {
 	super.onUpdate(event);
 
-    if (PlayerSettings.player1.controls.FREEPLAY_CHAR_SELECT)
+    //if (PlayerSettings.player1.controls.FREEPLAY_CHAR_SELECT)
             {
                   //FlxG.state.destroy();
                   FlxG.switchState(() -> ScriptedMusicBeatState.init('PixelMap'));

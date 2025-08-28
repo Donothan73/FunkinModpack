@@ -49,6 +49,7 @@ class DarnellBlazinCharacter extends AnimateAtlasCharacter
 		// TODO: Maybe add a cooldown to this?
 		var shouldDoUppercutPrep = wasNoteHitPoorly(event) && isPlayerLowHealth() && FlxG.random.bool(30);
 
+
 		if (shouldDoUppercutPrep) {
 			playUppercutPrepAnim();
 			return;
@@ -303,7 +304,7 @@ class DarnellBlazinCharacter extends AnimateAtlasCharacter
 	}
 
 	function willMissBeLethal(event:NoteScriptEvent):Bool {
-		return (PlayState.instance.health + event.healthChange) <= 0.0;
+		return (if (PlayState.instance.health > 0.1)  PlayState.instance.health + event.healthChange) <= 0.0;
 	}
 
 	function onNoteGhostMiss(event:GhostMissNoteScriptEvent)
@@ -346,7 +347,7 @@ class DarnellBlazinCharacter extends AnimateAtlasCharacter
 	}
 
 	function isPlayerLowHealth(event:HitNoteScriptEvent):Bool {
-		return PlayState.instance.health <= 0.30 * 2.0;
+		return if (PlayState.instance.health > 0.1)  PlayState.instance.health <= 0.30 * 2.0;
 	}
 
 	// ANIMATIONS

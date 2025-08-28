@@ -38,12 +38,7 @@ class MainMenuDebugButton extends Module
 		if (ReflectUtil.getClassNameOf(FlxG.state) == "funkin.ui.mainmenu.MainMenuState")
     	{
 			if (!buttonAdded) createButton();
-
-			if (PlayerSettings.player1.controls.FREEPLAY_CHAR_SELECT)
-            {
-                  //FlxG.state.destroy();
-                  FlxG.switchState(() -> ScriptedMusicBeatState.init('PixelMap'));
-            }
+			
 		}	
 			if(FlxG.keys.justPressed.NUMPADFIVE)
 				{

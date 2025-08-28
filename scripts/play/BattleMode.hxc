@@ -1,0 +1,353 @@
+import funkin.play.PlayState;
+import flixel.FlxG;
+import funkin.util.Constants;
+import funkin.modding.module.Module;
+import funkin.modding.events.ScriptEvent;
+import funkin.play.character.CharacterType;
+import flixel.math.FlxMath;
+import funkin.Highscore;
+import funkin.Conductor;
+import funkin.Preferences;
+import funkin.play.notes.notestyle.NoteStyle;
+import funkin.data.notestyle.NoteStyleRegistry;
+import funkin.play.song.Song;
+import funkin.graphics.FunkinSprite;
+import flixel.tweens.FlxTween;
+import funkin.util.EaseUtil;
+
+class BattleMode extends Module 
+{
+
+	//Player Health Stats
+	var killer:Float = 0.2;
+	var sick:Float = 0.1;
+	var good:Float = 0.075;
+	var bad:Float = 0.0;
+	var shit:Float = -0.1;
+	var miss:Float = -0.4;
+	var playerCurve:Float = 0;
+
+	//Opponent Stats
+	var opponentDrain:Float = -0.1;
+	var difficultyMultiplier:Float = 1;
+	var opponentCurve:Float = 0;
+
+	//Combo crap ; credits to JugieNoob they're super goated
+	var combo = 0;
+    var hashitnote = false;
+    var notehittime = 0;
+    var playedcombo = false;
+    var holdnoteend = 0;
+    var holdnoteendtime = 0;
+    var holdnotestart = 0;
+
+	var comboSprite:FunkinSprite;
+	var comboJudgement:FunkinSprite;
+	var judgement:String;
+
+	//Judgement counts
+	var killers:Int = 0;
+	var sicks:Int = 0;
+	var goods:Int = 0;
+	var bads:Int = 0;
+	var shits:Int = 0;
+	var misses:Int = 0;
+
+
+	function new ()
+	{
+	        super("BattleMode");
+	}
+
+	override function onSongStart(event:ScriptEvent)
+  	{
+
+		if (comboJudgement != null) comboJudgement.destroy();
+		if (comboSprite != null) comboSprite.destroy();
+
+		switch (PlayState.instance.currentDifficulty)
+		{
+			default:
+				difficultyMultiplier = 1;
+			case 'easy':
+				difficultyMultiplier = 0.35;
+			case 'normal':
+				difficultyMultiplier = 0.65;	
+			case 'hard':
+				difficultyMultiplier = 1.0;	
+			case 'erect':
+				difficultyMultiplier = 1.075;	
+			case 'nightmare':
+				difficultyMultiplier = 1.25;	
+							
+		}
+		
+		difficultyMultiplier*.5;
+
+		hashitnote = false;
+        playedcombo = false;
+        holdnotestart = 0;
+        holdnoteend = 0;
+        holdnoteendtime = 0;
+        combo = 0;
+        notehittime = 0;
+        comtostring = "";
+
+		FunkinSprite.cacheTexture("combo.png");
+        FunkinSprite.cacheTexture("combo-pixel.png");
+  	}
+
+	function onNoteHit(event:HitNoteScriptEvent)
+	{
+		if (!event.note.noteData.getMustHitNote())
+		{
+			switch (PlayState.instance.currentStage.getDad().characterId)
+			{
+				case 'gf':
+					opponentDrain = 0.0;
+				case 'dad':
+					opponentDrain = -0.1;
+				case 'dad-dark':
+					opponentDrain = -0.1;
+				case 'spooky':
+					opponentDrain = -0.13;
+				case 'spooky-dark':
+					opponentDrain = -0.13;
+				case 'pico':
+					opponentDrain = -0.14;
+				case 'mom':
+					opponentDrain = -0.165;
+				case 'mom-car':
+					opponentDrain = -0.165;
+				case 'parents':
+					opponentDrain = -0.1;
+				case 'parents-christmas':
+					switch(event.note.kind) //switch between mom and dad
+					{
+						default:
+							opponentDrain = -0.1;
+						case 'mom':
+							opponentDrain = -0.175;
+
+					}
+				case 'senpai':
+					opponentDrain = -0.135;
+				case 'senpai-angry':
+					opponentDrain = -0.155;
+				case 'spirit':
+					opponentDrain = -0.165;
+				case 'tankman':
+					opponentDrain = -0.155;
+				case 'tankman-bloody':
+					opponentDrain = -0.125;
+				case 'darnell':
+					opponentDrain = -0.115;
+				case 'darnell-blazin':
+					opponentDrain = -0.125;
+				case 'bf-pixel':
+					opponentDrain = -0.15;
+									
+			}
+			
+			curveOpponent();
+			opponentDrain = opponentDrain*opponentCurve * difficultyMultiplier;
+			if (PlayState.instance.health + opponentDrain > Constants.HEALTH_MIN) PlayState.instance.health += opponentDrain;
+		}
+		else
+		{
+			switch (event.judgement)
+			{
+				case 'killer':
+					event.healthChange = killer;
+					killers++;
+				case 'sick':
+					event.healthChange = sick;
+					sicks++;
+				case 'good':
+					event.healthChange = good;
+					goods++;
+				case 'bad':
+					event.healthChange = bad;
+					bads++;
+				case 'shit':
+					event.healthChange = shit;
+					shits++;
+				case 'miss':
+					event.healthChange = miss;
+					misses++;
+			}
+
+			calculateCombo(event);
+			curvePlayer();
+			event.healthChange = event.healthChange*playerCurve;
+		}
+
+		super.onNoteHit(event);
+	}
+
+	function calculateCombo(event:HitNoteScriptEvent):Void
+	{
+        
+        notehittime = event.note.noteData.getStepTime() + (Conductor.instance.get_bpm() / 24);
+        combo++;
+        hashitnote = true;
+        playedcombo = false;
+        checkSustain(event);
+
+	}
+
+	function checkSustain(event:HitNoteScriptEvent)
+    {
+        //Rewrote the sutain note stuff
+        if (event.note.noteData.getStepLength() > 0 && event.note.noteData.getMustHitNote())
+        {
+            holdnotestart = event.note.noteData.getStepTime();
+            holdnoteend = FlxMath.roundDecimal(event.note.noteData.getStepLength());
+            holdnoteendtime = Conductor.instance.currentStep + holdnoteend + 4;
+        }
+        else
+        {
+            holdnotestart = 0;
+            holdnoteend = 0;
+            holdnoteendtime = 0;
+        }
+    }
+
+	function displayCombo():Void
+    {
+		var noteStyleId = PlayState.instance.currentChart.noteStyle;
+		if (noteStyleId == '' | noteStyleId == null) noteStyleId = 'funkin';
+		var healthBar = PlayState.instance.healthBar;
+		var comboY:Float;
+
+		total = killers + sicks + goods + bads + shits + misses;
+
+		var grade = (killers + sicks + (goods*.85) - bads - misses - shits) / total;
+
+		var multiplier:Float;
+		multiplier = (grade / total) / 4 + 1;
+
+    	if (grade == Constants.RANK_PERFECT_THRESHOLD)
+    	{
+      		judgement = 'sick';
+			PlayState.instance.health += killer*multiplier;
+    	}
+    	else if (grade >= Constants.RANK_EXCELLENT_THRESHOLD)
+		{
+			judgement = 'sick';
+			PlayState.instance.health += sick*multiplier;
+		}
+		else if (grade >= Constants.RANK_GREAT_THRESHOLD)
+		{
+			judgement = 'good';
+			PlayState.instance.health += good*multiplier;
+		}
+		else if (grade >= Constants.RANK_GOOD_THRESHOLD)
+		{
+			judgement = 'bad';
+			PlayState.instance.health += bad*multiplier;
+		}
+		else
+		{
+			judgement = 'shit';
+			PlayState.instance.health += shit*multiplier;
+		}
+
+		if (Preferences.downscroll == true)
+		{
+			comboY = healthBar.y + 100;
+		}
+		else
+		{
+			comboY = healthBar.y - 100;
+		}
+
+		if (comboSprite != null) comboSprite.destroy();
+		comboSprite = new FunkinSprite(healthBar.x + healthBar.width / 2, comboY);
+		comboSprite.loadGraphic(Paths.image('ui/popup/' + noteStyleId + '/combo'));
+		comboSprite.cameras = [PlayState.instance.camHUD];
+		PlayState.instance.add(comboSprite);
+		comboSprite.scale.set(0.4, 0.4);
+		if (noteStyleId == 'pixel') comboSprite.antialiasing = false;
+		if (noteStyleId == 'pixel') comboSprite.scale.set(3, 3);
+		comboSprite.updateHitbox();
+		comboSprite.screenCenter();
+		comboSprite.y = comboY;
+		comboSprite.x += 75;
+
+		if (comboJudgement != null) comboJudgement.destroy();
+		comboJudgement = new FunkinSprite(healthBar.x + healthBar.width / 2, comboY);
+		comboJudgement.loadGraphic(Paths.image('ui/popup/' + noteStyleId + '/' + judgement));
+		comboJudgement.cameras = [PlayState.instance.camHUD];
+		PlayState.instance.add(comboJudgement);
+		comboJudgement.scale.set(0.4, 0.4);
+		if (noteStyleId == 'pixel') comboJudgement.antialiasing = false;
+		if (noteStyleId == 'pixel') comboJudgement.scale.set(3, 3);
+		comboJudgement.updateHitbox();
+		comboJudgement.screenCenter();
+		comboJudgement.y = comboY;
+		comboJudgement.x += -75;
+
+		comboSprite.alpha = 1;
+		comboJudgement.alpha = 1;
+
+		 FlxTween.tween(comboJudgement, {alpha: 0}, 0.2,
+        {
+          onComplete: function(tween:FlxTween) {
+            comboJudgement.destroy();
+          },
+          startDelay: Conductor.instance.beatLengthMs * 0.002
+        });
+
+		 FlxTween.tween(comboSprite, {alpha: 0}, 0.2,
+        {
+          onComplete: function(tween:FlxTween) {
+            comboSprite.destroy();
+          },
+          startDelay: Conductor.instance.beatLengthMs * 0.002
+        });
+
+		killers = 0;
+		sicks = 0;
+		goods = 0;
+		bads = 0;
+		shits = 0;
+		misses = 0;
+	}
+
+	 override function onUpdate(event)
+    {
+        if (PlayState.instance != null)
+        {
+
+			PlayState.instance.comboPopUps.offsets = [500, 360];
+
+            if (Conductor.instance.currentStep >= (notehittime + holdnoteend) && hashitnote && !playedcombo)
+            {
+                playedcombo = true;
+                if (!PlayState.instance.isBotPlayMode)
+                {
+                    displayCombo();
+                }
+            }
+        }
+
+    	super.onUpdate(event);     
+    }
+
+	function curvePlayer():Void
+	{
+		var health = PlayState.instance.health;
+		var healthMax = Constants.HEALTH_MAX;
+		//playerCurve = (.1(health - 3.1)^2) * ((health - 2) + 2);
+		playerCurve = -(.15(health - 3.1)^2) * (health - healthMax - .15)*.25;
+	}
+
+	function curveOpponent():Void
+	{
+		var health = PlayState.instance.health;
+		var healthMax = Constants.HEALTH_MAX;
+		//opponentCurve = -(-.1(health + 3.1)^2) * (health - healthMax);
+		opponentCurve = (.15(health - 3.1)^2) * ((health - healthMax) - .3 +(0.8*healthMax))*.25;
+	}
+}

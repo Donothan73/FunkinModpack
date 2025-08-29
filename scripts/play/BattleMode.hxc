@@ -24,7 +24,7 @@ class BattleMode extends Module
 	var good:Float = 0.075;
 	var bad:Float = 0.0;
 	var shit:Float = -0.1;
-	var miss:Float = -0.4;
+	var miss:Float = -0.1;
 	var playerCurve:Float = 0;
 
 	//Opponent Stats
@@ -41,6 +41,8 @@ class BattleMode extends Module
     var holdnoteendtime = 0;
     var holdnotestart = 0;
 
+	var comboOffsets = [500, 360];
+	var noteStyleId:String;
 	var comboSprite:FunkinSprite;
 	var comboJudgement:FunkinSprite;
 	var judgement:String;
@@ -59,11 +61,18 @@ class BattleMode extends Module
 	        super("BattleMode");
 	}
 
+
 	override function onSongStart(event:ScriptEvent)
   	{
 
+		noteStyleId = PlayState.instance.currentChart.noteStyle;
 		if (comboJudgement != null) comboJudgement.destroy();
 		if (comboSprite != null) comboSprite.destroy();
+
+		if (Preferences.downscroll == true | FlxG.onMobile == true)
+		{
+			comboOffsets = [500, -160];
+		}
 
 		switch (PlayState.instance.currentDifficulty)
 		{
@@ -81,6 +90,8 @@ class BattleMode extends Module
 				difficultyMultiplier = 1.25;	
 							
 		}
+
+		if (noteStyleId == '' | noteStyleId == null) noteStyleId = 'funkin';
 		
 		difficultyMultiplier*.5;
 
@@ -185,6 +196,33 @@ class BattleMode extends Module
 		super.onNoteHit(event);
 	}
 
+	function onNoteMiss(event:NoteScriptEvent)
+	{
+		event.healthChange = miss;
+		misses++;
+		//PlayState.instance.comboPopUps.displayRating('miss');
+		missSprite = new FunkinSprite(PlayState.instance.comboPopUps.x, PlayState.instance.comboPopUps.y);
+		missSprite.loadGraphic(Paths.image('ui/popup/' + noteStyleId + '/miss'));
+		missSprite.x = (FlxG.width * 0.474);
+    	missSprite.x -= missSprite.width / 2;
+    	missSprite.y = (FlxG.camera.height * 0.45 - 60);
+    	missSprite.y -= missSprite.height / 2;
+    	missSprite.x += PlayState.instance.comboPopUps.offsets[0];
+    	missSprite.y += PlayState.instance.comboPopUps.offsets[1];
+		missSprite.cameras = [PlayState.instance.camHUD];
+		PlayState.instance.add(missSprite);
+		missSprite.acceleration.y = 550;
+    	missSprite.velocity.y -= FlxG.random.int(140, 175);
+    	missSprite.velocity.x -= FlxG.random.int(0, 10);
+		FlxTween.tween(missSprite, {alpha: 0}, 0.2,
+        {
+          onComplete: function(tween:FlxTween) {
+            missSprite.destroy();
+          },
+          startDelay: Conductor.instance.beatLengthMs * 0.002
+        });		
+	}
+
 	function calculateCombo(event:HitNoteScriptEvent):Void
 	{
         
@@ -215,8 +253,6 @@ class BattleMode extends Module
 
 	function displayCombo():Void
     {
-		var noteStyleId = PlayState.instance.currentChart.noteStyle;
-		if (noteStyleId == '' | noteStyleId == null) noteStyleId = 'funkin';
 		var healthBar = PlayState.instance.healthBar;
 		var comboY:Float;
 
@@ -226,6 +262,7 @@ class BattleMode extends Module
 
 		var multiplier:Float;
 		multiplier = (grade / total) / 4 + 1;
+		multiplier += multiplier*difficultyMultiplier/4;
 
     	if (grade == Constants.RANK_PERFECT_THRESHOLD)
     	{
@@ -253,7 +290,7 @@ class BattleMode extends Module
 			PlayState.instance.health += shit*multiplier;
 		}
 
-		if (Preferences.downscroll == true)
+		if (Preferences.downscroll == true | FlxG.onMobile == true)
 		{
 			comboY = healthBar.y + 100;
 		}
@@ -274,6 +311,9 @@ class BattleMode extends Module
 		comboSprite.screenCenter();
 		comboSprite.y = comboY;
 		comboSprite.x += 75;
+		comboSprite.acceleration.y = 550;
+    	comboSprite.velocity.y -= FlxG.random.int(140, 175);
+    	comboSprite.velocity.x -= FlxG.random.int(0, 10);
 
 		if (comboJudgement != null) comboJudgement.destroy();
 		comboJudgement = new FunkinSprite(healthBar.x + healthBar.width / 2, comboY);
@@ -287,6 +327,9 @@ class BattleMode extends Module
 		comboJudgement.screenCenter();
 		comboJudgement.y = comboY;
 		comboJudgement.x += -75;
+		comboJudgement.acceleration.y = 550;
+    	comboJudgement.velocity.y -= FlxG.random.int(140, 175);
+    	comboJudgement.velocity.x -= FlxG.random.int(0, 10);
 
 		comboSprite.alpha = 1;
 		comboJudgement.alpha = 1;
@@ -315,12 +358,12 @@ class BattleMode extends Module
 		misses = 0;
 	}
 
-	 override function onUpdate(event)
+	override function onUpdate(event)
     {
         if (PlayState.instance != null)
         {
 
-			PlayState.instance.comboPopUps.offsets = [500, 360];
+			PlayState.instance.comboPopUps.offsets = comboOffsets;
 
             if (Conductor.instance.currentStep >= (notehittime + holdnoteend) && hashitnote && !playedcombo)
             {

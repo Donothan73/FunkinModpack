@@ -283,7 +283,7 @@ class StressSong extends Song
         PlayState.instance.currentStage.getGirlfriend().visible = true;
         //PlayState.instance.currentStage.getBoyfriend().visible = true;
         tankCutscene.kill();
-        girlCutscene.kill();
+        //girlCutscene.kill();
         FlxTween.tween(skipText, {alpha: 0}, 0.5, {ease: FlxEase.quadOut});
         cutsceneSkipped = true;
         canSkipCutscene = false;
@@ -322,18 +322,32 @@ class StressSong extends Song
 
     if (!cutsceneSkipped) FlxTween.tween(PlayState.instance.camHUD, {alpha: 0}, 1);
     if (!cutsceneSkipped) PlayState.instance.tweenCameraZoom(0.85, 5, true, FlxEase.quadInOut);
-    if (!cutsceneSkipped) PlayState.instance.tweenCameraToPosition(645, 490, 5, FlxEase.expoOut);
+    if (!cutsceneSkipped) PlayState.instance.tweenCameraToPosition(345, 490, 5, FlxEase.expoOut);
 
-    if (!cutsceneSkipped) StressCutsceneSnd = FunkinSound.load(Paths.sound('stressPicoCutscene'), 1);
-    if (!cutsceneSkipped) StressCutsceneSnd.volume = 1;
-    if (!cutsceneSkipped) StressCutsceneSnd.play(false);
-
-    new FlxTimer().start(0, function(tmr) 
+    new FlxTimer().start(0.17, function(tmr) 
     {
+      if (!cutsceneSkipped) StressCutsceneSnd = FunkinSound.load(Paths.sound('stressPicoCutscene'), 1);
+      if (!cutsceneSkipped) StressCutsceneSnd.volume = 1;
+      if (!cutsceneSkipped) StressCutsceneSnd.play(false);
     });
-      //cutscene over. let's stress
-      new FlxTimer().start(33.0, function(tmr) 
-      {
+    
+    //cutscene over. let's stress
+    new FlxTimer().start(0.0, function(tmr) 
+    {
+      //create tankman and start animation
+      if (!cutsceneSkipped) PlayState.instance.currentStage.getDad().visible = false;
+      if (!cutsceneSkipped) tankCutscene = ScriptedFlxAtlasSprite.init('StressIntroTankmanPico', 0, 0);
+      if (!cutsceneSkipped) tankCutscene.x = tankCutscene.x + 832;
+      if (!cutsceneSkipped) tankCutscene.y = tankCutscene.y + 545;
+      if (!cutsceneSkipped) tankCutscene.zIndex = PlayState.instance.currentStage.getDad().zIndex;
+      if (!cutsceneSkipped) PlayState.instance.currentStage.add(tankCutscene);
+      if (!cutsceneSkipped) PlayState.instance.currentStage.refresh(); // Apply z-index.
+      if (!cutsceneSkipped) tankCutscene.scriptCall('playCutscene');
+    });
+
+    //cutscene over. let's stress
+    new FlxTimer().start(33.0, function(tmr) 
+    {
       if (!cutsceneSkipped) 
       {
         var bf =  PlayState.instance.currentStage.getBoyfriend();
@@ -354,7 +368,7 @@ class StressSong extends Song
           PlayState.instance.currentStage.getGirlfriend().danceEvery = 1;
         });
       }
-      });
+    });
   }
 
   function startVideo(usePicoVideo:Bool)

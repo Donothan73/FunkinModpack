@@ -1,0 +1,46 @@
+
+import funkin.play.PlayState;
+import funkin.play.song.Song;
+import flixel.FlxG;
+import funkin.save.Save;
+
+class SpookeezPicoMixSong extends Song
+{
+
+  public function new()
+  {
+    super('spookeez',
+      {
+        variation: 'pico'
+      });
+  }
+
+  public override function listAltInstrumentalIds(difficultyId:String, variationId:String):Array<String>
+  {
+    var results:Array<String> = super.listAltInstrumentalIds(difficultyId, 'default');
+
+    results.push('');
+
+    return results;
+  }
+
+  public override function isSongNew(currentDifficulty:String, currentVariation:String):Bool
+  {
+    //if (currentVariation == 'pico') return !Save.instance.hasBeatenSong(this.id, null, this.variation);
+
+    //return false;
+
+    return !Save.instance.hasBeatenSong(this.id, null, this.variation);
+  }
+
+  public function listDifficulties(variationId:String, variationIds:Array<String>, showLocked:Bool):Array<String>
+  {
+    if (showLocked || Save.instance.hasBeatenLevel('week1'))
+    {
+      return super.listDifficulties(variationId, variationIds);
+    }
+
+    // Hide all difficulties if the player has not beaten the week.
+    return [];
+  }
+}

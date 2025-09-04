@@ -105,30 +105,6 @@ class TankmanBattlefieldErectStage extends Stage
         getNamedProp('topBlend1').blend = 12;
         getNamedProp('topBlend2').blend = 0;
 
-        colorShader = new AdjustColorShader();
-        colorShader.hue = -20;
-        colorShader.saturation = -5;
-        colorShader.contrast = 60;
-        colorShader.brightness = -5;
-
-        colorShaderBG = new AdjustColorShader();
-        colorShaderBG.hue = -80;
-        colorShaderBG.saturation = -30;
-        colorShaderBG.contrast = 30;
-        colorShaderBG.brightness = -25;
-
-        getNamedProp('bg').shader = colorShaderBG;
-        getNamedProp('bottles').shader = colorShader;
-        getNamedProp('barLights1').shader = colorShaderBG;
-        getNamedProp('barLights2').shader = colorShaderBG;
-        getNamedProp('bar').shader = colorShaderBG;
-        getNamedProp('topBlend1').shader = colorShaderBG;
-        getNamedProp('topBlend2').shader = colorShaderBG;
-        getNamedProp('vehicles').shader = colorShader;
-        getNamedProp('sniper').shader = colorShaderBG;
-        getNamedProp('guy').shader = colorShaderBG;
-        getNamedProp('tankBricks').shader = colorShaderBG;
-
     }
   }
 

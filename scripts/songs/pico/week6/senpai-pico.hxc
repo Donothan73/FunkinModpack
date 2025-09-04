@@ -1,35 +1,38 @@
 import flixel.tweens.FlxEase;
 import funkin.graphics.FunkinSprite;
 import flixel.tweens.FlxTween;
+import funkin.play.cutscene.dialogue.DialogueBox;
 import funkin.play.PlayState;
 import funkin.play.PlayStatePlaylist;
 import funkin.play.song.Song;
 import flixel.FlxG;
+import funkin.save.Save;
 import flixel.FlxSprite;
 import flixel.util.FlxTimer;
-import funkin.save.Save;
 import funkin.effects.RetroCameraFade;
 
-class TutorialSong extends Song
+class SenpaiPicoMixSong extends Song
 {
   var hasPlayedCutscene:Bool;
 
   public function new()
   {
-    super('tutorial');
+    super('senpai',
+      {
+        variation: 'pico'
+      });
   }
 
   public override function isSongNew(currentDifficulty:String, currentVariation:String):Bool
   {
+    if (currentVariation == 'pico') return !Save.instance.hasBeatenSong(this.id, null, this.variation);
+
     return false;
   }
 
   public override function onCountdownStart(event:CountdownScriptEvent):Void
   {
     super.onCountdownStart(event);
-
-    // Skip the cutscene unless we are in Story Mode, or Pico Mix specifically.
-    //if (PlayState.instance.currentVariation != 'pico' && !PlayStatePlaylist.isStoryMode ||FlxG.save.data.freeplayCutscenes != true && PlayState.instance.currentVariation != 'pico') hasPlayedCutscene = true;
 
     // Skip the cutscene if we're playtesting in the Chart Editor.
     if (PlayState.instance.isChartingMode && !hasPlayedCutscene) hasPlayedCutscene = true;
@@ -49,26 +52,6 @@ class TutorialSong extends Song
     }
   }
 
-  public override function listAltInstrumentalIds(difficultyId:String, variationId:String):Array<String>
-  {
-    if (difficultyId == 'easy' || difficultyId == 'normal' || difficultyId == 'hard')
-    {
-      var hasBeatenPicoMix = Save.instance.hasBeatenSong(this.id, null, 'pico');
-
-      switch (variationId)
-      {
-        case 'pico':
-           return hasBeatenPicoMix ? [''] : [];
-          // No Pico mix on BF instrumental, sorry!
-          return [];
-        default:
-          return hasBeatenPicoMix ? ['pico'] : [];
-      }
-    }
-
-    return [];
-  }
-
   function transitionToDialogue()
   {
     trace('Transitioning to dialogue.');
@@ -77,12 +60,10 @@ class TutorialSong extends Song
 
     PlayState.instance.camCutscene.visible = true;
 
-    startDialogue();
-
     var black:FlxSprite = new FunkinSprite(-20, -20).makeSolidColor(FlxG.width * 1.5, FlxG.height * 1.5, 0xFF000000);
     black.cameras = [PlayState.instance.camCutscene];
     black.zIndex = 1000000;
-    //PlayState.instance.add(black);
+    PlayState.instance.add(black);
 
     black.alpha = 1.0;
 
@@ -93,7 +74,7 @@ class TutorialSong extends Song
 
     new FlxTimer().start(0.25, _ -> {
       PlayState.instance.remove(black);
-      //RetroCameraFade.fadeBlack(PlayState.instance.camGame, 12, 2);
+      RetroCameraFade.fadeBlack(PlayState.instance.camGame, 12, 2);
     });
 
     FlxTween.num(0.0, 1.0, 2.0,
@@ -101,7 +82,7 @@ class TutorialSong extends Song
         ease: FlxEase.linear,
         startDelay: 0.25,
         onComplete: function(input) {
-          //startDialogue();
+          startDialogue();
         }
       }, tweenFunction);
   }
@@ -109,8 +90,7 @@ class TutorialSong extends Song
   function startDialogue()
   {
     PlayState.instance.disableKeys = false;
-    var targetDialogue = PlayState.instance.currentVariation == 'pico' ? 'tutorial-pico' : 'tutorial';
-    PlayState.instance.startConversation(targetDialogue);
+    PlayState.instance.startConversation('senpai-pico');
   }
 
   /**

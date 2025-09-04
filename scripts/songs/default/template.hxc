@@ -1,0 +1,49 @@
+
+import funkin.play.PlayState;
+import funkin.play.song.Song;
+import flixel.FlxG;
+import funkin.save.Save;
+
+class TemplateSong extends Song
+{
+
+  public function new()
+  {
+    super('test',
+      {
+        variation: ''
+      });
+  }
+
+  public override function listAltInstrumentalIds(difficultyId:String, variationId:String):Array<String>
+  {
+    var results:Array<String> = super.listAltInstrumentalIds(difficultyId, variationId);
+
+    if (difficultyId == 'easy' || difficultyId == 'normal' || difficultyId == 'hard')
+    {
+      var hasBeatenPicoMix = Save.instance.hasBeatenSong(this.id, null, 'pico');
+      if (!hasBeatenPicoMix) results.remove('pico');
+    
+    }
+
+    return results;
+  }
+
+  public override function isSongNew(currentDifficulty:String, currentVariation:String):Bool
+  {
+    if (currentVariation == '') return !Save.instance.hasBeatenSong(this.id, null, this.variation);
+
+    return false;
+  }
+
+  public function listDifficulties(variationId:String, variationIds:Array<String>, showLocked:Bool):Array<String>
+  {
+    if (showLocked || Save.instance.hasBeatenLevel('week1'))
+    {
+      return super.listDifficulties(variationId, variationIds);
+    }
+
+    // Hide all difficulties if the player has not beaten the week.
+    return [];
+  }
+}

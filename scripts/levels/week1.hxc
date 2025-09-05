@@ -10,7 +10,7 @@ class Week1Level extends Level
 
   override function isUnlocked():Bool
   {
-    !return Save.instance.hasBeatenLevel('tutorial');
+    return Save.instance.hasBeatenLevel('tutorial');
   }
 
 }

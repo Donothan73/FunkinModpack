@@ -1,0 +1,53 @@
+import funkin.ui.freeplay.Album;
+import funkin.data.freeplay.album.AlbumRegistry;
+import funkin.data.IRegistryEntry;
+import flixel.graphics.FlxGraphic;
+import flixel.graphics.frames.FlxBitmapFont;
+import flixel.group.FlxTypedGroup;
+import flixel.FlxG;
+import flixel.text.FlxText;
+import flixel.text.FlxBitmapText;
+import flixel.math.FlxPoint;
+import Funkin.Paths;
+import funkin.ui.AtlasText;
+
+class Volume1Album extends Album
+{
+    var artists:Array<String>;
+    var txtCompletion:AtlasText;
+
+    function new(id:String)
+    {
+        super('volume1');
+
+        artists = getAlbumArtists();
+    }
+
+    function getAlbumArtAssetKey():String
+    {
+        super.getAlbumArtAssetKey();
+
+        return _data?.albumArtAsset ?? 'freeplay/albumRoll/volume1"';
+
+        //var fontLetters:String = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        //songName = new FlxBitmapText(FlxBitmapFont.fromMonospace(Paths.image("freeplay/letterCrap"), fontLetters, FlxPoint.get(49, 62)));
+        
+        //songName.text = artists[0];
+
+        var fontLetters:String = "AaBbCcDdEeFfGgHhiIJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz:1234567890";
+        songName = new FlxBitmapText(FlxBitmapFont.fromMonospace(Paths.image("resultScreen/tardlingSpritesheet"), fontLetters, FlxPoint.get(49, 62)));
+
+        songName.text = 'Kawai Sprite';
+        songName.letterSpacing = -15;
+        //songName.zIndex = 10000;
+
+        FlxG.state.albumRoll.add(songName);
+        FlxG.state.refresh();
+
+        txtCompletion = new AtlasText(FlxG.width - (FullScreenScaleMode.gameNotchSize.x + 95), 87, '69', 'letterCrap');
+        txtCompletion.text = 'Kawai Sprite';
+        FlxG.state.albumRoll.add(txtCompletion);
+        FlxG.state.add(txtCompletion);
+        FlxG.state.refresh();
+    }
+}

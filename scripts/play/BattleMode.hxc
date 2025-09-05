@@ -268,6 +268,7 @@ class BattleMode extends Module
     	{
       		judgement = 'sick';
 			PlayState.instance.health += killer*multiplier;
+			PlayState.instance.currentStage.getBoyfriend().playAnimation('hey', true, true);
     	}
     	else if (grade >= Constants.RANK_EXCELLENT_THRESHOLD)
 		{

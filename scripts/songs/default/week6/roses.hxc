@@ -4,13 +4,14 @@ import funkin.Preferences;
 import flixel.FlxSprite;
 import funkin.graphics.FunkinSprite;
 import flixel.FlxG;
+import funkin.save.Save;
 import funkin.play.PlayStatePlaylist;
 import funkin.audio.FunkinSound;
 import flixel.tweens.FlxTween;
-import funkin.save.Save;
 import flixel.tweens.FlxEase;
 import funkin.ui.options.PreferencesMenu;
 import funkin.util.HapticUtil;
+import funkin.data.story.level.LevelRegistry;
 
 class RosesSong extends Song
 {
@@ -21,31 +22,39 @@ class RosesSong extends Song
     super('roses');
   }
 
-  public override function isSongNew(currentDifficulty:String, currentVariation:String):Bool
-  {
-    if (currentVariation == 'pico') return !Save.instance.hasBeatenSong(this.id, null, 'pico');
-
-    return false;
-  }
-
   public override function listAltInstrumentalIds(difficultyId:String, variationId:String):Array<String>
   {
+    var results:Array<String> = super.listAltInstrumentalIds(difficultyId, variationId);
+
     if (difficultyId == 'easy' || difficultyId == 'normal' || difficultyId == 'hard')
     {
       var hasBeatenPicoMix = Save.instance.hasBeatenSong(this.id, null, 'pico');
-
-      switch (variationId)
-      {
-        case 'pico':
-          return hasBeatenPicoMix ? [''] : [];
-          // No Pico mix on BF instrumental, sorry!
-          return [];
-        default:
-          return hasBeatenPicoMix ? ['pico'] : [];
-      }
+      if (!hasBeatenPicoMix) results.remove('pico');
+    
     }
 
-    return [];
+    return results;
+  }
+
+  public override function isSongNew(currentDifficulty:String, currentVariation:String):Bool
+  {
+    if (currentVariation == '' || currentVariation == 'default') return !Save.instance.hasBeatenSong(this.id, null, this.variation);
+
+    return false;
+  }
+  
+  public function listDifficulties(variationId:String, variationIds:Array<String>, showLocked:Bool, showHidden:Bool):Array<String>
+  {
+    if (showLocked || showHidden) return super.listDifficulties(variationId, variationIds);
+    
+    if (LevelRegistry.instance.fetchEntry('week6').isUnlocked() && Save.instance.hasBeatenSong(this.id, null, this.variation))
+    {
+      return super.listDifficulties(variationId, variationIds);
+    }
+    else
+    {
+      return[];
+    }
   }
 
   public override function onCountdownStart(event:CountdownScriptEvent):Void
@@ -53,7 +62,7 @@ class RosesSong extends Song
     super.onCountdownStart(event);
 
     // Skip the cutscene unless we are in Story Mode, or Pico Mix specifically.
-    if (PlayState.instance.currentVariation != 'pico' && !PlayStatePlaylist.isStoryMode) hasPlayedCutscene = true;
+    if (!PlayStatePlaylist.isStoryMode) hasPlayedCutscene = true;
 
     // Skip the cutscene if we're playtesting in the Chart Editor.
     if (PlayState.instance.isChartingMode && !hasPlayedCutscene) hasPlayedCutscene = true;
@@ -83,8 +92,6 @@ class RosesSong extends Song
   function startDialogue()
   {
     var targetDialogue = 'roses';
-
-    if (PlayState.instance.currentVariation == 'pico') targetDialogue += "-pico";
     if (!Preferences.naughtyness) targetDialogue += "-censored";
 
     trace('Playing dialogue...');
@@ -117,13 +124,7 @@ class RosesSong extends Song
     // otherwise boppers will not work.
     super.onBeatHit(event);
 
-    var cutsceneBeat:Int;
-
-    if (PlayState.instance.currentVariation == '') cutsceneBeat = 180;
-    if (PlayState.instance.currentVariation == 'erect') cutsceneBeat = 206;
-    if (PlayState.instance.currentVariation == 'pico') cutsceneBeat = 185;
-
-    if (event.beat == cutsceneBeat && PlayStatePlaylist.isStoryMode)
+    if (event.beat == 180 && PlayStatePlaylist.isStoryMode)
     {
       trace('Hit end of song! Starting outro.');
 

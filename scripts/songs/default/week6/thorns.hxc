@@ -8,7 +8,7 @@ import funkin.util.Constants;
 import funkin.play.PlayStatePlaylist;
 import flixel.util.FlxTimer;
 import funkin.effects.RetroCameraFade;
-import funkin.save.Save;
+import funkin.data.story.level.LevelRegistry;
 
 class ThornsSong extends Song
 {
@@ -17,6 +17,41 @@ class ThornsSong extends Song
   public function new()
   {
     super('thorns');
+  }
+
+  public override function listAltInstrumentalIds(difficultyId:String, variationId:String):Array<String>
+  {
+    var results:Array<String> = super.listAltInstrumentalIds(difficultyId, variationId);
+
+    if (difficultyId == 'easy' || difficultyId == 'normal' || difficultyId == 'hard')
+    {
+      var hasBeatenPicoMix = Save.instance.hasBeatenSong(this.id, null, 'pico');
+      if (!hasBeatenPicoMix) results.remove('pico');
+    
+    }
+
+    return results;
+  }
+
+  public override function isSongNew(currentDifficulty:String, currentVariation:String):Bool
+  {
+    if (currentVariation == '' || currentVariation == 'default') return !Save.instance.hasBeatenSong(this.id, null, this.variation);
+
+    return false;
+  }
+  
+  public function listDifficulties(variationId:String, variationIds:Array<String>, showLocked:Bool, showHidden:Bool):Array<String>
+  {
+    if (showLocked || showHidden) return super.listDifficulties(variationId, variationIds);
+    
+    if (LevelRegistry.instance.fetchEntry('week6').isUnlocked() && Save.instance.hasBeatenSong(this.id, null, this.variation))
+    {
+      return super.listDifficulties(variationId, variationIds);
+    }
+    else
+    {
+      return[];
+    }
   }
 
   public override function onCountdownStart(event:CountdownScriptEvent):Void
@@ -40,24 +75,6 @@ class ThornsSong extends Song
     }
   }
 
-  public override function listAltInstrumentalIds(difficultyId:String, variationId:String):Array<String>
-  {
-    if (difficultyId == 'easy' || difficultyId == 'normal' || difficultyId == 'hard')
-    {
-      var hasBeatenPicoMix = Save.instance.hasBeatenSong(this.id, null, 'pico');
-
-      switch (variationId)
-      {
-        case 'pico':
-           return hasBeatenPicoMix ? [''] : [];
-          // No Pico mix on BF instrumental, sorry!
-          return [];
-        default:
-          return hasBeatenPicoMix ? ['pico'] : [];
-      }
-    }
-  }
-  
   function startCutscene()
   {
     trace('Hit start of song! Starting cutscene.');

@@ -1,5 +1,6 @@
 import funkin.ui.story.Level;
 import funkin.save.Save;
+import funkin.data.story.level.LevelRegistry;
 
 class Week2Level extends Level
 {
@@ -10,7 +11,23 @@ class Week2Level extends Level
 
   override function isUnlocked():Bool
   {
-    !return !Save.instance.hasBeatenLevel('week1');
+    super.isUnlocked();
+
+    difficultyList = LevelRegistry.instance.fetchEntry('week1').getDifficulties();
+
+    for (difficulty in difficultyList)
+    {
+      if (Save.instance.getLevelScore('week1', difficulty) == null)
+      {
+        continue;
+      }
+      else
+      {
+        return true;
+      }
+    }
+
+    return false;
   }
 
 }

@@ -1,0 +1,115 @@
+import flixel.math.FlxPoint;
+import flixel.FlxObject;
+import flixel.FlxSprite;
+import funkin.ui.MusicBeatSubState;
+import funkin.audio.FunkinSound;
+import funkin.ui.TextMenuList;
+import funkin.ui.debug.charting.ChartEditorState;
+import funkin.util.logging.CrashHandler;
+import flixel.addons.transition.FlxTransitionableState;
+import funkin.util.FileUtil;
+import funkin.ui.MusicBeatSubState;
+import funkin.ui.mainmenu.MainMenuState;
+import funkin.ui.title.TitleState;
+import funkin.ui.debug.DebugMenuSubState;
+import funkin.modding.module.Module;
+import flixel.FlxSubState;
+import flixel.FlxG;
+import Funkin.Paths;
+import funkin.util.WindowUtil;
+import funkin.play.PlayState;
+import funkin.ui.FullScreenScaleMode;
+import funkin.graphics.FunkinSprite;
+import funkin.util.ReflectUtil;
+import funkin.modding.base.ScriptedMusicBeatSubState;
+import funkin.ui.AtlasMenuList;
+import funkin.ui.freeplay.FreeplayState;
+import funkin.ui.MenuItem;
+import flixel.text.FlxText;
+import flixel.addons.transition.FlxTransitionableState;
+import funkin.ui.debug.DebugMenuSubState;
+import flixel.FlxObject;
+import flixel.FlxSubState;
+import flixel.FlxSprite;
+import flixel.effects.FlxFlicker;
+import flixel.math.FlxPoint;
+import flixel.util.FlxColor;
+import flixel.tweens.FlxEase;
+import funkin.graphics.FunkinCamera;
+import funkin.audio.FunkinSound;
+import funkin.util.SwipeUtil;
+import flixel.tweens.FlxTween;
+import funkin.ui.MusicBeatState;
+import flixel.util.FlxTimer;
+import funkin.ui.AtlasMenuList;
+import funkin.ui.freeplay.FreeplayState;
+import funkin.ui.title.TitleState;
+import funkin.ui.story.StoryMenuState;
+import funkin.ui.Prompt;
+import funkin.util.WindowUtil;
+import funkin.util.MathUtil;
+import funkin.util.TouchUtil;
+import flixel.group.FlxTypedSpriteGroup;
+import funkin.util.TouchUtil;
+import funkin.mobile.ui.FunkinBackButton;
+import funkin.mobile.input.ControlsHandler;
+import funkin.data.story.level.LevelRegistry;
+import funkin.ui.story.Level;
+import flixel.math.FlxMath;
+import funkin.input.Controls;
+import funkin.save.Save;
+
+class LevelUnlockDebug extends MusicBeatSubState
+{
+	var levelIds:Array<String>;
+	var levelTexts:Array<FlxText>;
+	var scores:Array<String>;
+
+	override function create():Void
+	{
+		//FlxTransitionableState.skipNextTransIn = true;
+    	super.create();
+
+		levelIds = LevelRegistry.instance.listSortedLevelIds();
+
+		for (i in 0...levelIds.length)
+		{  
+			var level:Level = LevelRegistry.instance.fetchEntry(levelIds[i]);
+			difficulties = level.getDifficulties();
+			levelText = new FlxText(Math.max(FullScreenScaleMode.gameNotchSize.x, 10), (i*36), 0, ((levelIds[i])+', "'+(level.getTitle()) + ', Unlocked: ' +  level.isUnlocked()+ ', ' + Save.instance.hasBeatenLevel(levelIds[i], difficulties) +'", Scores: '));
+			for (difficulty in difficulties)
+			{
+				if (Save.instance.getLevelScore(levelIds[i], difficulty) == null)
+				{
+					levelText.text += difficulty +': '+0+', ';
+				}
+				else
+				{
+					levelText.text += difficulty +': '+ Save.instance.getLevelScore(levelIds[i], difficulty).score +', ';
+				}
+			}
+			
+			levelText.setFormat('5by7', 24, FlxColor.WHITE, 'RIGHT');
+			levelText.alpha = 1;
+			levelText.zIndex = 1000;
+			add(levelText);
+		}
+	}
+
+	override function update(elapsed:Float):Void
+	{
+    	super.update(elapsed);
+
+		handleKeyPresses();
+	}
+
+	function handleKeyPresses():Void
+	{
+		if (controls.BACK)
+		{
+			FunkinSound.playOnce(Paths.sound('cancelMenu'));
+			FlxG.switchState(() -> new funkin.ui.title.TitleState());
+		}
+			
+	}
+}

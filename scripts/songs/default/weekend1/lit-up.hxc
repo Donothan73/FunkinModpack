@@ -3,6 +3,7 @@ import funkin.play.PlayState;
 import funkin.play.cutscene.VideoCutscene;
 import funkin.save.Save;
 import funkin.play.PlayStatePlaylist;
+import funkin.data.story.level.LevelRegistry;
 
 class LitUpSong extends Song
 {
@@ -11,27 +12,38 @@ class LitUpSong extends Song
     super('lit-up');
   }
 
+  public override function listAltInstrumentalIds(difficultyId:String, variationId:String):Array<String>
+  {
+    var results:Array<String> = super.listAltInstrumentalIds(difficultyId, variationId);
+
+    if (difficultyId == 'easy' || difficultyId == 'normal' || difficultyId == 'hard')
+    {
+      var hasBeatenBfMix = Save.instance.hasBeatenSong(this.id, null, 'bf');
+      if (!hasBeatenBfMix) results.remove('bf');
+    
+    }
+
+    return results;
+  }
+
   public override function isSongNew(currentDifficulty:String, currentVariation:String):Bool
   {
-    if (currentVariation == 'bf') return !Save.instance.hasBeatenSong(this.id, null, 'bf');
+    if (currentVariation == '' || currentVariation == 'default') return !Save.instance.hasBeatenSong(this.id, null, this.variation);
 
     return false;
   }
 
-  public function listDifficulties(variationId:String, variationIds:Array<String>, showLocked:Bool):Array<String>
+  public function listDifficulties(variationId:String, variationIds:Array<String>, showLocked:Bool, showHidden:Bool):Array<String>
   {
-    if (showLocked || Save.instance.hasBeatenLevel('weekend1'))
+    if (showLocked || showHidden) return super.listDifficulties(variationId, variationIds);
+    
+    if (LevelRegistry.instance.fetchEntry('weekend1').isUnlocked() && Save.instance.hasBeatenSong(this.id, null, this.variation))
     {
       return super.listDifficulties(variationId, variationIds);
     }
-
-    // Hide all difficulties if the player has not beaten the week.
-    return [];
-  }
-
-  public override function listAltInstrumentalIds(difficultyId:String, variationId:String):Array<String>
-  {
-    // NOTE: Lit Up (BF Mix) is incompatible with the base song, so this should always be empty.
-    return [];
+    else
+    {
+      return[];
+    }
   }
 }

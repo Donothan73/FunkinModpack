@@ -14,6 +14,7 @@ import funkin.PlayerSettings;
 import funkin.modding.base.ScriptedMusicBeatSubState;
 import funkin.modding.base.ScriptedFlxRuntimeShader;
 import funkin.modding.base.ScriptedMusicBeatState;
+import funkin.input.Controls;
 
 class MainMenuDebugButton extends Module
 {
@@ -40,24 +41,27 @@ class MainMenuDebugButton extends Module
 			if (!buttonAdded) createButton();
 			
 		}	
-			if(FlxG.keys.justPressed.NUMPADFIVE)
-				{
-				FlxG.switchState(() -> new funkin.ui.debug.results.ResultsDebugSubState());
+			if (FlxG.keys.justPressed.NUMPADFIVE)
+			{
+				//FlxG.switchState(() -> new funkin.ui.debug.results.ResultsDebugSubState());
 				FlxG.switchState(() -> new funkin.ui.mainmenu.MainMenuState());
-				}	
+			}	
 
-			if(FlxG.keys.justPressed.F1)
-				{
-				FlxG.switchState(() -> new funkin.ui.mainmenu.MainMenuState());
-				//if (PlayState.instance != null) PlayState.instance.endSong();
-				//FlxG.resizeGame(2532, 1170);
-				//FlxG.resizeWindow(2657, 1098);
-				//FlxG.resizeWindow(2441, 1098);
-				//FullScreenScaleMode.instance.enabled = true;
-				//FullScreenScaleMode.instance.updateGameSize(2657, 1098);
-    			//FullScreenScaleMode.instance.updateDeviceSize(2657, 1098);
-    			//FullScreenScaleMode.instance.updateDeviceCutout(2657, 11710980);
-				}		
+			if (FlxG.keys.justPressed.HOME)
+			{
+				FlxG.resizeGame(2532, 1170);
+				FlxG.resizeWindow(2657, 1098);
+				FlxG.resizeWindow(2441, 1098);
+				FullScreenScaleMode.instance.enabled = true;
+				FullScreenScaleMode.instance.updateGameSize(2657, 1098);
+    			FullScreenScaleMode.instance.updateDeviceSize(2657, 1098);
+    			FullScreenScaleMode.instance.updateDeviceCutout(2657, 11710980);
+			}	
+
+			if (FlxG.keys.justPressed.F1)
+			{
+				if (PlayState.instance != null) PlayState.instance.endSong();	
+			}
 	}
 
 	override function onStateChangeEnd(event)
@@ -65,7 +69,6 @@ class MainMenuDebugButton extends Module
     	super.onStateChangeEnd(event);
     	buttonAdded = false;
   	}
-
 
 	function createButton():Void
 	{
@@ -80,8 +83,8 @@ class MainMenuDebugButton extends Module
 		buttonAdded = true;
 
 		FlxG.state.createMenuItem('debug', 'mainmenu/debug', function() {
-			FlxG.state.canInteract = false;
-			FlxG.state.set_canInteract(false);
+			//FlxG.state.canInteract = false;
+			//FlxG.state.set_canInteract(false);
 			#if mobile
       		FlxG.state.openSubState(ScriptedMusicBeatSubState.init('MobileDebugMenuSubState'));
 			#end

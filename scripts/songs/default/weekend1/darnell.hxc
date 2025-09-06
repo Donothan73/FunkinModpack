@@ -19,6 +19,7 @@ import funkin.audio.FunkinSound;
 import funkin.play.cutscene.VideoCutscene;
 import funkin.play.cutscene.CutsceneType;
 import funkin.play.PlayStatePlaylist;
+import funkin.data.story.level.LevelRegistry;
 
 class DarnellSong extends Song
 {
@@ -36,42 +37,38 @@ class DarnellSong extends Song
     hasPlayedInGameCutscene = false;
   }
 
+  public override function listAltInstrumentalIds(difficultyId:String, variationId:String):Array<String>
+  {
+    var results:Array<String> = super.listAltInstrumentalIds(difficultyId, variationId);
+
+    if (difficultyId == 'easy' || difficultyId == 'normal' || difficultyId == 'hard')
+    {
+      var hasBeatenBfMix = Save.instance.hasBeatenSong(this.id, null, 'bf');
+      if (!hasBeatenBfMix) results.remove('bf');
+    
+    }
+
+    return results;
+  }
+
   public override function isSongNew(currentDifficulty:String, currentVariation:String):Bool
   {
-    if (currentDifficulty == 'erect' || currentDifficulty == 'nightmare')
-    {
-      return !Save.instance.hasBeatenSong(this.id, ['erect', 'nightmare']);
-    }
+    if (currentVariation == '' || currentVariation == 'default') return !Save.instance.hasBeatenSong(this.id, null, this.variation);
 
     return false;
   }
 
-  public function listDifficulties(variationId:String, variationIds:Array<String>, showLocked:Bool):Array<String>
+  public function listDifficulties(variationId:String, variationIds:Array<String>, showLocked:Bool, showHidden:Bool):Array<String>
   {
-    if (showLocked || Save.instance.hasBeatenLevel('weekend1'))
+    if (showLocked || showHidden) return super.listDifficulties(variationId, variationIds);
+    
+    if (LevelRegistry.instance.fetchEntry('weekend1').isUnlocked() && Save.instance.hasBeatenSong(this.id, null, this.variation))
     {
       return super.listDifficulties(variationId, variationIds);
     }
-
-    // Hide all difficulties if the player has not beaten the week.
-    return [];
-  }
-
-  public override function listAltInstrumentalIds(difficultyId:String, variationId:String):Array<String>
-  {
-    if (difficultyId == 'easy' || difficultyId == 'normal' || difficultyId == 'hard')
+    else
     {
-      var hasBeatenBFMix = Save.instance.hasBeatenSong(this.id, null, 'bf');
-
-      switch (variationId)
-      {
-        case 'bf':
-           return hasBeatenBFMix ? [''] : [];
-          // No BF mix on Pico instrumental, sorry!
-          return [];
-        default:
-          return hasBeatenBFMix ? ['bf'] : [];
-      }
+      return[];
     }
   }
 
@@ -321,6 +318,7 @@ class DarnellSong extends Song
   function startVideo()
   {
     var videoPath = 'darnellCutscene';
+
     if (Constants.CENSOR_EXPLETIVES)
     {
       videoPath += '-censored';

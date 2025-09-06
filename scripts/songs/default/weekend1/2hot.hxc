@@ -20,6 +20,7 @@ import funkin.play.song.Song;
 import funkin.play.stage.StageProp;
 import funkin.save.Save;
 import funkin.ui.FullScreenScaleMode;
+import funkin.data.story.level.LevelRegistry;
 
 // We have to use FlxBasePoint in scripts because FlxPoint is inlined and not available in scripts
 class TwoHOTSong extends Song
@@ -28,7 +29,7 @@ class TwoHOTSong extends Song
   // var tempConductor:Conductor;
   var cutsceneMusic:FunkinSound;
 
-  var canDamageVibrationPreset:VibrationPreset =
+  var canVibrationPreset:VibrationPreset =
     {
       period: 0.1,
       duration: 0.1,
@@ -47,17 +48,6 @@ class TwoHOTSong extends Song
    * Health lost when hit by can.
    */
   var HEALTH_LOSS = 0.25 * 2;
-
-  public function listDifficulties(variationId:String, variationIds:Array<String>, showLocked:Bool):Array<String>
-  {
-    if (showLocked || Save.instance.hasBeatenLevel('weekend1'))
-    {
-      return super.listDifficulties(variationId, variationIds);
-    }
-
-    // Hide all difficulties if the player has not beaten the week.
-    return [];
-  }
 
   public override function onCountdownStart(event:CountdownScriptEvent):Void
   {
@@ -98,19 +88,6 @@ class TwoHOTSong extends Song
     }
   }
 
-  public override function listAltInstrumentalIds(difficultyId:String, variationId:String):Array<String>
-  {
-    var results:Array<String> = super.listAltInstrumentalIds(difficultyId, variationId);
-
-    if (difficultyId == 'easy' || difficultyId == 'normal' || difficultyId == 'hard')
-    {
-      var hasBeatenPicoMix = Save.instance.hasBeatenSong(this.id, null, 'pico');
-
-      if (!hasBeatenPicoMix) results.remove('pico');
-    }
-
-    return results;
-  }
   // the Other stuff
   function endCutscene()
   {
@@ -362,6 +339,11 @@ class TwoHOTSong extends Song
 
       new FlxTimer().start(1 / 24, function(tmr) {
         darkenStageProps();
+
+        if (HapticUtil.hapticsAvailable)
+        {
+          HapticUtil.vibrateByPreset(canVibrationPreset);
+        }
       });
     }
   }
@@ -434,17 +416,16 @@ class TwoHOTSong extends Song
       GameOverSubState.musicSuffix = '-pico-explode';
       GameOverSubState.blueBallSuffix = '-pico-explode';
 
-      if (!PlayState.instance.isPracticeMode)
-        blackenStageProps();
+      if (!PlayState.instance.isPracticeMode) blackenStageProps();
     }
     else if (HapticUtil.hapticsAvailable)
     {
       // Can hits pico.
-      HapticUtil.vibrateByPreset(canDamageVibrationPreset);
+      HapticUtil.vibrateByPreset(canVibrationPreset);
 
       new FlxTimer().start(0.45, function(tmr) {
         // Can explodes.
-        HapticUtil.vibrateByPreset(canDamageVibrationPreset);
+        HapticUtil.vibrateByPreset(canVibrationPreset);
       });
     }
   }
@@ -457,5 +438,40 @@ class TwoHOTSong extends Song
     super.onCreate(event);
 
     hasPlayedCutscene = false;
+  }
+
+  public override function listAltInstrumentalIds(difficultyId:String, variationId:String):Array<String>
+  {
+    var results:Array<String> = super.listAltInstrumentalIds(difficultyId, variationId);
+
+    if (difficultyId == 'easy' || difficultyId == 'normal' || difficultyId == 'hard')
+    {
+      var hasBeatenBfMix = Save.instance.hasBeatenSong(this.id, null, 'bf');
+      if (!hasBeatenBfMix) results.remove('bf');
+    
+    }
+
+    return results;
+  }
+
+  public override function isSongNew(currentDifficulty:String, currentVariation:String):Bool
+  {
+    if (currentVariation == '' || currentVariation == 'default') return !Save.instance.hasBeatenSong(this.id, null, this.variation);
+
+    return false;
+  }
+
+  public function listDifficulties(variationId:String, variationIds:Array<String>, showLocked:Bool, showHidden:Bool):Array<String>
+  {
+    if (showLocked || showHidden) return super.listDifficulties(variationId, variationIds);
+    
+    if (LevelRegistry.instance.fetchEntry('weekend1').isUnlocked() && Save.instance.hasBeatenSong(this.id, null, this.variation))
+    {
+      return super.listDifficulties(variationId, variationIds);
+    }
+    else
+    {
+      return[];
+    }
   }
 }

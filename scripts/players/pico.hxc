@@ -1,5 +1,6 @@
 import funkin.ui.freeplay.charselect.PlayableCharacter;
 import funkin.save.Save;
+import funkin.data.story.level.LevelRegistry;
 
 class PicoPlayableCharacter extends PlayableCharacter
 {
@@ -8,7 +9,24 @@ class PicoPlayableCharacter extends PlayableCharacter
 		super('pico');
 	}
 
-  override function isUnlocked():Bool {
-    return true; //Save.instance.hasBeatenLevel('weekend1');
+  override function isUnlocked():Bool
+  {
+    super.isUnlocked();
+
+    difficultyList = LevelRegistry.instance.fetchEntry('week7').getDifficulties();
+
+    for (difficulty in difficultyList)
+    {
+      if (Save.instance.getLevelScore('week7', difficulty) == null)
+      {
+        continue;
+      }
+      else
+      {
+        return true;
+      }
+    }
+
+    return false;
   }
 }

@@ -2,6 +2,7 @@ import funkin.play.PlayState;
 import funkin.play.song.Song;
 import flixel.FlxG;
 import funkin.save.Save;
+import funkin.data.story.level.LevelRegistry;
 
 class BlammedSong extends Song
 {
@@ -32,9 +33,11 @@ class BlammedSong extends Song
     return false;
   }
   
-  public function listDifficulties(variationId:String, variationIds:Array<String>, showLocked:Bool):Array<String>
+  public function listDifficulties(variationId:String, variationIds:Array<String>, showLocked:Bool, showHidden:Bool):Array<String>
   {
-    if (Save.instance.hasBeatenLevel('week3'))
+    if (showLocked || showHidden) return super.listDifficulties(variationId, variationIds);
+    
+    if (LevelRegistry.instance.fetchEntry('week3').isUnlocked() && Save.instance.hasBeatenSong(this.id, null, this.variation))
     {
       return super.listDifficulties(variationId, variationIds);
     }

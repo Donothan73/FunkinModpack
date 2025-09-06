@@ -69,7 +69,7 @@ class BattleMode extends Module
 		if (comboJudgement != null) comboJudgement.destroy();
 		if (comboSprite != null) comboSprite.destroy();
 
-		if (Preferences.downscroll == true | FlxG.onMobile)
+		if (Preferences.downscroll == true || FlxG.onMobile)
 		{
 			comboOffsets = [500, -160];
 		}
@@ -91,7 +91,7 @@ class BattleMode extends Module
 							
 		}
 
-		if (noteStyleId == '' | noteStyleId == null) noteStyleId = 'funkin';
+		if (noteStyleId == '' || noteStyleId == null) noteStyleId = 'funkin';
 		
 		difficultyMultiplier*.5;
 
@@ -291,7 +291,7 @@ class BattleMode extends Module
 			PlayState.instance.health += shit*multiplier;
 		}
 
-		if (Preferences.downscroll == true | FlxG.onMobile)
+		if (Preferences.downscroll == true || FlxG.onMobile)
 		{
 			comboY = healthBar.y + 100;
 		}

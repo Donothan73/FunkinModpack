@@ -52,6 +52,11 @@ import flixel.group.FlxTypedSpriteGroup;
 import funkin.util.TouchUtil;
 import funkin.mobile.ui.FunkinBackButton;
 import funkin.mobile.input.ControlsHandler;
+import funkin.modding.base.ScriptedMusicBeatSubState;
+import funkin.PlayerSettings;
+import funkin.modding.base.ScriptedMusicBeatSubState;
+import funkin.modding.base.ScriptedFlxRuntimeShader;
+import funkin.modding.base.ScriptedMusicBeatState;
 
 class MobileDebugMenuSubState extends MusicBeatSubState
 {
@@ -113,6 +118,12 @@ class MobileDebugMenuSubState extends MusicBeatSubState
     createItem("RESULTS TEST", function() 
     {
       FlxG.switchState(() -> new funkin.ui.debug.results.ResultsDebugSubState());
+    });
+
+    createItem("LEVEL UNLOCK DEBUG", function() 
+    {
+      FlxG.switchState(() -> ScriptedMusicBeatSubState.init('LevelUnlockDebug'));
+      //FlxG.state.openSubState(ScriptedMusicBeatSubState.init('LevelUnlockDebug'));
     });
 
     createItem("CHARACTER UNLOCK", function() 

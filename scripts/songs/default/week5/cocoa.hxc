@@ -1,24 +1,9 @@
-import flixel.FlxG;
-import flixel.FlxSprite;
-import flixel.math.FlxBasePoint;
-import flixel.tweens.FlxEase;
-import flixel.tweens.FlxTween;
-import flixel.util.FlxTimer;
-import funkin.audio.FunkinSound;
-import funkin.Conductor;
-import funkin.graphics.adobeanimate.FlxAtlasSprite;
-import funkin.graphics.FunkinSprite;
-import funkin.modding.base.ScriptedFlxAtlasSprite;
-import funkin.play.cutscene.CutsceneType;
-import funkin.play.cutscene.VideoCutscene;
-import funkin.play.GameOverSubState;
 import funkin.play.PlayState;
-import funkin.play.PlayStatePlaylist;
 import funkin.play.song.Song;
-import funkin.play.stage.StageProp;
+import flixel.FlxG;
 import funkin.save.Save;
+import funkin.data.story.level.LevelRegistry;
 
-// We have to use FlxBasePoint in scripts because FlxPoint is inlined and not available in scripts
 class CocoaSong extends Song
 {
   function new()
@@ -26,54 +11,38 @@ class CocoaSong extends Song
     super('cocoa');
   }
 
-  public override function isSongNew(currentDifficulty:String, currentVariation:String):Bool
-  {
-    if (currentVariation == 'pico') return !Save.instance.hasBeatenSong(this.id, null, 'pico');
-
-    return false;
-  }
-
   public override function listAltInstrumentalIds(difficultyId:String, variationId:String):Array<String>
   {
+    var results:Array<String> = super.listAltInstrumentalIds(difficultyId, variationId);
+
     if (difficultyId == 'easy' || difficultyId == 'normal' || difficultyId == 'hard')
     {
       var hasBeatenPicoMix = Save.instance.hasBeatenSong(this.id, null, 'pico');
-
-      switch (variationId)
-      {
-        case 'pico':
-           return hasBeatenPicoMix ? [''] : [];
-          // No Pico mix on BF instrumental, sorry!
-          return [];
-        default:
-          return hasBeatenPicoMix ? ['pico'] : [];
-      }
+      if (!hasBeatenPicoMix) results.remove('pico');
+    
     }
 
-    return [];
+    return results;
   }
 
-  public override function onCountdownStart(event:CountdownScriptEvent):Void
+  public override function isSongNew(currentDifficulty:String, currentVariation:String):Bool
   {
-    super.onCountdownStart(event);
-    trace(PlayState.instance.currentVariation);
-  }
+    if (currentVariation == '' || currentVariation == 'default') return !Save.instance.hasBeatenSong(this.id, null, this.variation);
 
-  function onSongRetry(event:ScriptEvent)
-  {
-    super.onSongRetry(event);
+    return false;
   }
-
-  function onUpdate(event:UpdateScriptEvent)
+  
+  public function listDifficulties(variationId:String, variationIds:Array<String>, showLocked:Bool, showHidden:Bool):Array<String>
   {
-    super.onUpdate(event);
-  }
-
-  /**
-   * Replay the cutscene after leaving the song.
-   */
-  function onCreate(event:ScriptEvent):Void
-  {
-    super.onCreate(event);
+    if (showLocked || showHidden) return super.listDifficulties(variationId, variationIds);
+    
+    if (LevelRegistry.instance.fetchEntry('week5').isUnlocked() && Save.instance.hasBeatenSong(this.id, null, this.variation))
+    {
+      return super.listDifficulties(variationId, variationIds);
+    }
+    else
+    {
+      return[];
+    }
   }
 }

@@ -4,12 +4,12 @@ import flixel.FlxG;
 import funkin.save.Save;
 import funkin.data.story.level.LevelRegistry;
 
-class SpookeezSong extends Song
+class HighSong extends Song
 {
 
   public function new()
   {
-    super('spookeez');
+    super('high');
   }
 
   public override function listAltInstrumentalIds(difficultyId:String, variationId:String):Array<String>
@@ -32,12 +32,12 @@ class SpookeezSong extends Song
 
     return false;
   }
-
+  
   public function listDifficulties(variationId:String, variationIds:Array<String>, showLocked:Bool, showHidden:Bool):Array<String>
   {
     if (showLocked || showHidden) return super.listDifficulties(variationId, variationIds);
     
-    if (LevelRegistry.instance.fetchEntry('week2').isUnlocked() && Save.instance.hasBeatenSong(this.id, null, this.variation))
+    if (LevelRegistry.instance.fetchEntry('week4').isUnlocked() && Save.instance.hasBeatenSong(this.id, null, this.variation))
     {
       return super.listDifficulties(variationId, variationIds);
     }

@@ -43,6 +43,7 @@ import flixel.text.FlxText;
 import flixel.text.FlxTextBorderStyle;
 import funkin.util.TouchUtil;
 import funkin.ui.FullScreenScaleMode;
+import funkin.data.story.level.LevelRegistry;
 
 class StressSong extends Song
 {
@@ -79,31 +80,39 @@ class StressSong extends Song
 
   }
 
-  public override function isSongNew(currentDifficulty:String, currentVariation:String):Bool
-  {
-    if (currentVariation == 'pico') return !Save.instance.hasBeatenSong(this.id, null, 'pico');
-
-    return false;
-  }
-
   public override function listAltInstrumentalIds(difficultyId:String, variationId:String):Array<String>
   {
+    var results:Array<String> = super.listAltInstrumentalIds(difficultyId, variationId);
+
     if (difficultyId == 'easy' || difficultyId == 'normal' || difficultyId == 'hard')
     {
       var hasBeatenPicoMix = Save.instance.hasBeatenSong(this.id, null, 'pico');
-
-      switch (variationId)
-      {
-        case 'pico':
-           return hasBeatenPicoMix ? [''] : [];
-          // No Pico mix on BF instrumental, sorry!
-          return [];
-        default:
-          return hasBeatenPicoMix ? ['pico'] : [];
-      }
+      if (!hasBeatenPicoMix) results.remove('pico');
+    
     }
 
-    return [];
+    return results;
+  }
+
+  public override function isSongNew(currentDifficulty:String, currentVariation:String):Bool
+  {
+    if (currentVariation == '' || currentVariation == 'default') return !Save.instance.hasBeatenSong(this.id, null, this.variation);
+
+    return false;
+  }
+  
+  public function listDifficulties(variationId:String, variationIds:Array<String>, showLocked:Bool, showHidden:Bool):Array<String>
+  {
+    if (showLocked || showHidden) return super.listDifficulties(variationId, variationIds);
+    
+    if (LevelRegistry.instance.fetchEntry('week7').isUnlocked() && Save.instance.hasBeatenSong(this.id, null, this.variation))
+    {
+      return super.listDifficulties(variationId, variationIds);
+    }
+    else
+    {
+      return[];
+    }
   }
 
   public override function onCountdownStart(event:CountdownScriptEvent):Void
@@ -299,82 +308,9 @@ class StressSong extends Song
       });
   }
 
-  function picoCutscene():Void
-  {
-    skipText = new FlxText(936 * FullScreenScaleMode.wideScale.x, 618 * FullScreenScaleMode.wideScale.y, 0,
-      'Skip [ ' + PlayState.instance.controls.getDialogueNameFromToken("CUTSCENE_ADVANCE", true) + ' ]', 20);
-    if (FlxG.onMobile)
-    {
-      skipText.text = 'Skip [Pause Button]';
-      skipText.x -= 136;
-    }
-    skipText.setFormat(Paths.font('vcr.ttf'), 40, 0xFFFFFFFF, "right", FlxTextBorderStyle.OUTLINE, 0xFF000000);
-    skipText.scrollFactor.set();
-    skipText.borderSize = 2;
-    skipText.alpha = 0;
-    PlayState.instance.currentStage.add(skipText);
-
-    skipText.cameras = [PlayState.instance.camCutscene];
-
-    PlayState.instance.currentStage.refresh(); // Apply z-index.
-
-    if (!cutsceneSkipped) PlayState.instance.isInCutscene = true;
-
-    if (!cutsceneSkipped) FlxTween.tween(PlayState.instance.camHUD, {alpha: 0}, 1);
-    if (!cutsceneSkipped) PlayState.instance.tweenCameraZoom(0.85, 5, true, FlxEase.quadInOut);
-    if (!cutsceneSkipped) PlayState.instance.tweenCameraToPosition(345, 490, 5, FlxEase.expoOut);
-
-    new FlxTimer().start(0.17, function(tmr) 
-    {
-      if (!cutsceneSkipped) StressCutsceneSnd = FunkinSound.load(Paths.sound('stressPicoCutscene'), 1);
-      if (!cutsceneSkipped) StressCutsceneSnd.volume = 1;
-      if (!cutsceneSkipped) StressCutsceneSnd.play(false);
-    });
-    
-    //cutscene over. let's stress
-    new FlxTimer().start(0.0, function(tmr) 
-    {
-      //create tankman and start animation
-      if (!cutsceneSkipped) PlayState.instance.currentStage.getDad().visible = false;
-      if (!cutsceneSkipped) tankCutscene = ScriptedFlxAtlasSprite.init('StressIntroTankmanPico', 0, 0);
-      if (!cutsceneSkipped) tankCutscene.x = tankCutscene.x + 832;
-      if (!cutsceneSkipped) tankCutscene.y = tankCutscene.y + 545;
-      if (!cutsceneSkipped) tankCutscene.zIndex = PlayState.instance.currentStage.getDad().zIndex;
-      if (!cutsceneSkipped) PlayState.instance.currentStage.add(tankCutscene);
-      if (!cutsceneSkipped) PlayState.instance.currentStage.refresh(); // Apply z-index.
-      if (!cutsceneSkipped) tankCutscene.scriptCall('playCutscene');
-    });
-
-    //cutscene over. let's stress
-    new FlxTimer().start(33.0, function(tmr) 
-    {
-      if (!cutsceneSkipped) 
-      {
-        var bf =  PlayState.instance.currentStage.getBoyfriend();
-        PlayState.instance.tweenCameraToPosition(bf.x - 160, bf.y + 80, 2, FlxEase.expoOut);
-        PlayState.instance.isInCutscene = false;
-        PlayState.instance.currentStage.getDad().visible = true;
-        PlayState.instance.currentStage.getGirlfriend().visible = true;
-        //PlayState.instance.currentStage.getBoyfriend().visible = true;
-        FlxTween.tween(skipText, {alpha: 0}, 0.5, {ease: FlxEase.quadOut});
-        cutsceneSkipped = true;
-        canSkipCutscene = false;
-        FlxTween.tween(PlayState.instance.camHUD, {alpha: 1}, 1);
-          new FlxTimer().start(0.5, function(tmr) {
-          PlayState.instance.startCountdown();
-          PlayState.instance.tweenCameraZoom(0.6, 1, true, FlxEase.quadInOut);
-          PlayState.instance.currentStage.getBoyfriend().danceEvery = 1;
-          PlayState.instance.currentStage.getDad().danceEvery = 1;
-          PlayState.instance.currentStage.getGirlfriend().danceEvery = 1;
-        });
-      }
-    });
-  }
-
   function startVideo(usePicoVideo:Bool)
   {
-    if (usePicoVideo == true) picoCutscene();
-    if (usePicoVideo != true) bfCutscene();
+    bfCutscene();
   }
   function onSongRetry(event:ScriptEvent)
   {
@@ -445,8 +381,6 @@ class StressSong extends Song
     {
       
         PlayState.instance.isInCutscene = false;
-      if (PlayState.instance.currentVariation == 'default')
-      {
         cutsceneSkipped = true;
         canSkipCutscene = false;
         FlxTween.tween(PlayState.instance.camHUD, {alpha: 1}, 1);
@@ -476,150 +410,12 @@ class StressSong extends Song
           PlayState.instance.currentStage.getDad().danceEvery = 1;
           PlayState.instance.currentStage.getGirlfriend().danceEvery = 1;
         });
-      }
-      if (PlayState.instance.currentVariation == 'pico')
-      {
-        cutsceneSkipped = true;
-        canSkipCutscene = false;
-        FlxTween.tween(PlayState.instance.camHUD, {alpha: 1}, 1);
-        var bf =  PlayState.instance.currentStage.getBoyfriend();
-        if (!cutsceneSkipped) PlayState.instance.tweenCameraToPosition(bf.x - 160, bf.y + 80, 2, FlxEase.expoOut);
-        PlayState.instance.isInCutscene = false;
-        PlayState.instance.currentStage.getDad().visible = true;
-        PlayState.instance.currentStage.getGirlfriend().visible = true;
-        //PlayState.instance.currentStage.getBoyfriend().visible = true;
-        if (tankCutscene != null) tankCutscene.visible = false;
-        if (girlCutscene != null) girlCutscene.visible = false;
-        noGf = false;
-        if (tankCutscene != null) tankCutscene.destroy();
-        if (girlCutscene != null) girlCutscene.destroy();
-        FlxTween.tween(skipText, {alpha: 0}, 0.5, {ease: FlxEase.quadOut});
-        cutsceneSkipped = true;
-        canSkipCutscene = false;
-        if (StressCutsceneSnd != null) StressCutsceneSnd.stop();
-        FlxTween.tween(PlayState.instance.camHUD, {alpha: 1}, 1);
-          new FlxTimer().start(0.5, function(tmr) {
-          PlayState.instance.startCountdown();
-          PlayState.instance.tweenCameraZoom(0.9, 1, true, FlxEase.quadInOut);
-          PlayState.instance.currentStage.getBoyfriend().danceEvery = 1;
-          PlayState.instance.currentStage.getDad().danceEvery = 1;
-          PlayState.instance.currentStage.getGirlfriend().danceEvery = 1;
-        });
-      }
     }
 
     if (PlayState.instance.isInCutscene)
     {
       if (cutsceneTimerManager != null) cutsceneTimerManager.update(event.elapsed);
-
-      if (rimlightCamera != null)
-      {
-        rimlightCamera.focusOn(new FlxPoint(PlayState.instance.camGame.viewLeft + PlayState.instance.camGame.viewWidth / 2,
-          PlayState.instance.camGame.viewTop + PlayState.instance.camGame.viewHeight / 2));
-        rimlightCamera.zoom = PlayState.instance.camGame.zoom;
-      }
-
     }
-  }
-  var bgSprite:FunkinSprite;
-
-  function onSongEnd(event:CountdownScriptEvent):Void
-  {
-    super.onSongEnd(event);
-    if (PlayState.instance.currentVariation != 'pico') hasPlayedEndCutscene = true;
-    // only play this on pico variant..
-
-    if (!hasPlayedEndCutscene)
-    {
-      hasPlayedEndCutscene = true;
-
-      event.cancel();
-
-      // trace('Adding black background behind cutscene over UI');
-      bgSprite = new FunkinSprite(0, 0);
-      bgSprite.makeSolidColor(2000, 2500, 0xFF000000);
-      bgSprite.cameras = [PlayState.instance.camCutscene]; // Show over the HUD but below the video.
-      // this
-      bgSprite.zIndex = -10000;
-      PlayState.instance.add(bgSprite);
-      PlayState.instance.refresh();
-      bgSprite.alpha = 0;
-
-      startEndCutscene();
-    }
-    else
-    {
-      // Make sure the cutscene can play again next time!
-      hasPlayedEndCutscene = false;
-      // DO NOT CANCEL THE EVENT!
-    }
-  }
-
-  var cutsceneTimerManager:FlxTimerManager;
-
-  function startEndCutscene()
-  {
-    var picoPos:Array<Float> = [
-      PlayState.instance.currentStage.getBoyfriend().cameraFocusPoint.x,
-      PlayState.instance.currentStage.getBoyfriend().cameraFocusPoint.y
-    ];
-    var otisPos:Array<Float> = [
-      PlayState.instance.currentStage.getGirlfriend().cameraFocusPoint.x,
-      PlayState.instance.currentStage.getGirlfriend().cameraFocusPoint.y
-    ];
-    var tankmanPos:Array<Float> = [
-      PlayState.instance.currentStage.getDad().cameraFocusPoint.x,
-      PlayState.instance.currentStage.getDad().cameraFocusPoint.y
-    ];
-
-    cutsceneTimerManager = new FlxTimerManager();
-
-    // Disable player input during cutscene, so you can't get a gameover during cutscene
-    PlayState.instance.isInCutscene = true;
-    PlayState.instance.camHUD.visible = false;
-
-    rimlightCamera = new FlxCamera();
-    FlxG.cameras.insert(rimlightCamera, (FlxG.onMobile) ? -4 : -2, false);
-    rimlightCamera.bgColor = 0x00FFFFFF; // Show the game scene behind the camera.
-
-    screenspaceRimlight.baseBrightness = -46;
-    screenspaceRimlight.baseHue = -38;
-    screenspaceRimlight.baseContrast = -25;
-    screenspaceRimlight.baseSaturation = -20;
-
-    screenspaceRimlight.angle = 45;
-    screenspaceRimlight.threshold = 0.3;
-
-    var rimlightFilter:ShaderFilter = new ShaderFilter(screenspaceRimlight);
-
-    rimlightCamera.filters = [rimlightFilter];
-
-    tankmanCutscene = ScriptedFlxAtlasSprite.init('TankmanEndingSprite', 0, 0);
-    tankmanCutscene.setPosition(PlayState.instance.currentStage.getDad().x + 723, PlayState.instance.currentStage.getDad().y + 145);
-
-    PlayState.instance.tweenCameraToPosition(tankmanPos[0] + 320, tankmanPos[1] - 70, 2.8, FlxEase.expoOut);
-    PlayState.instance.tweenCameraZoom(0.65, 2, true, FlxEase.expoOut);
-
-    PlayState.instance.currentStage.getDad().visible = false;
-    PlayState.instance.currentStage.add(tankmanCutscene);
-    tankmanCutscene.cameras = [rimlightCamera];
-
-    tankmanCutscene.scriptCall('doAnim');
-
-    new FlxTimer(cutsceneTimerManager).start(176 / 24, _ -> {
-      PlayState.instance.currentStage.getBoyfriend().playAnimation('laughEnd', true);
-    });
-
-    new FlxTimer(cutsceneTimerManager).start(270 / 24, _ -> {
-      PlayState.instance.tweenCameraToPosition(tankmanPos[0] + 320, tankmanPos[1] - 370, 2, FlxEase.quadInOut);
-      FlxTween.tween(bgSprite, {alpha: 1}, 2, null);
-    });
-
-    new FlxTimer(cutsceneTimerManager).start(320 / 24, _ -> {
-      FlxG.cameras.remove(rimlightCamera);
-      rimlightCamera = null;
-      PlayState.instance.endSong(true);
-    });
   }
 
   function kill():Void

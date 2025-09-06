@@ -2,11 +2,11 @@ import funkin.play.song.Song;
 import funkin.save.Save;
 
 
-class LitUpBFMixSong extends Song
+class DarnellBFMixSong extends Song
 {
   public function new()
   {
-    super('lit-up',
+    super('darnell',
       {
         variation: 'bf'
       });

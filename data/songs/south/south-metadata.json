@@ -11,7 +11,7 @@
       "opponent": "spooky",
       "altInstrumentals": ["pico"]
     },
-    "songVariations": ["erect", "pico"],
+    "songVariations": ["erect", "pico", "olderect"],
     "ratings": { "easy": 1, "normal": 2, "hard": 2 },
     "difficulties": ["easy", "normal", "hard"],
     "noteStyle": "funkin",

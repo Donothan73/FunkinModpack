@@ -11,6 +11,7 @@
       "opponent": "spooky-dark",
       "instrumental": "erect"
     },
+    "songVariations": ["olderect"],
     "stage": "spookyMansionErect",
     "noteStyle": "funkin",
     "ratings": { "erect": 8, "nightmare": 9 },

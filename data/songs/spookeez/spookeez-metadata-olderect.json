@@ -1,15 +1,15 @@
 {
   "version": "2.2.4",
-  "songName": "Spookeez Erect",
-  "artist": "Kawai Sprite (feat. Saruky)",
+  "songName": "Spookeez Erect (Old)",
+  "artist": "Kawai Sprite",
   "charter": "Spazkid + fabs",
   "playData": {
     "difficulties": ["erect", "nightmare"],
     "characters": {
-      "player": "bf-dark",
+      "player": "bf-dark-old",
       "girlfriend": "gf-dark",
       "opponent": "spooky-dark",
-      "instrumental": "erect"
+      "instrumental": "olderect"
     },
     "stage": "spookyMansionErect",
     "noteStyle": "funkin",

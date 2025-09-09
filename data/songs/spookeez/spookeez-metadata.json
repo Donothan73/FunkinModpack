@@ -4,7 +4,7 @@
   "artist": "Kawai Sprite",
   "charter": "ninjamuffin99 + MtH + Spazkid",
   "playData": {
-    "songVariations": ["erect", "pico"],
+    "songVariations": ["erect", "pico", "olderect"],
     "difficulties": ["easy", "normal", "hard"],
     "characters": {
       "player": "bf",

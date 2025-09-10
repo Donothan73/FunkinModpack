@@ -1,7 +1,5 @@
 import funkin.ui.freeplay.BGScrollingText;
 import funkin.ui.freeplay.FreeplayState;
-import funkin.ui.freeplay.AlbumRoll;
-import funkin.ui.freeplay.SongMenuItem;
 import funkin.ui.freeplay.backcards.BackingCard;
 import flixel.FlxSprite;
 import flixel.tweens.FlxEase;
@@ -10,11 +8,12 @@ import flixel.util.FlxSpriteUtil;
 import funkin.ui.freeplay.charselect.PlayableCharacter;
 import funkin.data.freeplay.player.PlayerRegistry;
 import flixel.FlxG;
+import funkin.Conductor;
 import funkin.ui.FullScreenScaleMode;
 import funkin.Conductor;
 import funkin.data.freeplay.album.AlbumRegistry;
 
-class OldCard extends BackingCard
+class BoyfriendCard extends BackingCard
 {
   public var moreWays:BGScrollingText;
   public var funnyScroll:BGScrollingText;
@@ -43,12 +42,12 @@ class OldCard extends BackingCard
         speed: 0.4,
         wait: 0
       });
-    exitMovers.set([diffText],
+    exitMovers.set([txtNuts],
       {
         x: FlxG.width * 2,
         speed: 0.4,
       });
-    exitMovers.set([txtNuts],
+    exitMovers.set([diffText],
       {
         x: FlxG.width * 2,
         speed: 0.4,
@@ -89,7 +88,7 @@ class OldCard extends BackingCard
 
   public override function new()
   {
-    super("old");
+    super("bf");
 
     var player = PlayerRegistry.instance.fetchEntry(this.currentCharacter);
     funnyScroll = new BGScrollingText(0, 220, player.getFreeplayDJText(1), FlxG.width / 2, false, 60);
@@ -105,21 +104,20 @@ class OldCard extends BackingCard
     FlxTween.tween(pinkBack, {x: 0}, 0.6, {ease: FlxEase.quartOut});
     add(pinkBack);
 
+    add(orangeBackShit);
+
     diffText = new FlxSprite(40, 190).loadGraphic(Paths.image('freeplay/difficultyText'));
     diffText.x = (FlxG.width - 290) - FullScreenScaleMode.gameNotchSize.x;
     diffText.zIndex = 10000;
     instance.albumRoll.add(diffText);
 
-    add(orangeBackShit);
-
     add(alsoOrangeLOL);
 
     FlxSpriteUtil.alphaMaskFlxSprite(orangeBackShit, pinkBack, orangeBackShit);
-    orangeBackShit.visible = true;
-    alsoOrangeLOL.visible = true;
+    orangeBackShit.visible = false;
+    alsoOrangeLOL.visible = false;
 
     confirmTextGlow.blend = 0;
-    confirmTextGlow.alpha = 0;
     confirmTextGlow.visible = false;
 
     confirmGlow.blend = 0;
@@ -168,64 +166,17 @@ class OldCard extends BackingCard
     add(funnyScroll3);
 
     glowDark = new FlxSprite((FreeplayState.CUTOUT_WIDTH * FreeplayState.DJ_POS_MULTI) + -300, 330).loadGraphic(Paths.image('freeplay/beatglow'));
-    //glowDark.blend = 9;
+    glowDark.blend = 9;
     add(glowDark);
 
     glow = new FlxSprite((FreeplayState.CUTOUT_WIDTH * FreeplayState.DJ_POS_MULTI) + -300, 330).loadGraphic(Paths.image('freeplay/beatglow'));
-    //glow.blend = 0;
+    glow.blend = 0;
     add(glow);
 
     glowDark.visible = false;
     glow.visible = false;
 
     add(cardGlow);
-  }
-
-  var beatFreq:Int = 1;
-  var beatFreqList:Array<Int> = [1, 2, 4, 8];
-
-  public override function beatHit():Void
-  {
-    // increases the amount of beats that need to go by to pulse the glow because itd flash like craazy at high bpms.....
-    beatFreq = beatFreqList[Math.floor(Conductor.instance.bpm / 140)];
-
-    if (Conductor.instance.currentBeat % beatFreq != 0) return;
-    FlxTween.cancelTweensOf(glow);
-    FlxTween.cancelTweensOf(glowDark);
-
-    glow.alpha = 0.6;
-    FlxTween.tween(glow, {alpha: 0}, 16 / 24, {ease: FlxEase.quartOut});
-    glowDark.alpha = 0;
-    FlxTween.tween(glowDark, {alpha: 1}, 18 / 24, {ease: FlxEase.quartOut});
-  }
-
-  public override function introDone():Void
-  {
-    super.introDone();
-    moreWays.visible = false;
-    funnyScroll.visible = false;
-    txtNuts.visible = false;
-    funnyScroll2.visible = false;
-    moreWays2.visible = false;
-    funnyScroll3.visible = false;
-    // grpTxtScrolls.visible = false;
-    glowDark.visible = true;
-    glow.visible = true;
-  }
-
-  public override function confirm():Void
-  {
-    super.confirm();
-    FlxTween.color(FreeplayState.backingImage, 0.33, 0xFFFFFFFF, 0xFF555555, {ease: FlxEase.quadOut});
-
-    moreWays.visible = false;
-    funnyScroll.visible = false;
-    txtNuts.visible = false;
-    funnyScroll2.visible = false;
-    moreWays2.visible = false;
-    funnyScroll3.visible = false;
-    glowDark.visible = false;
-    glow.visible = false;
   }
 
   var levelId:String;
@@ -255,6 +206,53 @@ class OldCard extends BackingCard
     album = instance.currentCapsule.freeplayData.albumID;
 
 
+  }
+
+  var beatFreq:Int = 1;
+  var beatFreqList:Array<Int> = [1, 2, 4, 8];
+
+  public override function beatHit():Void
+  {
+    // increases the amount of beats that need to go by to pulse the glow because itd flash like craazy at high bpms.....
+    beatFreq = beatFreqList[Math.floor(Conductor.instance.bpm / 140)];
+
+    if (Conductor.instance.currentBeat % beatFreq != 0) return;
+    FlxTween.cancelTweensOf(glow);
+    FlxTween.cancelTweensOf(glowDark);
+
+    glow.alpha = 0.8;
+    FlxTween.tween(glow, {alpha: 0}, 16 / 24, {ease: FlxEase.quartOut});
+    glowDark.alpha = 0;
+    FlxTween.tween(glowDark, {alpha: 0.6}, 18 / 24, {ease: FlxEase.quartOut});
+  }
+
+  public override function introDone():Void
+  {
+    super.introDone();
+    moreWays.visible = true;
+    funnyScroll.visible = true;
+    txtNuts.visible = true;
+    funnyScroll2.visible = true;
+    moreWays2.visible = true;
+    funnyScroll3.visible = true;
+    // grpTxtScrolls.visible = true;
+    glowDark.visible = true;
+    glow.visible = true;
+  }
+
+  public override function confirm():Void
+  {
+    super.confirm();
+    // FlxTween.color(bgDad, 0.33, 0xFFFFFFFF, 0xFF555555, {ease: FlxEase.quadOut});
+
+    moreWays.visible = false;
+    funnyScroll.visible = false;
+    txtNuts.visible = false;
+    funnyScroll2.visible = false;
+    moreWays2.visible = false;
+    funnyScroll3.visible = false;
+    glowDark.visible = false;
+    glow.visible = false;
   }
 
   public override function disappear():Void

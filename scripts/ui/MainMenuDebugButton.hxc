@@ -47,7 +47,22 @@ class MainMenuDebugButton extends Module
 				FlxG.switchState(() -> new funkin.ui.mainmenu.MainMenuState());
 			}	
 
-			if (FlxG.keys.justPressed.HOME)
+			if (FlxG.keys.justPressed.NUMPADONE)
+			{
+			 if (PlayState.instance != null) PlayState.instance.camHUD.visible = !PlayState.instance.camHUD.visible;
+			}	
+
+			if (FlxG.keys.justPressed.NUMPADNINE)
+			{
+			 if (PlayState.instance != null) PlayState.instance.currentCameraZoom += 0.05;
+			}	
+
+			if (FlxG.keys.justPressed.NUMPADSEVEN)
+			{
+			 if (PlayState.instance != null) PlayState.instance.currentCameraZoom -= 0.05;
+			}	
+
+			if (FlxG.keys.justPressed.NUMPADSIX)
 			{
 				FlxG.resizeGame(2532, 1170);
 				FlxG.resizeWindow(2657, 1098);

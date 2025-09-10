@@ -13,11 +13,11 @@ class PicoPlayableCharacter extends PlayableCharacter
   {
     super.isUnlocked();
 
-    difficultyList = LevelRegistry.instance.fetchEntry('week7').getDifficulties();
+    difficultyList = LevelRegistry.instance.fetchEntry('weekend1').getDifficulties();
 
     for (difficulty in difficultyList)
     {
-      if (Save.instance.getLevelScore('week7', difficulty) == null)
+      if (Save.instance.getLevelScore('weekend1', difficulty) == null)
       {
         continue;
       }

@@ -13,6 +13,8 @@ import flixel.FlxG;
 import funkin.ui.FullScreenScaleMode;
 import funkin.Conductor;
 import funkin.data.freeplay.album.AlbumRegistry;
+import funkin.data.story.level.LevelRegistry;
+import funkin.graphics.FunkinSprite;
 
 class OldCard extends BackingCard
 {
@@ -98,6 +100,12 @@ class OldCard extends BackingCard
     moreWays2 = new BGScrollingText(0, 397, player.getFreeplayDJText(2), FlxG.width, true, 43);
     txtNuts = new BGScrollingText(0, 285, player.getFreeplayDJText(3), FlxG.width / 2, true, 43);
     funnyScroll3 = new BGScrollingText(0, orangeBackShit.y + 10, player.getFreeplayDJText(1), FlxG.width / 2, false, 60);
+
+    for (i in 0...LevelRegistry.instance.listSortedLevelIds().length)
+    {
+      level = LevelRegistry.instance.listSortedLevelIds()[i];
+      FunkinSprite.cacheTexture(Paths.image(('freeplay/backgrounds/' + 'bf/' + 'freeplayBG' + level + '-' + 'bf')));
+    }
   }
 
   public override function onCreate(event:ScriptEvent):Void

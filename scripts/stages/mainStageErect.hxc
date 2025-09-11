@@ -52,7 +52,7 @@ class MainStageErectStage extends Stage
 
 		switch(PlayState.instance.currentVariation) 
 		{
-    		  case 'erect':
+    		default:
 			switch(charType)
 			{
 				case CharacterType.BF:
@@ -166,7 +166,7 @@ class MainStageErectStage extends Stage
 		super.buildStage();
 
 	switch(PlayState.instance.currentVariation) {
-    	  case 'erect':
+    	  default:
 
     		colorShaderBf.brightness = -23;
     		colorShaderBf.hue = 12;

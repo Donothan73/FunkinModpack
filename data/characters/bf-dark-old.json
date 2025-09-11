@@ -5,7 +5,7 @@
   "assetPath": "characters/bf_dark",
   "flipX": true,
   "healthIcon": {
-    "id": "bf",
+    "id": "bf-old",
     "flipX": false
   },
   "singTime": 8.0,

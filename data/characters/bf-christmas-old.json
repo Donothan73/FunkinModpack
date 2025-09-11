@@ -4,7 +4,7 @@
   "assetPath": "characters/bfChristmas",
   "flipX": true,
   "healthIcon": {
-    "id": "bf"
+    "id": "bf-old"
   },
   "renderType": "multisparrow",
   "singTime": 8.0,

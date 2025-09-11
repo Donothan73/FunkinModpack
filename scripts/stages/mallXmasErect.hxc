@@ -75,7 +75,7 @@ class MallXmasErectStage extends Stage
 
 		switch(PlayState.instance.currentVariation) 
 		{
-    		  case 'erect':
+    		default:
 			switch(charType)
 			{
 				case CharacterType.BF:

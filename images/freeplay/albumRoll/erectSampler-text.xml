@@ -1,21 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TextureAtlas imagePath="erectSampler-text.png">
-	<!-- Created with Adobe Animate version 24.0.9.74 -->
+	<!-- Created with Adobe Animate version 24.0.10.14 -->
 	<!-- http://www.adobe.com/products/animate.html -->
-	<SubTexture name="switch0000" x="5" y="5" width="246" height="179"/>
-	<SubTexture name="switch0001" x="5" y="5" width="246" height="179"/>
-	<SubTexture name="switch0002" x="5" y="5" width="246" height="179"/>
-	<SubTexture name="switch0004" x="5" y="5" width="246" height="179"/>
-	<SubTexture name="idle0003" x="253" y="5" width="241" height="179" frameX="-3" frameY="0" frameWidth="246" frameHeight="179"/>
-	<SubTexture name="idle0004" x="253" y="5" width="241" height="179" frameX="-3" frameY="0" frameWidth="246" frameHeight="179"/>
-	<SubTexture name="idle0005" x="253" y="5" width="241" height="179" frameX="-3" frameY="0" frameWidth="246" frameHeight="179"/>
-	<SubTexture name="idle0006" x="253" y="5" width="241" height="179" frameX="-3" frameY="0" frameWidth="246" frameHeight="179"/>
-	<SubTexture name="idle0007" x="253" y="5" width="241" height="179" frameX="-3" frameY="0" frameWidth="246" frameHeight="179"/>
-	<SubTexture name="idle0008" x="253" y="5" width="241" height="179" frameX="-3" frameY="0" frameWidth="246" frameHeight="179"/>
-	<SubTexture name="idle0009" x="253" y="5" width="241" height="179" frameX="-3" frameY="0" frameWidth="246" frameHeight="179"/>
-	<SubTexture name="idle0010" x="253" y="5" width="241" height="179" frameX="-3" frameY="0" frameWidth="246" frameHeight="179"/>
-	<SubTexture name="idle0011" x="253" y="5" width="241" height="179" frameX="-3" frameY="0" frameWidth="246" frameHeight="179"/>
-	<SubTexture name="idle0012" x="253" y="5" width="241" height="179" frameX="-3" frameY="0" frameWidth="246" frameHeight="179"/>
-	<SubTexture name="idle0013" x="253" y="5" width="241" height="179" frameX="-3" frameY="0" frameWidth="246" frameHeight="179"/>
-	<SubTexture name="idle0014" x="253" y="5" width="241" height="179" frameX="-3" frameY="0" frameWidth="246" frameHeight="179"/>
+	<SubTexture name="idle0000" x="2" y="2" width="253" height="124" frameX="-7" frameY="-4" frameWidth="268" frameHeight="132"/>
+	<SubTexture name="switch0001" x="2" y="131" width="268" height="132"/>
+	<SubTexture name="switch0002" x="2" y="131" width="268" height="132"/>
+	<SubTexture name="switch0003" x="2" y="131" width="268" height="132"/>
+	<SubTexture name="switch0004" x="2" y="131" width="268" height="132"/>
 </TextureAtlas>

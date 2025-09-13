@@ -3,5 +3,6 @@
   "name": "Erect Sampler",
   "artists": ["Kawai Sprite", "Kohta Takahashi", "Saruky"],
   "albumArtAsset": "freeplay/albumRoll/erectSampler",
-  "albumTitleAsset": "freeplay/albumRoll/erectSampler-text"
+  "albumTitleAsset": "freeplay/albumRoll/erectSampler-text",
+  "albumTitleOffsets": [-10, 20]
 }

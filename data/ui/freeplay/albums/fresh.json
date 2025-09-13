@@ -1,0 +1,8 @@
+{
+  "version": "1.0.0",
+  "name": "Fresh",
+  "artists": ["Kawai Sprite"],
+  "albumArtAsset": "freeplay/albumRoll/Fresh",
+  "albumTitleAsset": "freeplay/albumRoll/fresh-text",
+  "albumTitleOffsets": [-10, -5]
+}

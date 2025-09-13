@@ -3,5 +3,6 @@
   "name": "Week 6",
   "artists": ["Kawai Sprite"],
   "albumArtAsset": "freeplay/albumRoll/week6",
-  "albumTitleAsset": "freeplay/albumRoll/week6-text"
+  "albumTitleAsset": "freeplay/albumRoll/week6-text",
+  "albumTitleOffsets": [22, 5]
 }

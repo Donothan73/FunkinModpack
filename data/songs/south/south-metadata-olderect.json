@@ -2,25 +2,58 @@
   "version": "2.2.4",
   "songName": "Spooky Down South Erect (Old)",
   "artist": "Kawai Sprite",
-  "charter": "Spazkid + fabs",
+  "charter": "Spazkid + fabs + Donothan73",
+  "divisions": 96,
+  "looped": false,
+  "offsets": {
+    "instrumental": 0,
+    "altInstrumentals": {    },
+    "vocals": {    },
+    "altVocals": {    }
+  },
   "playData": {
-    "difficulties": ["erect", "nightmare"],
+    "songVariations": [    ],
+    "difficulties": [
+      "nightmare"
+    ],
     "characters": {
       "player": "bf-dark-old",
       "girlfriend": "gf-dark",
       "opponent": "spooky-dark",
-      "instrumental": "olderect"
+      "instrumental": "olderect",
+      "altInstrumentals": [      ],
+      "opponentVocals": [
+        "spooky-dark"
+      ],
+      "playerVocals": [
+        "bf-dark-old"
+      ]
     },
     "stage": "spookyMansionErect",
     "noteStyle": "funkin",
-    "ratings": { "erect": 8, "nightmare": 9 },
+    "ratings": {
+      "erect": 8,
+      "nightmare": 10
+    },
     "album": "volume3",
     "previewStart": 0,
     "previewEnd": 15000
   },
-  "generatedBy": "Friday Night Funkin' - v0.3.0 (rewrite/master:008fc3c) PROTOTYPE",
+  "generatedBy": "Friday Night Funkin' - v0.7.4",
   "timeFormat": "ms",
   "timeChanges": [
-    { "t": 0, "b": 0, "bpm": 177, "n": 4, "d": 4, "bt": [4, 4, 4, 4] }
+    {
+      "t": 0,
+      "b": 0,
+      "bpm": 177,
+      "n": 4,
+      "d": 4,
+      "bt": [
+        4,
+        4,
+        4,
+        4
+      ]
+    }
   ]
 }

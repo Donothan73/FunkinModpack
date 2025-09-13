@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="switch.png">
+	<!-- Created with Adobe Animate version 24.0.10.14 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="idle0000" x="2" y="2" width="294" height="97" frameX="-6" frameY="-6" frameWidth="306" frameHeight="109"/>
+	<SubTexture name="switch0001" x="2" y="104" width="306" height="109"/>
+	<SubTexture name="switch0002" x="2" y="104" width="306" height="109"/>
+	<SubTexture name="switch0003" x="2" y="104" width="306" height="109"/>
+	<SubTexture name="switch0004" x="2" y="104" width="306" height="109"/>
+</TextureAtlas>

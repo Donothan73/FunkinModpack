@@ -3,5 +3,6 @@
   "name": "Bopeebo",
   "artists": ["Kawai Sprite"],
   "albumArtAsset": "freeplay/albumRoll/bopeebo",
-  "albumTitleAsset": "freeplay/albumRoll/bopeebo-text"
+  "albumTitleAsset": "freeplay/albumRoll/bopeebo-text",
+  "albumTitleOffsets": [-40, -5]
 }

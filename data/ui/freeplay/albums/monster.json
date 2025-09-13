@@ -1,0 +1,8 @@
+{
+  "version": "1.0.0",
+  "name": "Monster",
+  "artists": ["Basset"],
+  "albumArtAsset": "freeplay/albumRoll/monster",
+  "albumTitleAsset": "freeplay/albumRoll/monster-text",
+  "albumTitleOffsets": [-20, 0]
+}

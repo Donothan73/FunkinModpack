@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="bopeebo-text.png">
+	<!-- Created with Adobe Animate version 24.0.10.14 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="idle0000" x="2" y="2" width="316" height="105" frameX="-3" frameY="-4" frameWidth="323" frameHeight="114"/>
+	<SubTexture name="switch0000" x="2" y="112" width="323" height="114"/>
+	<SubTexture name="switch0001" x="2" y="112" width="323" height="114"/>
+	<SubTexture name="switch0002" x="2" y="112" width="323" height="114"/>
+	<SubTexture name="switch0003" x="2" y="112" width="323" height="114"/>
+</TextureAtlas>

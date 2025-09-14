@@ -1,0 +1,46 @@
+{
+  "version": "2.2.4",
+  "songName": "Fresh (Bf Mix)",
+  "artist": "Kawai Sprite",
+  "charter": "Donothan73",
+  "looped": false,
+  "offsets": {
+    "instrumental": 0,
+    "altInstrumentals": {    },
+    "vocals": {    },
+    "altVocals": {    }
+  },
+  "playData": {
+    "songVariations": [    ],
+    "difficulties": [
+      "easy",
+      "normal",
+      "hard"
+    ],
+    "characters": {
+      "player": "bf-old",
+      "girlfriend": "gf",
+      "opponent": "dad",
+      "instrumental": "remix",
+      "opponentVocals": [
+        "dad"
+      ],
+      "playerVocals": [
+        "bf-old"
+      ]
+    },
+    "stage": "mainStageErect",
+    "noteStyle": "funkin",
+    "ratings": {
+      "hard": 4
+    },
+    "previewStart": 0,
+    "previewEnd": 0
+  },
+  "generatedBy": "Friday Night Funkin' - v0.7.4",
+  "timeFormat": "ms",
+  "timeChanges":[
+    { "t": 0, "bpm": 100 },
+    { "t": 8000, "bpm": 120 }
+  ]
+}

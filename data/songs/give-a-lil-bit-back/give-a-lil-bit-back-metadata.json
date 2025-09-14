@@ -12,12 +12,13 @@
       "hard"
     ],
     "characters": {
-      "player": "bf-car",
+      "player": "bf-car-old",
       "girlfriend": "gf-car",
       "opponent": "mom-car"
     },
     "stage": "limoRide",
     "noteStyle": "funkin",
+    "album": "volume2",
     "ratings": {
       "easy": 0,
       "hard": 0

@@ -12,7 +12,7 @@
       "opponent": "dad",
       "altInstrumentals": ["pico"]
     },
-    "songVariations": ["erect", "pico", "olderect"],
+    "songVariations": ["erect", "pico", "olderect", "remix"],
     "ratings": { "easy": 1, "normal": 1, "hard": 2 },
     "difficulties": ["easy", "normal", "hard"],
     "noteStyle": "funkin"

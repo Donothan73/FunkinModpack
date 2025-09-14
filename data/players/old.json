@@ -4,10 +4,11 @@
   "ownedChars": [
     "bf-old",
     "bf-dark-old",
-    "bf-christmas-old"
+    "bf-christmas-old",
+    "bf-car-old"
   ],
   "showUnownedChars": false,
-  "unlocked": true,
+  "unlocked": false,
   "freeplayStyle": "old",
   "stickerPack": "standard-bf",
   "freeplayDJ": {

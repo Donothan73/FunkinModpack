@@ -11,7 +11,7 @@
     "pico-holding-nene"
   ],
   "showUnownedChars": false,
-  "unlocked": true,
+  "unlocked": false,
   "freeplayStyle": "pico",
   "stickerPack": "standard-pico",
   "freeplayDJ": {

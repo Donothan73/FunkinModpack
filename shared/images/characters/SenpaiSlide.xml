@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="slide_senpai.png">
+	<!-- Created with Adobe Animate version 24.0.10.14 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="Senpai slide idle0000" x="2" y="2" width="69" height="115"/>
+	<SubTexture name="Senpai slide idle0001" x="2" y="2" width="69" height="115"/>
+	<SubTexture name="Senpai slide idle0002" x="2" y="2" width="69" height="115"/>
+	<SubTexture name="Senpai slide idle0003" x="2" y="2" width="69" height="115"/>
+	<SubTexture name="Senpai slide idle0004" x="2" y="2" width="69" height="115"/>
+	<SubTexture name="Senpai slide idle0005" x="2" y="2" width="69" height="115"/>
+	<SubTexture name="Senpai slide idle0006" x="76" y="2" width="69" height="115"/>
+	<SubTexture name="Senpai slide idle0007" x="76" y="2" width="69" height="115"/>
+	<SubTexture name="Senpai slide idle0008" x="76" y="2" width="69" height="115"/>
+	<SubTexture name="Senpai slide idle0009" x="150" y="2" width="69" height="115"/>
+	<SubTexture name="Senpai slide idle0010" x="150" y="2" width="69" height="115"/>
+	<SubTexture name="Senpai slide idle0011" x="150" y="2" width="69" height="115"/>
+	<SubTexture name="Senpai slide idle0012" x="224" y="2" width="69" height="115"/>
+	<SubTexture name="Senpai slide idle0013" x="224" y="2" width="69" height="115"/>
+	<SubTexture name="Senpai slide idle0014" x="224" y="2" width="69" height="115"/>
+	<SubTexture name="Senpai slide idle0015" x="298" y="2" width="69" height="115"/>
+	<SubTexture name="Senpai slide idle0016" x="298" y="2" width="69" height="115"/>
+	<SubTexture name="Senpai slide idle0017" x="298" y="2" width="69" height="115"/>
+	<SubTexture name="Senpai slide idle0018" x="298" y="2" width="69" height="115"/>
+	<SubTexture name="Senpai slide idle0019" x="298" y="2" width="69" height="115"/>
+	<SubTexture name="Senpai slide idle0020" x="298" y="2" width="69" height="115"/>
+	<SubTexture name="Senpai slide idle0021" x="372" y="2" width="69" height="115"/>
+	<SubTexture name="Senpai slide idle0022" x="372" y="2" width="69" height="115"/>
+	<SubTexture name="Senpai slide idle0023" x="372" y="2" width="69" height="115"/>
+	<SubTexture name="Senpai slide idle0024" x="2" y="2" width="69" height="115"/>
+	<SubTexture name="Senpai slide idle0025" x="2" y="2" width="69" height="115"/>
+	<SubTexture name="Senpai slide idle0026" x="2" y="2" width="69" height="115"/>
+	<SubTexture name="Senpai slide idle0027" x="2" y="122" width="69" height="115"/>
+	<SubTexture name="Senpai slide idle0028" x="2" y="122" width="69" height="115"/>
+	<SubTexture name="Senpai slide idle0029" x="2" y="122" width="69" height="115"/>
+</TextureAtlas>

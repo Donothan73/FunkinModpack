@@ -1,0 +1,36 @@
+import funkin.play.character.MultiSparrowCharacter;
+import funkin.play.character.CharacterType;
+import funkin.play.PlayState;
+
+class SenpaiCharacter extends MultiSparrowCharacter
+{
+  function new()
+  {
+    super('senpai');
+
+  }
+
+  function onStepHit(event:SongTimeScriptEvent):Void
+	{
+		super.onStepHit(event);
+
+    if (PlayState.instance.currentVariation == '' || PlayState.instance.currentSong.id == 'senpai')
+    {
+      switch(event.step)
+      {
+        case 0:
+          idleSuffix = '';
+        case 890:
+          idleSuffix = '-alt';
+      }
+    }
+  }
+
+  override function onSongRetry()
+	{
+		super.onSongRetry();
+
+    idleSuffix = '';
+
+  }
+}

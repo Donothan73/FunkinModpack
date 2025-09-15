@@ -6,7 +6,9 @@ import flixel.addons.effects.FlxTrail;
 import funkin.play.Countdown;
 import funkin.play.character.CharacterType;
 import flixel.FlxG;
-import funkin.graphics.shaders.DropShadowShader;
+import funkin.graphics.shaders.AdjustColorShader;
+import openfl.filters.ShaderFilter;
+import funkin.Conductor;
 
 class SchoolEvilErectStage extends Stage
 {
@@ -15,22 +17,25 @@ class SchoolEvilErectStage extends Stage
     super('schoolEvilErect');
   }
 
+  var waveFreq:Float = (Conductor.instance.beatLengthMs / 1000) * 16;
+  var waveSpeed:Float = (Conductor.instance.beatLengthMs / 1000) * 4;
+
   var wiggleBack:FlxRuntimeShader = null;
   var wiggleSchool:FlxRuntimeShader = null;
   var wiggleGround:FlxRuntimeShader = null;
   var wiggleSpike:FlxRuntimeShader = null;
 
-  var wiggleHUD:FlxRuntimeShader = null;
+  var wiggleChar:FlxRuntimeShader = new WiggleEffectRuntime(waveSpeed, waveFreq, 0.007, WiggleEffectType.DREAMY);
+	var wiggleCharFilter:ShaderFilter;
 
   override function buildStage()
   {
     super.buildStage();
 
-    wiggleBack = new WiggleEffectRuntime(2 * 0.8, 4 * 0.4, 0.011, WiggleEffectType.DREAMY);
-    wiggleSchool = new WiggleEffectRuntime(2, 4, 0.017, WiggleEffectType.DREAMY);
-    wiggleSpike = new WiggleEffectRuntime(2, 4, 0.01, WiggleEffectType.DREAMY);
-    wiggleGround = new WiggleEffectRuntime(2, 4, 0.007, WiggleEffectType.DREAMY);
-    wiggleHUD = new WiggleEffectRuntime(2, 4, 0.007, WiggleEffectType.DREAMY);
+    wiggleBack = new WiggleEffectRuntime(waveSpeed * 0.8, waveFreq * 0.4, 0.011, WiggleEffectType.DREAMY);
+    wiggleSchool = new WiggleEffectRuntime(waveSpeed, waveFreq, 0.017, WiggleEffectType.DREAMY);
+    wiggleSpike = new WiggleEffectRuntime(waveSpeed, waveFreq, 0.01, WiggleEffectType.DREAMY);
+    wiggleGround = new WiggleEffectRuntime(waveSpeed, waveFreq, 0.007, WiggleEffectType.DREAMY);
 
     getNamedProp('school').shader = wiggleSchool;
     getNamedProp('evilstreet').shader = wiggleGround;
@@ -40,6 +45,11 @@ class SchoolEvilErectStage extends Stage
     //PlayState.instance.camHUD.shader = wiggleHUD;
     if (FlxG.save.data.week6pixel == true) PlayState.instance.camHUD.pixelPerfectRender = true;
     if (FlxG.save.data.week6pixel == true) PlayState.instance.camGame.pixelPerfectRender = true;
+
+    wiggleCharFilter = new ShaderFilter(wiggleChar);
+		//FlxG.camera.filters = [wiggleCharFilter];
+    PlayState.instance.camHUD.filters = [wiggleCharFilter];
+    PlayState.instance.camGame.filters = [wiggleCharFilter];
   }
 
   override function addCharacter(character:BaseCharacter, charType:CharacterType):Void
@@ -48,57 +58,22 @@ class SchoolEvilErectStage extends Stage
     super.addCharacter(character, charType);
     trace('Applied stage shader to ' + character.characterName);
 
-    var rim = new DropShadowShader();
-    rim.setAdjustColor(-100, -44, -9, 5);
-    rim.color = 0xFFB0003B;
-    rim.antialiasAmt = 0;
-    rim.attachedSprite = character;
-    rim.distance = 4;
-    rim.threshold = 0.3;
-    rim.angle = 175;
-    rim.strength = 0.80;
+    colorShader = new AdjustColorShader();
+    colorShader.brightness = -50;
+    colorShader.hue = -40;
+    colorShader.contrast = 7;
+		colorShader.saturation = -21;
 
     switch (charType)
     {
       case CharacterType.BF:
-        character.shader = rim;
-
-        rim.loadAltMask('assets/week6/images/weeb/erect/masks/bfPixel_mask.png');
-        rim.maskThreshold = 1;
-        //rim.useAltMask = true;
-
-        character.animation.onFrameChange.add(function() {
-          if (getBoyfriend() != null)
-          {
-            rim.updateFrameInfo(getBoyfriend().frame);
-          }
-        });
+        character.shader = colorShader;
 
       case CharacterType.GF:
-        character.shader = rim;
+        character.shader = colorShader;
 
-        rim.loadAltMask('assets/week6/images/weeb/erect/masks/gfPixel_mask.png');
-        rim.maskThreshold = 1;
-        //rim.useAltMask = true;
-
-        character.animation.onFrameChange.add(function() {
-          if (getGirlfriend() != null)
-          {
-            rim.updateFrameInfo(getGirlfriend().frame);
-          }
-        });
-
-      //case CharacterType.DAD:
-        //rim.angle = 90;
-        //character.shader = rim;
-
-        //character.animation.onFrameChange.add(function() {
-          //if (getDad() != null)
-          //{
-          //  rim.updateFrameInfo(getDad().frame);
-          //}
-        //});
-
+      case CharacterType.DAD:
+        
       default:
     }
   }
@@ -113,7 +88,7 @@ class SchoolEvilErectStage extends Stage
       wiggleSchool.update(event.elapsed);
       wiggleGround.update(event.elapsed);
       wiggleSpike.update(event.elapsed);
-      wiggleHUD.update(event.elapsed);
+      wiggleChar.update(event.elapsed);
     }
   }
 
@@ -124,6 +99,6 @@ class SchoolEvilErectStage extends Stage
     wiggleSchool = null;
     wiggleGround = null;
     wiggleSpike = null;
-    wiggleHUD = null;
+    wiggleChar = null;
   }
 }

@@ -5,6 +5,8 @@ import funkin.graphics.shaders.WiggleEffectType;
 import flixel.addons.effects.FlxTrail;
 import funkin.play.Countdown;
 import flixel.FlxG;
+import openfl.filters.ShaderFilter;
+import funkin.Conductor;
 
 class SchoolEvilStage extends Stage
 {
@@ -13,19 +15,25 @@ class SchoolEvilStage extends Stage
     super('schoolEvil');
   }
 
+  var waveFreq:Float = (Conductor.instance.beatLengthMs / 1000) * 16;
+  var waveSpeed:Float = (Conductor.instance.beatLengthMs / 1000) * 4;
+
   var wiggleBack:FlxRuntimeShader = null;
   var wiggleSchool:FlxRuntimeShader = null;
   var wiggleGround:FlxRuntimeShader = null;
   var wiggleTrees:FlxRuntimeShader = null;
 
+  var wiggleChar:FlxRuntimeShader = new WiggleEffectRuntime(waveSpeed, waveFreq, 0.007, WiggleEffectType.DREAMY);
+	var wiggleCharFilter:ShaderFilter;
+
   override function buildStage()
   {
     super.buildStage();
 
-    wiggleBack = new WiggleEffectRuntime(2 * 0.8, 4 * 0.4, 0.011, WiggleEffectType.DREAMY);
-    wiggleSchool = new WiggleEffectRuntime(2, 4, 0.017, WiggleEffectType.DREAMY);
-    wiggleGround = new WiggleEffectRuntime(2, 4, 0.007, WiggleEffectType.DREAMY);
-    wiggleTrees = new WiggleEffectRuntime(2, 4, 0.007, WiggleEffectType.DREAMY);
+    wiggleBack = new WiggleEffectRuntime(waveSpeed*0.8, waveFreq * 0.4, 0.011, WiggleEffectType.DREAMY);
+    wiggleSchool = new WiggleEffectRuntime(waveSpeed, waveFreq, 0.017, WiggleEffectType.DREAMY);
+    wiggleGround = new WiggleEffectRuntime(waveSpeed, waveFreq, 0.007, WiggleEffectType.DREAMY);
+    wiggleTrees = new WiggleEffectRuntime(waveSpeed, waveFreq, 0.007, WiggleEffectType.DREAMY);
 
     getNamedProp('backTrees').shader = wiggleBack;
     getNamedProp('school').shader = wiggleSchool;
@@ -34,6 +42,13 @@ class SchoolEvilStage extends Stage
 
     if (FlxG.save.data.week6pixel == true) PlayState.instance.camHUD.pixelPerfectRender = true;
     if (FlxG.save.data.week6pixel == true) PlayState.instance.camGame.pixelPerfectRender = true;
+
+    if (FlxG.save.data.week6pixel == true) FlxG.camera.pixelPerfectRender = true;
+
+    wiggleCharFilter = new ShaderFilter(wiggleChar);
+		//FlxG.camera.filters = [wiggleCharFilter];
+    PlayState.instance.camHUD.filters = [wiggleCharFilter];
+    PlayState.instance.camGame.filters = [wiggleCharFilter];
   }
 
   override function addCharacter(char:BaseCharacter, charType:CharacterType)
@@ -51,6 +66,7 @@ class SchoolEvilStage extends Stage
       wiggleSchool.update(event.elapsed);
       wiggleGround.update(event.elapsed);
       wiggleTrees.update(event.elapsed);
+      wiggleChar.update(event.elapsed);
     }
   }
 

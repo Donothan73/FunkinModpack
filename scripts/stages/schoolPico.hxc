@@ -28,10 +28,12 @@ class SchoolPicoStage extends Stage
 {
 
   var rainShader:RuntimeRainShader = new RuntimeRainShader();
-  //var rainPixelShader:PixelShader = new PixelShader();
+  var rainPixelShader:PixelShader = new MosaicEffect();
   var rainShaderFilter:ShaderFilter;
-  //var rainPixelFilter:ShaderFilter;
+  var rainPixelFilter:ShaderFilter;
   var blurFilter:BlurFilter = new BlurFilter(6, 6);
+
+  var rain:FlxTiledSprite;
 
   // as song goes on, these are used to make the rain more intense throught the song
   // these values are also used for the rain sound effect volume intensity!
@@ -50,6 +52,17 @@ class SchoolPicoStage extends Stage
     if (FlxG.save.data.week6pixel == true) PlayState.instance.camHUD.pixelPerfectRender = true;
     if (FlxG.save.data.week6pixel == true) PlayState.instance.camGame.pixelPerfectRender = true;
 
+    rain = new FlxTiledSprite(Paths.image('weeb/erect/raindrops'), FlxG.width*1.5, FlxG.height*1.5, true, true);
+		rain.setPosition((FlxG.width*1.5)/2, (FlxG.height*1.5)/-2);
+		rain.scrollFactor.set(0, 0);
+		rain.zIndex = 1004;
+		rain.alpha = .9;
+		rain.blend = 11;
+    rain.cameras = [PlayState.instance.camHUD];
+
+		PlayState.instance.currentStage.add(rain);
+		PlayState.instance.currentStage.refresh(); // Apply z-index.
+
     if (PlayState.instance.currentSong.id.toLowerCase() == "roses")
     {
       getNamedProp('freaks').idleSuffix = '-scared';
@@ -63,10 +76,6 @@ class SchoolPicoStage extends Stage
 override function onCreate(event:ScriptEvent):Void
   {
     super.onCreate(event);
-
-    rainShader.scale = FlxG.height / 2000; // adjust this value so that the rain looks nice
-
-    rainPixelShader.setBlockSize(4.0, 4.0);
 
     FlxG.console.registerObject("rainShader", rainShader);
     switch (PlayState.instance.currentSong.id)
@@ -87,11 +96,6 @@ override function onCreate(event:ScriptEvent):Void
     // set the shader input
     // rainShader.mask = frameBufferMan.getFrameBuffer("mask");
     // rainShader.lightMap = frameBufferMan.getFrameBuffer("lightmap");
-
-    rainShaderFilter = new ShaderFilter(rainShader);
-    //rainPixelFilter = new ShaderFilter(rainPixelShader);
-    //PlayState.instance.camHUD.filters = [rainShaderFilter, rainPixelFilter];
-    // FlxG.camera.setFilters([new openfl.filters.BlurFilter(16,16)]);
 
   }
 

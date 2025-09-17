@@ -23,17 +23,17 @@ import flixel.addons.display.FlxTiledSprite;
 import StringTools;
 import funkin.graphics.shaders.DropShadowShader;
 import funkin.play.character.CharacterType;
+import funkin.graphics.FunkinCamera;
+import flixel.util.FlxColor;
+import funkin.graphics.shaders.AdjustColorShader;
 
 class SchoolPicoStage extends Stage
 {
 
-  var rainShader:RuntimeRainShader = new RuntimeRainShader();
-  var rainPixelShader:PixelShader = new MosaicEffect();
+  var rainShader:RuntimeRainShader = new RuntimeRainShader(Assets.getText(Paths.frag('rainPixel')));
   var rainShaderFilter:ShaderFilter;
   var rainPixelFilter:ShaderFilter;
-  var blurFilter:BlurFilter = new BlurFilter(6, 6);
-
-  var rain:FlxTiledSprite;
+  var camRain:FunkinCamera;
 
   // as song goes on, these are used to make the rain more intense throught the song
   // these values are also used for the rain sound effect volume intensity!
@@ -49,28 +49,38 @@ class SchoolPicoStage extends Stage
   {
     super.buildStage();
 
+    camRain = new FunkinCamera('camRain', 0, 0, FlxG.width, FlxG.height, 1);
+    camRain.bgColor = FlxColor.TRANSPARENT;
+    FlxG.cameras.add(camRain, false);
+
+    rainShader.scale = FlxG.height / 260; // adjust this value so that the rain looks nice
+    rainShaderFilter = new ShaderFilter(rainShader);
+    PlayState.instance.camGame.filters = [rainShaderFilter];
+    rainShader.rainColor = 0xFF5D3D3D;
+    rainShader.scale = 6;
+
     if (FlxG.save.data.week6pixel == true) PlayState.instance.camHUD.pixelPerfectRender = true;
     if (FlxG.save.data.week6pixel == true) PlayState.instance.camGame.pixelPerfectRender = true;
 
-    rain = new FlxTiledSprite(Paths.image('weeb/erect/raindrops'), FlxG.width*1.5, FlxG.height*1.5, true, true);
-		rain.setPosition((FlxG.width*1.5)/2, (FlxG.height*1.5)/-2);
-		rain.scrollFactor.set(0, 0);
-		rain.zIndex = 1004;
-		rain.alpha = .9;
-		rain.blend = 11;
-    rain.cameras = [PlayState.instance.camHUD];
+    rainShader.intensity = rainShaderStartIntensity;
 
-		PlayState.instance.currentStage.add(rain);
-		PlayState.instance.currentStage.refresh(); // Apply z-index.
+    var colorShaderBg:AdjustColorShader;
+    colorShaderBg = new AdjustColorShader();
+    
 
-    if (PlayState.instance.currentSong.id.toLowerCase() == "roses")
+    colorShaderBg.brightness = -60;
+    colorShaderBg.hue = -37;
+    colorShaderBg.contrast = 34;
+		colorShaderBg.saturation = -23;
+
+    //(-120, -30, 34, -23);
+
+    for (prop in namedProps)
     {
-      getNamedProp('freaks').idleSuffix = '-scared';
+      //prop.cameras = [camRain, PlayState.instance.camGame];
+      prop.shader = colorShaderBg;
     }
-    else
-    {
-      getNamedProp('freaks').idleSuffix = '';
-    }
+
   }
 
 override function onCreate(event:ScriptEvent):Void
@@ -82,10 +92,10 @@ override function onCreate(event:ScriptEvent):Void
     {
       case "senpai":
         rainShaderStartIntensity = 0;
-        rainShaderEndIntensity = 0.3;
+        rainShaderEndIntensity = 0.4;
       case "roses":
-        rainShaderStartIntensity = 0.3;
-        rainShaderEndIntensity = 0.6;
+        rainShaderStartIntensity = 0.4;
+        rainShaderEndIntensity = 0.8;
       default:
         rainShaderStartIntensity = 0.2;
         rainShaderEndIntensity = 0.4;
@@ -93,29 +103,34 @@ override function onCreate(event:ScriptEvent):Void
 
     rainShader.intensity = rainShaderStartIntensity;
 
-    // set the shader input
-    // rainShader.mask = frameBufferMan.getFrameBuffer("mask");
-    // rainShader.lightMap = frameBufferMan.getFrameBuffer("lightmap");
-
   }
 
-override function onUpdate(event:UpdateScriptEvent)
+  var step:Float = 0;
+
+  override function onUpdate(event:UpdateScriptEvent)
   {
     super.onUpdate(event);
 
-    if (FlxG.sound.music != null)
+    step += 1*Conductor.instance.beatLengthMs / 1000 * 16;
+
+    if(step > 24)
     {
-      var remappedIntensityValue:Float = FlxMath.remapToRange(Conductor.instance.songPosition, 0, FlxG.sound.music.length, rainShaderStartIntensity,
+      if (FlxG.sound.music != null)
+      {
+        var remappedIntensityValue:Float = FlxMath.remapToRange(Conductor.instance.songPosition, 0, FlxG.sound.music.length, rainShaderStartIntensity,
         rainShaderEndIntensity);
-      rainShader.intensity = remappedIntensityValue;
-      rainShader.updateViewInfo(FlxG.width, FlxG.height, FlxG.camera);
-      rainShader.update(event.elapsed);
-    }
-    else
-    {
-      rainShader.intensity = rainShaderStartIntensity;
-      rainShader.updateViewInfo(FlxG.width, FlxG.height, FlxG.camera);
-      rainShader.update(event.elapsed);
+        rainShader.intensity = remappedIntensityValue;
+        rainShader.updateViewInfo(FlxG.width, FlxG.height, PlayState.instance.camGame);
+        rainShader.update(event.elapsed);
+        step = 0;
+      }
+      else
+      {
+        rainShader.intensity = rainShaderStartIntensity;
+        rainShader.updateViewInfo(FlxG.width, FlxG.height, PlayState.instance.camGame);
+        rainShader.update(event.elapsed);
+        step = 0;
+      }
     }
   }
 
@@ -123,7 +138,7 @@ override function onUpdate(event:UpdateScriptEvent)
   {
     super.onGameOver(event);
     // Make it so the rain shader doesn't show over the game over screen
-    FlxG.camera.filters = [];
+    camRain.filters = [];
   }
 
   override function onSongRetry(event:ScriptEvent):Void
@@ -132,7 +147,7 @@ override function onUpdate(event:UpdateScriptEvent)
     // Make it so the rain shader doesn't show over the game over screen
     // FlxG.camera.setFilters([rainShaderFilter]);
 
-    FlxG.camera.filters = [rainShaderFilter];
+    camRain.filters = [rainShaderFilter];
   }
 
   override function addCharacter(character:BaseCharacter, charType:CharacterType):Void
@@ -142,11 +157,13 @@ override function onUpdate(event:UpdateScriptEvent)
     trace('Applied stage shader to ' + character.characterName);
 
     var rim = new DropShadowShader();
-    rim.setAdjustColor(-66, -10, 24, -23);
+    //rim.setAdjustColor(-66, -20, 24, -23);
+    rim.setAdjustColor(-120, -30, 34, -23);
     rim.antialiasAmt = 0;
-    rim.color = 0xFF52351d;
+    rim.color = 0xFF453468;
     rim.attachedSprite = character;
-    rim.distance = 5;
+    rim.strength = .9;
+    rim.distance = 0;
 
     switch (charType)
     {

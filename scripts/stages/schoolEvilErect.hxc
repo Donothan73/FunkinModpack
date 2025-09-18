@@ -9,6 +9,9 @@ import flixel.FlxG;
 import funkin.graphics.shaders.AdjustColorShader;
 import openfl.filters.ShaderFilter;
 import funkin.Conductor;
+import flixel.math.FlxMath;
+
+import funkin.graphics.shaders.RuntimeRainShader;
 
 class SchoolEvilErectStage extends Stage
 {
@@ -27,6 +30,14 @@ class SchoolEvilErectStage extends Stage
 
   var wiggleChar:FlxRuntimeShader = new WiggleEffectRuntime(waveSpeed, waveFreq, 0.007, WiggleEffectType.DREAMY);
 	var wiggleCharFilter:ShaderFilter;
+
+  var rainShader:RuntimeRainShader = new RuntimeRainShader(Assets.getText(Paths.frag('rainPixel')));
+  var rainShaderFilter:ShaderFilter;
+
+  // as song goes on, these are used to make the rain more intense throught the song
+  // these values are also used for the rain sound effect volume intensity!
+  var rainShaderStartIntensity:Float;
+  var rainShaderEndIntensity:Float;
 
   override function buildStage()
   {
@@ -50,6 +61,21 @@ class SchoolEvilErectStage extends Stage
 		//FlxG.camera.filters = [wiggleCharFilter];
     PlayState.instance.camHUD.filters = [wiggleCharFilter];
     PlayState.instance.camGame.filters = [wiggleCharFilter];
+
+    if (PlayState.instance.currentVariation == 'pico')
+    {
+      rainShader.scale = FlxG.height / 260; // adjust this value so that the rain looks nice
+      rainShaderFilter = new ShaderFilter(rainShader);
+      PlayState.instance.camGame.filters = [rainShaderFilter, wiggleCharFilter];
+      rainShader.rainColor = 0xFF5D3D3D;
+      rainShader.scale = 6;
+
+      rainShaderStartIntensity = 0.0;
+      rainShaderEndIntensity = 1.0;
+
+      rainShader.intensity = rainShaderStartIntensity;
+      
+    }
   }
 
   override function addCharacter(character:BaseCharacter, charType:CharacterType):Void
@@ -72,15 +98,46 @@ class SchoolEvilErectStage extends Stage
       case CharacterType.GF:
         character.shader = colorShader;
 
+        if (character.characterId == 'nene-pixel')
+        {
+          character.scriptCall('addHellShaders');
+          character.x -= 55;
+          character.y -= 155;
+        }
+
       case CharacterType.DAD:
         
       default:
     }
   }
 
+  var step:Float = 0;
+
   override function onUpdate(event:UpdateScriptEvent)
   {
     super.onUpdate(event);
+
+    step += 1*Conductor.instance.beatLengthMs / 1000 * 16;
+
+    if(step > 24)
+    {
+      if (FlxG.sound.music != null)
+      {
+        var remappedIntensityValue:Float = FlxMath.remapToRange(Conductor.instance.songPosition, 0, FlxG.sound.music.length, rainShaderStartIntensity,
+        rainShaderEndIntensity);
+        rainShader.intensity = remappedIntensityValue;
+        rainShader.updateViewInfo(FlxG.width, FlxG.height, PlayState.instance.camGame);
+        rainShader.update(event.elapsed);
+        step = 0;
+      }
+      else
+      {
+        rainShader.intensity = rainShaderStartIntensity;
+        rainShader.updateViewInfo(FlxG.width, FlxG.height, PlayState.instance.camGame);
+        rainShader.update(event.elapsed);
+        step = 0;
+      }
+    }
 
     if (wiggleBack != null)
     {

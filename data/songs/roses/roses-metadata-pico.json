@@ -6,12 +6,12 @@
   "offsets": {
     "instrumental": 0.0,
     "altInstrumentals": {
-      "": 4000.0
+      "default": -4000.0
     },
     "altVocals": {
       "": {
-        "senpai-angry": 0.0,
-        "pico-pixel": 0.0
+        "senpai-angry": -4000.0,
+        "pico-pixel": -4000.0
       }
     }
   },

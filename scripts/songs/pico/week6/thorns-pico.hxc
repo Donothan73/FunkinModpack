@@ -1,25 +1,24 @@
-import funkin.play.song.Song;
-import funkin.play.PlayState;
-import funkin.Preferences;
-import flixel.FlxSprite;
-import funkin.graphics.FunkinSprite;
-import flixel.FlxG;
-import funkin.play.PlayStatePlaylist;
-import funkin.audio.FunkinSound;
-import flixel.tweens.FlxTween;
-import funkin.save.Save;
 import flixel.tweens.FlxEase;
-import funkin.ui.options.PreferencesMenu;
+import funkin.graphics.FunkinSprite;
+import flixel.tweens.FlxTween;
+import funkin.play.cutscene.dialogue.DialogueBox;
+import funkin.play.PlayState;
+import funkin.play.PlayStatePlaylist;
+import funkin.play.song.Song;
+import flixel.FlxG;
+import funkin.save.Save;
+import flixel.FlxSprite;
+import flixel.util.FlxTimer;
+import funkin.effects.RetroCameraFade;
 import funkin.data.story.level.LevelRegistry;
-import funkin.Conductor;
 
-class RosesPicoSong extends Song
+class ThornsPicoMixSong extends Song
 {
   var hasPlayedCutscene:Bool;
 
   public function new()
   {
-    super('roses',
+    super('thorns',
       {
         variation: 'pico'
       });
@@ -80,33 +79,52 @@ class RosesPicoSong extends Song
 
       event.cancel(); // CANCEL THE COUNTDOWN!
 
-      // Play a SFX
-      FunkinSound.playOnce(Paths.sound('ANGRY_TEXT_BOX'), 1.0);
+      //  pausing is breaking a lot in the erect stage for some reason disabling this for the sake of not running into issues atm
+      //  PlayState.instance.currentStage.pause();
 
-      // ERIC: There's a known bug where, on the School stage, pausing the stage animations then trying
-      // to restart them causes the animations to freeze.
-      // TODO: Commenting out this line causes the animations to work but they play even during the dialogue, which is supposed to pause everything.
-      // PlayState.instance.currentStage.pause();
-
-      startDialogue();
+      transitionToDialogue();
     }
-    else
-    {
-      if (PlayState.instance.currentInstrumental == '') //if we using the bf instrumental
+  }
+
+  function transitionToDialogue()
+  {
+    trace('Transitioning to dialogue.');
+
+    PlayState.instance.disableKeys = true;
+
+    PlayState.instance.camCutscene.visible = true;
+
+    var black:FlxSprite = new FunkinSprite(-20, -20).makeSolidColor(FlxG.width * 1.5, FlxG.height * 1.5, 0xFF000000);
+    black.cameras = [PlayState.instance.camCutscene];
+    black.zIndex = 1000000;
+    PlayState.instance.add(black);
+
+    black.alpha = 1.0;
+
+    var tweenFunction = function(x) {
+      var xSnapped = Math.floor(x * 8) / 8;
+      // black.alpha = 1.0 - xSnapped;
+    };
+
+    new FlxTimer().start(0.25, _ -> {
+      PlayState.instance.remove(black);
+      RetroCameraFade.fadeBlack(PlayState.instance.camGame, 12, 2);
+    });
+
+    FlxTween.num(0.0, 1.0, 2.0,
       {
-        Conductor.instance.instrumentalOffset = 4000; //changes chart?
-      }
-    }
+        ease: FlxEase.linear,
+        startDelay: 0.25,
+        onComplete: function(input) {
+          startDialogue();
+        }
+      }, tweenFunction);
   }
 
   function startDialogue()
   {
-    var targetDialogue = 'roses-pico';
-
-    if (!Preferences.naughtyness) targetDialogue += "-censored";
-
-    trace('Playing dialogue...');
-    PlayState.instance.startConversation(targetDialogue);
+    PlayState.instance.disableKeys = false;
+    PlayState.instance.startConversation('thorns-pico');
   }
 
   /**
@@ -132,6 +150,7 @@ class RosesPicoSong extends Song
   public override function onDialogueEnd()
   {
     // We may need to wait for the outro to play.
+    PlayState.instance.currentStage.resume();
     Countdown.performCountdown();
   }
 }

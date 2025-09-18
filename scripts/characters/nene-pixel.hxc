@@ -195,6 +195,21 @@ class NenePixelCharacter extends SparrowCharacter
     abotSpeaker.shader = abotSpeakerShader;
   }
 
+   function addHellShaders()
+  {
+    var noRimShader = new AdjustColorShader();
+    noRimShader.brightness = -80;
+    noRimShader.hue = -40;
+    noRimShader.contrast = 7;
+		noRimShader.saturation = -21;
+
+    abot.shader = noRimShader;
+    abotBack.shader = noRimShader;
+    abotHead.shader = noRimShader;
+    abotViz.shader = noRimShader;
+    abotSpeaker.shader = noRimShader;
+  }
+
   function dance(forceRestart:Bool)
   {
     if (abotSpeaker != null) abotSpeaker.animation.play("danceLeft", true);

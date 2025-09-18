@@ -18,6 +18,7 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxTimer;
 import flixel.util.FlxTimerManager;
+import funkin.data.story.level.LevelRegistry;
 
 class StressPicoMixSong extends Song
 {
@@ -34,11 +35,42 @@ class StressPicoMixSong extends Song
     hasPlayedCutscene = false;
   }
 
+  public override function listAltInstrumentalIds(difficultyId:String, variationId:String):Array<String>
+  {
+    var results:Array<String> = super.listAltInstrumentalIds(difficultyId, 'default');
+
+    if (Save.instance.hasBeatenSong(this.id, null, this.variation)) 
+    {
+      results.push('');
+      return results;
+    }
+    else
+    {
+      return;
+    }
+  }
+
   public override function isSongNew(currentDifficulty:String, currentVariation:String):Bool
   {
-    if (currentVariation == 'pico') return !Save.instance.hasBeatenSong(this.id, null, this.variation);
+    //if (currentVariation == 'pico') return !Save.instance.hasBeatenSong(this.id, null, this.variation);
 
-    return false;
+    //return false;
+
+    return !Save.instance.hasBeatenSong(this.id, null, this.variation);
+  }
+
+  public function listDifficulties(variationId:String, variationIds:Array<String>, showLocked:Bool, showHidden:Bool):Array<String>
+  {
+    if (showLocked || showHidden) return super.listDifficulties(variationId, variationIds);
+    
+    if (LevelRegistry.instance.fetchEntry('week7').isUnlocked() && Save.instance.hasBeatenSong(this.id, null, ''))
+    {
+      return super.listDifficulties(variationId, variationIds);
+    }
+    else
+    {
+      return[];
+    }
   }
 
   public override function onCountdownStart(event:CountdownScriptEvent):Void

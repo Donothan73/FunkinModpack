@@ -3,6 +3,7 @@ import funkin.play.PlayState;
 import funkin.play.song.Song;
 import flixel.FlxG;
 import funkin.save.Save;
+import funkin.data.story.level.LevelRegistry;
 
 class BopeeboPicoMixSong extends Song
 {
@@ -19,9 +20,15 @@ class BopeeboPicoMixSong extends Song
   {
     var results:Array<String> = super.listAltInstrumentalIds(difficultyId, 'default');
 
-    results.push('');
-
-    return results;
+    if (Save.instance.hasBeatenSong(this.id, null, this.variation)) 
+    {
+      results.push('');
+      return results;
+    }
+    else
+    {
+      return;
+    }
   }
 
   public override function isSongNew(currentDifficulty:String, currentVariation:String):Bool
@@ -33,14 +40,17 @@ class BopeeboPicoMixSong extends Song
     return !Save.instance.hasBeatenSong(this.id, null, this.variation);
   }
 
-  public function listDifficulties(variationId:String, variationIds:Array<String>, showLocked:Bool):Array<String>
+  public function listDifficulties(variationId:String, variationIds:Array<String>, showLocked:Bool, showHidden:Bool):Array<String>
   {
-    if (showLocked || Save.instance.hasBeatenLevel('week1'))
+    if (showLocked || showHidden) return super.listDifficulties(variationId, variationIds);
+    
+    if (LevelRegistry.instance.fetchEntry('week1').isUnlocked() && Save.instance.hasBeatenSong(this.id, null, ''))
     {
       return super.listDifficulties(variationId, variationIds);
     }
-
-    // Hide all difficulties if the player has not beaten the week.
-    return [];
+    else
+    {
+      return[];
+    }
   }
 }

@@ -4,23 +4,29 @@
   "artist": "Kawai Sprite",
   "charter": "ninjamuffin99 + MtH",
   "playData": {
-    "stage": "schoolEvil",
+    "stage": "schoolEvilErect",
     "characters": {
-      "player": "bf-pixel",
-      "girlfriend": "gf-pixel",
+      "player": "pico-pixel",
+      "girlfriend": "nene-pixel",
       "opponent": "spirit",
       "instrumental": "",
-      "altInstrumentals": []
+      "altInstrumentals": [],
+      "opponentVocals": [
+        "spirit"
+      ],
+      "playerVocals": [
+        "bf-pixel"
+      ]
     },
     "ratings": { "easy": 2, "normal": 3, "hard": 4 },
-    "songVariations": ["erect", "pico"],
+    "songVariations": [],
     "difficulties": ["easy", "normal", "hard"],
     "noteStyle": "pixel",
-    "album": "week6",
+    "album": "volume4",
     "previewStart": 0,
     "previewEnd": 15000
   },
-  "songName": "Thorns",
+  "songName": "Thorns (Pico Mix)",
   "timeChanges": [{ "d": 4, "n": 4, "t": -1, "bt": [4, 4, 4, 4], "bpm": 190 }],
   "generatedBy": "Chart Editor Import (FNF Legacy)"
 }

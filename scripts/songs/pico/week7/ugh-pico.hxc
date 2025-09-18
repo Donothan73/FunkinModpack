@@ -1,16 +1,14 @@
-
 import funkin.play.PlayState;
 import funkin.play.song.Song;
 import flixel.FlxG;
 import funkin.save.Save;
 import funkin.data.story.level.LevelRegistry;
 
-class DadBattlePicoMixSong extends Song
+class UghPicoMixSong extends Song
 {
-
-  public function new()
+  function new()
   {
-    super('dadbattle',
+    super('ugh',
       {
         variation: 'pico'
       });
@@ -44,7 +42,7 @@ class DadBattlePicoMixSong extends Song
   {
     if (showLocked || showHidden) return super.listDifficulties(variationId, variationIds);
     
-    if (LevelRegistry.instance.fetchEntry('week1').isUnlocked() && Save.instance.hasBeatenSong(this.id, null, ''))
+    if (LevelRegistry.instance.fetchEntry('week7').isUnlocked() && Save.instance.hasBeatenSong(this.id, null, ''))
     {
       return super.listDifficulties(variationId, variationIds);
     }

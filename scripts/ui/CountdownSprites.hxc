@@ -8,6 +8,7 @@ import funkin.play.notes.notestyle.NoteStyle;
 import funkin.data.notestyle.NoteStyleRegistry;
 import funkin.Conductor;
 import flixel.util.FlxTimer;
+import flixel.FlxG;
 
 
 class CountdownSprites extends Module 
@@ -35,9 +36,9 @@ class CountdownSprites extends Module
 		if (noteStyleId == 'funkin')
 		{
 			styleMatch = true;
-			readySprite = ScriptedFlxAtlasSprite.init('CountdownSprite', 0, 0, 'READY');
-			setSprite = ScriptedFlxAtlasSprite.init('CountdownSprite', 0, 0, 'SET');
-			goSprite = ScriptedFlxAtlasSprite.init('CountdownSprite', 0, 0, 'GO');
+			readySprite = ScriptedFlxAtlasSprite.init('CountdownSprite', FlxG.width/2, FlxG.height/2, 'READY');
+			setSprite = ScriptedFlxAtlasSprite.init('CountdownSprite', FlxG.width/2, FlxG.height/2, 'SET');
+			goSprite = ScriptedFlxAtlasSprite.init('CountdownSprite', FlxG.width/2, FlxG.height/2, 'GO');
 		}
 	}
 
@@ -50,24 +51,16 @@ class CountdownSprites extends Module
 			case 'GO':
 				PlayState.instance.currentStage.add(goSprite);
 				goSprite.cameras = [PlayState.instance.camCutscene];
-				//goSprite.screenCenter();
-				goSprite.x = goSprite.x + 40;
-				goSprite.y = goSprite.y - 225;
 				goSprite.scriptCall('playCutscene');
 
 			case 'ONE':
 				PlayState.instance.currentStage.add(setSprite);
 				setSprite.cameras = [PlayState.instance.camCutscene];
-				//setSprite.screenCenter();
-				setSprite.x = setSprite.x - 150;
-				setSprite.y = setSprite.y - 30;
 				setSprite.scriptCall('playCutscene');
 
 			case 'TWO':
 				PlayState.instance.currentStage.add(readySprite);
 				readySprite.cameras = [PlayState.instance.camCutscene];
-				//readySprite.screenCenter();
-				readySprite.x = readySprite.x - 225;
 				readySprite.scriptCall('playCutscene');
 		}	
 	}

@@ -9,7 +9,8 @@
       "player": "bf-car",
       "girlfriend": "gf-car",
       "opponent": "mom-car",
-      "instrumental": "erect"
+      "instrumental": "erect",
+      "altInstrumentals": [""]
     },
     "stage": "limoRideErect",
     "noteStyle": "funkin",

@@ -1,0 +1,52 @@
+import funkin.play.notes.ScriptedStrumline;
+import funkin.play.notes.Strumline;
+import flixel.FlxG;
+import funkin.play.notes.notestyle.NoteStyle;
+import flixel.group.FlxTypedGroup;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
+import flixel.util.FlxSort;
+import funkin.graphics.FunkinSprite;
+import funkin.play.notes.NoteHoldCover;
+import funkin.play.notes.NoteSplash;
+import funkin.play.notes.NoteSprite;
+import funkin.play.notes.SustainTrail;
+import funkin.play.notes.NoteVibrationsHandler;
+import funkin.util.SortUtil;
+import funkin.util.GRhythmUtil;
+import funkin.play.notes.notekind.NoteKind;
+import funkin.play.notes.notekind.NoteKindManager;
+import flixel.math.FlxPoint;
+
+class BlazinStrumline extends Strumline
+{
+    public function new(noteStyle:NoteStyle, isPlayer:Bool, ?scrollSpeed:Float)
+    {
+        super('funkin', isPlayer, scrollSpeed);
+
+        customPositionData = true;
+
+        set_y(150);
+    }
+
+    public override function setNoteSpacing(multiplier:Float = 1):Void
+    {
+        this.y = 800;
+
+        for (note in notes.members)
+        {
+            note.yOffset = 100*notes.indexOf(note) + 200 * multiplier;
+        }
+    }
+
+    public override function update(elapsed:Float):Void
+    {
+        super.update(elapsed);
+
+        this.y = 800;
+  }
+
+    public function vwooshNotes():Void
+    {
+    }
+}

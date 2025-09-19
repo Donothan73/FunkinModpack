@@ -1,68 +1,32 @@
 import funkin.play.PlayState;
+import funkin.play.PauseSubState;
 import funkin.modding.module.Module;
 import funkin.Paths;
-import flixel.addons.display.FlxTiledSprite;
+import flixel.FlxSprite;
 import flixel.FlxG;
 
 
 class PauseGraphic extends Module 
 {
-	var pauseImage1:FlxTiledSprite;
-	var pauseImage2:FlxTiledSprite;
-	var pauseImage3:FlxTiledSprite;
+	var pauseSubState:PauseSubState;
 
 	function new ()
 	{
 	        super("PauseGraphic");
 	}
 
-  	public function onPause(event:PauseScriptEvent) 
+	public function onPause(event:PauseScriptEvent) 
 	{
-		pauseImage1 = new FlxTiledSprite(Paths.image('pause', "shared"), 697*5, 255, true, false);
-		pauseImage1.setPosition(-650, -25);
-		pauseImage1.scale.set(0.25, 0.25);
-		pauseImage1.alpha = .95;
-		pauseImage1.blend = 1;
-		pauseImage1.velocity.x = 170;
-		pauseImage1.scrollFactor.set(0, 0);
-		pauseImage1.cameras = [PlayState.instance.camCutscene];
-		//PlayState.instance.add(pauseImage1);
+		event.stopPropagation();
 
-		pauseImage2 = new FlxTiledSprite(Paths.image('pause', "shared"), 697*5, 255, true, false);
-		pauseImage2.setPosition(-650, 225);
-		pauseImage2.scale.set(0.25, 0.25);
-		pauseImage2.alpha = .95;
-		pauseImage2.blend = 1;
-		pauseImage2.velocity.x = 170;
-		pauseImage2.scrollFactor.set(0, 0);
-		pauseImage2.cameras = [PlayState.instance.camCutscene];
-		//PlayState.instance.add(pauseImage2);
+		pauseSubState = PlayState.instance.subState;
 
-		pauseImage3 = new FlxTiledSprite(Paths.image('pause', "shared"), 697*5, 255, true, false);
-		pauseImage3.setPosition(-650, 480);
-		pauseImage3.scale.set(0.25, 0.25);
-		pauseImage3.alpha = .95;
-		pauseImage3.blend = 1;
-		pauseImage3.velocity.x = 170;
-		pauseImage3.scrollFactor.set(0, 0);
-		pauseImage3.cameras = [PlayState.instance.camCutscene];
-		//PlayState.instance.add(pauseImage3);
+		var graphic = new FlxSprite(0,0).loadGraphic(Paths.image('pause', 'shared'));
 
-	}
+		FlxG.state.add(graphic);
 
-  	public function onResume(event:ScriptEvent) 
-	{
-	pauseImage1.destroy();
-	pauseImage2.destroy();
-	pauseImage3.destroy();
-	}
+		graphic.zIndex = 100000;
+		FlxG.state.refresh();
 
-  	function onUpdate(event:UpdateScriptEvent):Void
-	{
-		super.onUpdate(event);
-
-		if(pauseImage1 != null) pauseImage1.scrollX += FlxG.elapsed * 256*1;
-		if(pauseImage2 != null) pauseImage2.scrollX += FlxG.elapsed * 256*-1;
-		if(pauseImage3 != null) pauseImage3.scrollX += FlxG.elapsed * 256*1;
 	}
 }

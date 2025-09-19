@@ -20,6 +20,10 @@ class PhillyNiceSong extends Song
     {
       var hasBeatenPicoMix = Save.instance.hasBeatenSong(this.id, null, 'pico');
       if (!hasBeatenPicoMix) results.remove('pico');
+
+      var hasBeatenErectRemix = Save.instance.hasBeatenSong(this.id, 'erect', 'erect');
+      if (hasBeatenErectRemix == false) hasBeatenErectRemix = Save.instance.hasBeatenSong(this.id, 'nightmare', 'erect');
+      if (!hasBeatenErectRemix) results.remove('erect');
     
     }
 

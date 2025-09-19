@@ -20,10 +20,15 @@ class HighSong extends Song
     {
       var hasBeatenPicoMix = Save.instance.hasBeatenSong(this.id, null, 'pico');
       if (!hasBeatenPicoMix) results.remove('pico');
+
+      var hasBeatenErectRemix = Save.instance.hasBeatenSong(this.id, 'erect', 'erect');
+      if (hasBeatenErectRemix == false) hasBeatenErectRemix = Save.instance.hasBeatenSong(this.id, 'nightmare', 'erect');
+      if (hasBeatenErectRemix) results.remove('erect');
     
     }
 
     return results;
+    //return ['erect'];
   }
 
   public override function isSongNew(currentDifficulty:String, currentVariation:String):Bool
@@ -32,6 +37,33 @@ class HighSong extends Song
 
     return false;
   }
+
+  function onSongStart(event:ScriptEvent):Void
+  {
+    super.onSongStart(event);
+    
+    if (FlxG.sound.music != null)
+    {
+      if (PlayState.instance.currentInstrumental == 'erect') //if we using the erect instrumental
+      {
+        FlxG.sound.music.volume = 0.675;
+      }
+    }
+  }
+
+  function onSongRetry(event:ScriptEvent)
+  {
+    super.onSongRetry(event);
+
+    if (FlxG.sound.music != null)
+    {
+      if (PlayState.instance.currentInstrumental == 'erect') //if we using the erect instrumental
+      {
+        FlxG.sound.music.volume = 0.675;
+      }
+    }
+  }
+
   
   public function listDifficulties(variationId:String, variationIds:Array<String>, showLocked:Bool, showHidden:Bool):Array<String>
   {

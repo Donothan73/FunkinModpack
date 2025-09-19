@@ -7,6 +7,8 @@ import funkin.play.cutscene.CutsceneType;
 import funkin.play.PlayStatePlaylist;
 import funkin.save.Save;
 import funkin.data.story.level.LevelRegistry;
+import funkin.play.notes.Strumline;
+import funkin.play.notes.ScriptedStrumline;
 
 /**
  * Apply middlescroll to the song.
@@ -93,10 +95,16 @@ class BlazinSong extends Song
 
   function hideOpponentStrumline()
   {
+
     var opponentStrumline:FlxSprite = PlayState.instance.opponentStrumline;
     if (opponentStrumline != null)
     {
       for (arrow in opponentStrumline.members)
+      {
+        arrow.visible = false;
+      }
+
+      for (arrow in PlayState.instance.playerStrumline.members)
       {
         arrow.visible = false;
       }
@@ -108,6 +116,7 @@ class BlazinSong extends Song
     // This is a song gimmick we are never making middlescroll an option.
 
     var playerStrumline:FlxSprite = PlayState.instance.playerStrumline;
+
     if (playerStrumline != null)
     {
       playerStrumline.x = FlxG.width / 2 - playerStrumline.width / 2;

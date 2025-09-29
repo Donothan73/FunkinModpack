@@ -21,6 +21,7 @@ class UghPicoMixSong extends Song
     if (Save.instance.hasBeatenSong(this.id, null, this.variation)) 
     {
       results.push('');
+      results.push('loner');
       return results;
     }
     else

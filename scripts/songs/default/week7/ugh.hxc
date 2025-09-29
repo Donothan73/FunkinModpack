@@ -29,9 +29,10 @@ class UghSong extends Song
   var cutsceneSkipped:Bool = false;
   var canSkipCutscene:Bool = false;
   var distortoMus:FunkinSound;
-  var tankCutscene;
+  var tankCutscene:ScriptedFlxAtlasSprite;
   var dialogue:FunkinSound;
   var introSound:FunkinSound;
+  
 
   var debugTesting:Bool = false;
 
@@ -109,6 +110,8 @@ class UghSong extends Song
     {
       var hasBeatenPicoMix = Save.instance.hasBeatenSong(this.id, null, 'pico');
       if (!hasBeatenPicoMix) results.remove('pico');
+
+      results.push('loner');
     
     }
 
@@ -166,7 +169,7 @@ class UghSong extends Song
     });
 
     if (!cutsceneSkipped) PlayState.instance.currentStage.getDad().visible = false;
-    if (!cutsceneSkipped) var tankCutscene:ScriptedFlxAtlasSprite = ScriptedFlxAtlasSprite.init('UghsIntroTankman', 0, 0);
+    tankCutscene = ScriptedFlxAtlasSprite.init('UghsIntroTankman', 0, 0);
     if (!cutsceneSkipped) tankCutscene.x = tankCutscene.x + 432;
     if (!cutsceneSkipped) if (!cutsceneSkipped) tankCutscene.y = tankCutscene.y + 545;
     if (!cutsceneSkipped) tankCutscene.zIndex = PlayState.instance.currentStage.getDad().zIndex;

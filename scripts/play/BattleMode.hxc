@@ -148,7 +148,7 @@ class BattleMode extends Module
 				case 'spirit':
 					opponentDrain = -0.165;
 				case 'tankman':
-					opponentDrain = -0.155;
+					opponentDrain = -0.125;
 				case 'tankman-bloody':
 					opponentDrain = -0.125;
 				case 'darnell':

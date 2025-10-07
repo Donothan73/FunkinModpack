@@ -1,0 +1,144 @@
+{
+  "version": "1.0.0",
+  "name": "Tankman Battlefield [Erect]",
+  "cameraZoom": 0.60,
+  "props": [
+    {
+      "name": "bg",
+      "assetPath": "erect/bgFlats",
+      "position": [-985, -805],
+      "scale": [1.15, 1.15],
+      "zIndex": 10,
+      "scroll": [1, 1]
+    },
+    {
+      "name": "bottles",
+      "assetPath": "erect/barBottles",
+      "position": [-92, -2],
+      "scale": [1.15, 1.15],
+      "zIndex": 11,
+      "scroll": [0.95, 1]
+    },
+    {
+      "name": "barLights1",
+      "alpha": 0.5,
+      "assetPath": "erect/barGrey",
+      "position": [-92, -2],
+      "scale": [1.15, 1.15],
+      "zIndex": 12,
+      "scroll": [0.95, 1]
+    },
+    {
+      "name": "barLights2",
+      "alpha": 0.5,
+      "assetPath": "erect/barGrey",
+      "position": [-92, -2],
+      "scale": [1.15, 1.15],
+      "zIndex": 13,
+      "scroll": [0.95, 1]
+    },
+    {
+      "name": "bar",
+      "assetPath": "erect/bar",
+      "position": [-152, -799],
+      "scale": [1.15, 1.15],
+      "zIndex": 14,
+      "scroll": [0.95, 1]
+    },
+    {
+      "name": "topBlend1",
+      "alpha": 0.5,
+      "assetPath": "erect/topBlend1",
+      "position": [-148, -202],
+      "scale": [1.15, 1.15],
+      "zIndex": 15,
+      "scroll": [0.95, 1]
+    },
+    {
+      "name": "topBlend2",
+      "alpha": 0.5,
+      "assetPath": "erect/topBlend2",
+      "position": [-148, -202],
+      "scale": [1.15, 1.15],
+      "zIndex": 16,
+      "scroll": [0.95, 1]
+    },
+    {
+      "name": "vehicles",
+      "assetPath": "erect/vehicles",
+      "position": [-1061, -178],
+      "scale": [1.15, 1.15],
+      "zIndex": 17,
+      "scroll": [0.975, 1]
+    },
+    {
+      "name": "sniper",
+      "assetPath": "erect/sniper",
+      "zIndex": 20,
+      "position": [-127, 349],
+      "scale": [1.15, 1.15],
+      "scroll": [0.95, 1],
+      "danceEvery": 2,
+      "animations": [
+        {
+          "name": "idle",
+          "prefix": "Tankmanidlebaked instance 1",
+          "looped": false
+        },
+        {
+          "name": "sip",
+          "prefix": "tanksippingBaked instance 1",
+          "looped": false
+        }
+      ],
+      "startingAnimation": "idle"
+    },
+    {
+      "name": "guy",
+      "assetPath": "erect/guy",
+      "zIndex": 20,
+      "position": [1398, 407],
+      "scale": [1.15, 1.15],
+      "scroll": [0.95, 1],
+      "danceEvery": 2,
+      "animations": [
+        {
+          "name": "idle",
+          "prefix": "BLTank2 instance 1",
+          "looped": false
+        }
+      ],
+      "startingAnimation": "idle"
+    },
+    {
+      "name": "tankBricks",
+      "assetPath": "erect/bricksGround",
+      "position": [465, 760],
+      "scroll": [0.975, 1],
+      "scale": [1.15, 1.15],
+      "zIndex": 101,
+      "flipX": true
+    }
+  ],
+  "characters": {
+    "bf": 
+    {
+      "zIndex": 100,
+      "position": [1340.5, 885],
+      "cameraOffsets": [-220, -150]
+    },
+    "dad": 
+    {
+      "zIndex": 100,
+      "position": [230.5, 996],
+      "cameraOffsets": [250, -150]
+    },
+    "gf": 
+    { 
+    "zIndex": 100,
+    "position": [800.5, 775],
+    "cameraOffsets": [0, 0]
+    }
+  },
+  "directory": "week7"
+}

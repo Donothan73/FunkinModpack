@@ -106,7 +106,7 @@ class BlazinSong extends Song
 
       for (arrow in PlayState.instance.playerStrumline.members)
       {
-        arrow.visible = false;
+        //arrow.visible = false;
       }
     }
   }

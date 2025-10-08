@@ -139,14 +139,14 @@
       "name": "tankmanChill",
       "assetPath": "tableGuy",
       "zIndex": 102,
-      "position": [-475, 650],
+      "position": [1335, 463],
       "scale": [1, 1],
-      "scroll": [1.7, 1.5],
+      "scroll": [1.0, 1.0],
       "danceEvery": 1,
       "animations": [
         {
           "name": "idle",
-          "prefix": "bop",
+          "prefix": "tankman right table bop",
           "looped": false
         }
       ],

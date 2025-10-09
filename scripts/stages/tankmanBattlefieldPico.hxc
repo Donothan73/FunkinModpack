@@ -6,12 +6,16 @@ import funkin.graphics.shaders.DropShadowShader;
 import funkin.play.character.CharacterType;
 import openfl.display.BitmapData;
 import flixel.graphics.FlxGraphic;
+import funkin.graphics.shaders.AdjustColorShader;
 
-class TankmanBattlefieldErectStage extends Stage
+class TankmanBattlefieldPicoStage extends Stage
 {
+  var adjustColor:AdjustColorShader;
+
   function new()
   {
-    super('tankmanBattlefieldErect');
+    super('tankmanBattlefieldPico');
+    
   }
 
   function onCreate(event:ScriptEvent):Void
@@ -27,6 +31,32 @@ class TankmanBattlefieldErectStage extends Stage
     getBoyfriend().shader = null;
   }
 
+  public function buildStage()
+  {
+    super.buildStage();
+
+    adjustColor = new AdjustColorShader();
+
+    adjustColor.hue = 25;
+    adjustColor.saturation = -25;
+    adjustColor.brightness = -55;
+    adjustColor.contrast = 20;
+
+    var tankmen = ['tankmanAudience0', 'tankmanAudience2', 'tankmanAudience4', 'tankmanAudience5'];
+
+    for (i in tankmen)
+    {
+      if (FlxG.random.bool(80))
+      {
+        getNamedProp(i).shader = adjustColor;
+      }
+      else
+      {
+        getNamedProp(i).visible = false;
+      }
+    }
+  }
+
   override function addCharacter(character:BaseCharacter, charType:CharacterType):Void
   {
     // Apply the shader automatically to each character as it gets added.
@@ -37,6 +67,7 @@ class TankmanBattlefieldErectStage extends Stage
     rim.setAdjustColor(-46, -38, -25, -20);
     rim.color = 0xFFDFEF3C;
     character.shader = rim;
+    rim.strength = 1.0;
     rim.attachedSprite = character;
 
     switch (charType)

@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "name": "Tankman Battlefield [Erect]",
+  "name": "Tankman Battlefield [Pico]",
   "cameraZoom": 0.60,
   "props": [
     {
@@ -70,6 +70,74 @@
       "scale": [1.15, 1.15],
       "zIndex": 17,
       "scroll": [0.975, 1]
+    },
+    {
+      "name": "tankmanAudience0",
+      "assetPath": "tank0",
+      "zIndex": 1000,
+      "position": [-623, 915],
+      "scale": [1, 1],
+      "scroll": [1.7, 1.5],
+      "danceEvery": 1,
+      "animations": [
+        {
+          "name": "idle",
+          "prefix": "fg tankhead far right instance 1",
+          "looped": false
+        }
+      ],
+      "startingAnimation": "idle"
+    },
+    {
+      "name": "tankmanAudience2",
+      "assetPath": "tank2",
+      "zIndex": 1002,
+      "position": [360, 1043],
+      "scale": [1, 1],
+      "scroll": [1.5, 1.5],
+      "danceEvery": 1,
+      "animations": [
+        {
+          "name": "idle",
+          "prefix": "foreground man 3 instance 1",
+          "looped": false
+        }
+      ],
+      "startingAnimation": "idle"
+    },
+    {
+      "name": "tankmanAudience4",
+      "assetPath": "tank4",
+      "zIndex": 1004,
+      "position": [1192, 1030],
+      "scale": [1, 1],
+      "scroll": [1.5, 1.5],
+      "danceEvery": 1,
+      "animations": [
+        {
+          "name": "idle",
+          "prefix": "fg tankman bobbin 3 instance 1",
+          "looped": false
+        }
+      ],
+      "startingAnimation": "idle"
+    },
+    {
+      "name": "tankmanAudience5",
+      "assetPath": "tank5",
+      "zIndex": 1003,
+      "position": [2015, 823],
+      "scale": [1, 1],
+      "scroll": [1.5, 0.9],
+      "danceEvery": 1,
+      "animations": [
+        {
+          "name": "idle",
+          "prefix": "fg tankhead far right instance 1",
+          "looped": false
+        }
+      ],
+      "startingAnimation": "idle"
     },
     {
       "name": "sniper",

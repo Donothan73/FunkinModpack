@@ -138,7 +138,7 @@ class BattleMode extends Module
 						default:
 							opponentDrain = -0.1;
 						case 'mom':
-							opponentDrain = -0.175;
+							opponentDrain = -0.165;
 
 					}
 				case 'senpai':
@@ -148,7 +148,9 @@ class BattleMode extends Module
 				case 'spirit':
 					opponentDrain = -0.165;
 				case 'tankman':
-					opponentDrain = -0.125;
+					opponentDrain = -0.105;
+				case 'tankman-atlas':
+					opponentDrain = -0.105;
 				case 'tankman-bloody':
 					opponentDrain = -0.125;
 				case 'darnell':

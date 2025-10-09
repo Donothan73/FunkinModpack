@@ -11,6 +11,8 @@ import funkin.graphics.adobeanimate.FlxAtlasSprite;
 import funkin.graphics.shaders.AdjustColorShader;
 import funkin.audio.visualize.ABotVis;
 
+import funkin.graphics.shaders.DropShadowShader;
+
 class NeneTankmenCharacter extends MultiSparrowCharacter
 {
   function new()
@@ -29,8 +31,16 @@ class NeneTankmenCharacter extends MultiSparrowCharacter
   var eyeWhites:FlxSprite;
   var pupil:FlxAtlasSprite;
 
+  var tankmenBottomL:FunkinSprite;
+  var tankmenTopL:FunkinSprite;
+  var tankmenBottomR:FunkinSprite;
+  var tankmenTopR:FunkinSprite;
+
   var adjustColor:AdjustColorShader;
   var vizAdjustColor:AdjustColorShader;
+
+  var rimTankL:DropShadowShader;
+  var rimTankR:DropShadowShader;
 
   function onCreate(event:ScriptEvent)
   {
@@ -50,9 +60,70 @@ class NeneTankmenCharacter extends MultiSparrowCharacter
     vizAdjustColor.contrast = 0;
     vizAdjustColor.saturation = -10;
 
+    rimTankL = new DropShadowShader();
+    rimTankR = new DropShadowShader();
+
+    rimTankL.setAdjustColor(-46, -38, -25, -20);
+    rimTankL.color = 0xFFDFEF3C;
+    rimTankL.angle = 90+25;
+    rimTankL.threshold = 0.3;
+    rimTankL.distance = 10;
+    rimTankL.strength = 1.0;
+
+    rimTankR.setAdjustColor(-46, -38, -25, -20);
+    rimTankR.color = 0xFFDFEF3C;
+    rimTankR.angle = 90-25;
+    rimTankR.threshold = 0.3;
+    rimTankR.distance = 9;
+    rimTankR.strength = 1.0;
+
     stereoBG = new FlxSprite(0, 0, Paths.image('characters/abot/stereoBG'));
 
     eyeWhites = new FunkinSprite().makeSolidColor(160, 60);
+
+    tankmenBottomL = FunkinSprite.createSparrow(0, 0, "characters/tankmenStickup");
+    tankmenBottomL.animation.addByPrefix('idle', "tankman bottom", 24, true, true);
+    tankmenBottomL.x = this.x;
+    tankmenBottomL.y = this.y;
+    tankmenBottomL.zIndex = this.zIndex - 2;
+    tankmenBottomL.updateHitbox();
+    tankmenBottomL.animation.play('idle', true);
+
+    tankmenTopL = FunkinSprite.createSparrow(0, 0, "characters/tankmenStickup");
+    tankmenTopL.animation.addByPrefix('idle', "tankman top 2", 24, true, true);
+    tankmenTopL.x = this.x;
+    tankmenTopL.y = this.y;
+    tankmenTopL.zIndex = this.zIndex - 2;
+    tankmenTopL.updateHitbox();
+    tankmenTopL.animation.play('idle', true);
+    tankmenTopL.animation.onFrameChange.add(function() {
+          if (tankmenTopL != null)
+          {
+            rimTankL.updateFrameInfo(tankmenTopL.frame);
+          }
+        });
+
+    tankmenBottomR = FunkinSprite.createSparrow(0, 0, "characters/tankmenStickup");
+    tankmenBottomR.animation.addByPrefix('idle', "tankman bottom", 24, true, false);
+    tankmenBottomR.x = this.x;
+    tankmenBottomR.y = this.y;
+    tankmenBottomR.zIndex = this.zIndex - 2;
+    tankmenBottomR.updateHitbox();
+    tankmenBottomR.animation.play('idle', true);
+
+    tankmenTopR = FunkinSprite.createSparrow(0, 0, "characters/tankmenStickup");
+    tankmenTopR.animation.addByPrefix('idle', "tankman top", 24, true, false);
+    tankmenTopR.x = this.x;
+    tankmenTopR.y = this.y;
+    tankmenTopR.zIndex = this.zIndex - 2;
+    tankmenTopR.updateHitbox();
+    tankmenTopR.animation.play('idle', true);
+    tankmenTopR.animation.onFrameChange.add(function() {
+          if (tankmenTopR != null)
+          {
+            rimTankR.updateFrameInfo(tankmenTopR.frame);
+          }
+        });
 
     pupil = new FlxAtlasSprite(0, 0, Paths.animateAtlas("characters/abot/systemEyes", "shared"));
     pupil.x = this.x;
@@ -72,10 +143,19 @@ class NeneTankmenCharacter extends MultiSparrowCharacter
     stereoBG.shader = adjustColor;
     pupil.shader = adjustColor;
     abot.shader = adjustColor;
+
+    tankmenBottomL.shader = adjustColor;
+    tankmenBottomR.shader = adjustColor;
+
+    tankmenTopL.shader = rimTankL;
+    tankmenTopR.shader = rimTankR;
+
     for (spr in abotViz.members)
     {
-      spr.shader = vizAdjustColor;
+      //spr.shader = vizAdjustColor; The VIZ glows? It shouldnt be affected by the lighting
     }
+
+
   }
 
   /**
@@ -203,6 +283,26 @@ class NeneTankmenCharacter extends MultiSparrowCharacter
     {
       abot.playAnimation("");
       abot.anim.curFrame = 1; // we start on this frame, since from Flash the symbol has a non-bumpin frame on frame 0
+    }
+
+    if (tankmenBottomL != null)
+    {
+      tankmenBottomL.animation.play('idle', true);
+    }
+
+    if (tankmenTopL != null)
+    {
+      tankmenTopL.animation.play('idle', true);
+    }
+
+    if (tankmenBottomR != null)
+    {
+      tankmenBottomR.animation.play('idle', true);
+    }
+
+    if (tankmenTopR != null)
+    {
+      tankmenTopR.animation.play('idle', true);
     }
 
     // Then, perform the appropriate animation for the current state.
@@ -373,10 +473,30 @@ class NeneTankmenCharacter extends MultiSparrowCharacter
       pupil.zIndex = eyeWhites.zIndex + 5;
       PlayState.instance.currentStage.add(pupil);
 
-      stereoBG.x = abot.x + 150;
+      stereoBG.x = abot.x + 175;
       stereoBG.y = abot.y + 30;
       stereoBG.zIndex = abot.zIndex - 8;
       PlayState.instance.currentStage.add(stereoBG);
+
+      tankmenBottomL.x = abot.x + -15-45;
+      tankmenBottomL.y = abot.y + -155+5;
+      tankmenBottomL.zIndex = abot.zIndex - 9;
+      PlayState.instance.currentStage.add(tankmenBottomL);
+
+      tankmenTopL.x = abot.x + -50-40;
+      tankmenTopL.y = abot.y + -270+5;
+      tankmenTopL.zIndex = this.zIndex + 1;
+      PlayState.instance.currentStage.add(tankmenTopL);
+
+      tankmenBottomR.x = abot.x + 525+55;
+      tankmenBottomR.y = abot.y + -155+5;
+      tankmenBottomR.zIndex = abot.zIndex - 9;
+      PlayState.instance.currentStage.add(tankmenBottomR);
+
+      tankmenTopR.x = abot.x + 525;
+      tankmenTopR.y = abot.y + -270+5;
+      tankmenTopR.zIndex = this.zIndex + 1;
+      PlayState.instance.currentStage.add(tankmenTopR);
 
       PlayState.instance.currentStage.refresh();
       refershedLol = true;
@@ -392,13 +512,15 @@ class NeneTankmenCharacter extends MultiSparrowCharacter
   {
     abotViz.snd = FlxG.sound.music;
     abotViz.initAnalyzer();
+    abotViz.alpha = 1;
   }
 
-  /*override function onSongRetry(event:ScriptEvent)
-    {
-      super.onSongRetry();
-      abotViz.dumpSound();
-  }*/
+  override function onSongRetry(event:ScriptEvent)
+  {
+    super.onSongRetry();
+    abotViz.alpha = 0;
+  }
+
   override function onSongEnd(event:ScriptEvent)
   {
     super.onSongEnd();

@@ -90,7 +90,7 @@ class NeneTankmenCharacter extends MultiSparrowCharacter
     tankmenBottomL.animation.play('idle', true);
 
     tankmenTopL = FunkinSprite.createSparrow(0, 0, "characters/tankmenStickup");
-    tankmenTopL.animation.addByPrefix('idle', "tankman top 2", 24, true, true);
+    tankmenTopL.animation.addByPrefix('idle', "tankman1 top 2", 24, true, true);
     tankmenTopL.x = this.x;
     tankmenTopL.y = this.y;
     tankmenTopL.zIndex = this.zIndex - 2;

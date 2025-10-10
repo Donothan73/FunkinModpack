@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="guy.png">
+	<!-- Created with Adobe Animate version 23.0.0.407 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="rando0000" x="7" y="7" width="255" height="288" frameX="0" frameY="-6" frameWidth="255" frameHeight="294"/>
+	<SubTexture name="rando0001" x="7" y="7" width="255" height="288" frameX="0" frameY="-6" frameWidth="255" frameHeight="294"/>
+	<SubTexture name="rando0002" x="264" y="7" width="252" height="289" frameX="-2" frameY="-5" frameWidth="255" frameHeight="294"/>
+	<SubTexture name="rando0003" x="264" y="7" width="252" height="289" frameX="-2" frameY="-5" frameWidth="255" frameHeight="294"/>
+	<SubTexture name="rando0004" x="518" y="7" width="250" height="293" frameX="-4" frameY="-1" frameWidth="255" frameHeight="294"/>
+	<SubTexture name="rando0005" x="518" y="7" width="250" height="293" frameX="-4" frameY="-1" frameWidth="255" frameHeight="294"/>
+	<SubTexture name="rando0006" x="7" y="302" width="250" height="294" frameX="-4" frameY="0" frameWidth="255" frameHeight="294"/>
+	<SubTexture name="rando0007" x="7" y="302" width="250" height="294" frameX="-4" frameY="0" frameWidth="255" frameHeight="294"/>
+	<SubTexture name="rando0008" x="259" y="302" width="250" height="294" frameX="-4" frameY="0" frameWidth="255" frameHeight="294"/>
+	<SubTexture name="rando0009" x="259" y="302" width="250" height="294" frameX="-4" frameY="0" frameWidth="255" frameHeight="294"/>
+	<SubTexture name="rando0010" x="259" y="302" width="250" height="294" frameX="-4" frameY="0" frameWidth="255" frameHeight="294"/>
+	<SubTexture name="rando0011" x="259" y="302" width="250" height="294" frameX="-4" frameY="0" frameWidth="255" frameHeight="294"/>
+	<SubTexture name="rando0012" x="259" y="302" width="250" height="294" frameX="-4" frameY="0" frameWidth="255" frameHeight="294"/>
+	<SubTexture name="rando0013" x="259" y="302" width="250" height="294" frameX="-4" frameY="0" frameWidth="255" frameHeight="294"/>
+	<SubTexture name="rando0014" x="259" y="302" width="250" height="294" frameX="-4" frameY="0" frameWidth="255" frameHeight="294"/>
+</TextureAtlas>

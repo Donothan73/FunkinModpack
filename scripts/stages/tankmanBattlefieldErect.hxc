@@ -2,29 +2,84 @@ import flixel.FlxG;
 import flixel.math.FlxAngle;
 import funkin.play.PlayState;
 import funkin.play.stage.Stage;
-import funkin.graphics.shaders.DropShadowShader;
+import funkin.graphics.shaders.AdjustColorShader;
 import funkin.play.character.CharacterType;
 import openfl.display.BitmapData;
 import flixel.graphics.FlxGraphic;
 
+import funkin.graphics.shaders.GaussianBlurShader;
+import openfl.filters.ShaderFilter;
+import flixel.addons.display.FlxTiledSprite;
+import flixel.math.FlxMath;
+import funkin.graphics.shaders.WiggleEffectRuntime;
+import funkin.graphics.shaders.WiggleEffectType;
+import funkin.Conductor;
+
 class TankmanBattlefieldErectStage extends Stage
 {
+  var adjustColor:AdjustColorShader;
+  var brickShader:AdjustColorShader;
+  var dust:FlxTiledSprite;
+
+  var waveFreq:Float = (Conductor.instance.beatLengthMs / 1000) * 16;
+  var waveSpeed:Float = (Conductor.instance.beatLengthMs / 1000) * 2;
+
+  var dustShader:FlxRuntimeShader = null;
+
+  var blurShader = new GaussianBlurShader(0.5);
+
   function new()
   {
     super('tankmanBattlefieldErect');
+
+    adjustColor = new AdjustColorShader();
+
+    adjustColor.hue = 20;
+    adjustColor.saturation = -23;
+    adjustColor.brightness = 25;
+    adjustColor.contrast = 3;
+
+    brickShader = new AdjustColorShader(); //yes
+
+    brickShader.hue = 0;
+    brickShader.saturation = -43;
+    brickShader.brightness = 25;
+    brickShader.contrast = 3;
+
+    dustShader = new WiggleEffectRuntime(waveSpeed * 4, waveFreq * 0.4, 0.05, WiggleEffectType.DREAMY);
+    
   }
 
   function onCreate(event:ScriptEvent):Void
   {
     super.onCreate(event);
+
+    blurShaderFilter = new ShaderFilter(blurShader);
+    PlayState.instance.camGame.filters = [blurShaderFilter];
   }
 
-  var tankmanRim:DropShadowShader;
+  public function buildStage()
+  {
+    super.buildStage();
+    getNamedProp('tankBricks').shader = brickShader;
+    getNamedProp('storm').blend = 12;
+
+    dust = new FlxTiledSprite(Paths.image('erect/day/dustBlur'), FlxG.width*2.5, FlxG.height*2.5, true, true);
+    dust.setPosition(FlxG.width/2 - dust.width/2, FlxG.height/2 - dust.height/2);
+    dust.scrollFactor.set(0.1, 0.1);
+    dust.zIndex = 750;
+    dust.scale.set(1, 1);
+    dust.shader = dustShader;
+
+    PlayState.instance.currentStage.add(dust);
+    PlayState.instance.currentStage.refresh(); // Apply z-index.
+  }
 
   public function onGameOver(event:ScriptEvent)
   {
     super.onGameOver(event);
     getBoyfriend().shader = null;
+    PlayState.instance.camGame.filters =[];
   }
 
   override function addCharacter(character:BaseCharacter, charType:CharacterType):Void
@@ -33,63 +88,16 @@ class TankmanBattlefieldErectStage extends Stage
     super.addCharacter(character, charType);
     trace('Applied stage shader to ' + character.characterName);
 
-    var rim = new DropShadowShader();
-    rim.setAdjustColor(-46, -38, -25, -20);
-    rim.color = 0xFFDFEF3C;
-    character.shader = rim;
-    rim.attachedSprite = character;
+    character.shader = adjustColor;
 
-    switch (charType)
+    if (getGirlfriend().characterId == 'gf-tankmen' || getGirlfriend().characterId == 'nene-tankmen')
     {
-      case CharacterType.BF:
-        rim.angle = 90;
-
-        character.animation.onFrameChange.add(function() {
-          if (getBoyfriend() != null)
-          {
-            rim.updateFrameInfo(getBoyfriend().frame);
-          }
-        });
-
-      case CharacterType.GF:
-        rim.angle = 90;
-
-        character.animation.onFrameChange.add(function() {
-          rim.updateFrameInfo(getGirlfriend().frame);
-        });
-
-        if (getGirlfriend().characterId == 'gf-tankmen')
-        {
-          rim.loadAltMask('assets/week7/images/erect/masks/gfTankmen_mask.png');
-          rim.maskThreshold = 0.4;
-          rim.useAltMask = true;
-        }
-
-        if (getGirlfriend().characterId == 'otis-speaker')
-        {
-          getNamedProp('tankBricks').setPosition(445, 774);
-        }
-
-      case CharacterType.DAD:
-        rim.angle = 135;
-        rim.threshold = 0.3;
-
-        character.animation.onFrameChange.add(function() {
-          rim.updateFrameInfo(getDad().frame);
-        });
-
-        if (getDad().characterId == 'tankman-bloody')
-        {
-          rim.loadAltMask('assets/week7/images/erect/masks/tankmanCaptainBloody_mask.png');
-          rim.maskThreshold = 1;
-          rim.useAltMask = false;
-        }
-
-        // need to save this for later for when the mask is needed
-        tankmanRim = rim;
-
-      default:
+      getGirlfriend().scriptGet('tankmenBottomL').shader = adjustColor;
+      getGirlfriend().scriptGet('tankmenTopL').shader = adjustColor;
+      getGirlfriend().scriptGet('tankmenBottomR').shader = adjustColor;
+      getGirlfriend().scriptGet('tankmenTopR').shader = adjustColor;
     }
+
   }
 
   /**
@@ -99,15 +107,18 @@ class TankmanBattlefieldErectStage extends Stage
   {
     super.onSongEvent(scriptEvent);
 
-    if (scriptEvent.eventData.eventKind == "EnableMask" && tankmanRim != null)
-    {
-      tankmanRim.useAltMask = true;
-    }
   }
 
   function onUpdate(event:UpdateScriptEvent):Void
   {
     super.onUpdate(event);
+
+    if (dust != null)
+    {
+      dust.scrollX -= (Math.sin(FlxG.elapsed*0.8)*100) * FlxG.elapsed * 100 * 25;
+      dust.scrollY = (Math.sin(FlxG.elapsed*0.8)*50);
+      
+    }
   }
 
   function onBeatHit(event:SongTimeScriptEvent):Void
@@ -124,10 +135,7 @@ class TankmanBattlefieldErectStage extends Stage
   {
     super.onSongRetry(event);
 
-    if (tankmanRim != null)
-    {
-      tankmanRim.useAltMask = false;
-    }
+    PlayState.instance.camGame.filters = [blurShaderFilter];
 
     if (getGirlfriend().characterId == 'otis-speaker')
     {

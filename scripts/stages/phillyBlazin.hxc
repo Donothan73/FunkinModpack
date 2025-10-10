@@ -144,7 +144,7 @@ class PhillyBlazinStage extends Stage
 
     rainShaderFilter = new ShaderFilter(rainShader);
     FlxG.camera.filters = [rainShaderFilter];
-    // FlxG.camera.setFilters([new openfl.filters.BlurFilter(16,16)]);
+    FlxG.camera.setFilters([new openfl.filters.BlurFilter(16,16)]);
 
     resetCar(true, true);
     resetStageValues();

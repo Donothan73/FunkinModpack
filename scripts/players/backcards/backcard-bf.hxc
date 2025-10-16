@@ -193,6 +193,13 @@ class BoyfriendCard extends BackingCard
   function onUpdate(elapsed):Void
   {
     super.onUpdate(elapsed);
+    if (instance.grpCapsules.members[0] != null)
+    {
+      instance.grpCapsules.members[0].pixelIcon.setCharacter('bf');
+      //instance.grpCapsules.members[0].freeplayData.songCharacter = 'boyfriend';
+      instance.grpCapsules.members[0].pixelIcon.alpha = 1;
+      instance.grpCapsules.members[0].pixelIcon.visible = true;
+    }
 
     if (instance.currentCapsule.freeplayData != null)
     {

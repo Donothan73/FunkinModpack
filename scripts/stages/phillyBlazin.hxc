@@ -22,6 +22,7 @@ import flixel.addons.display.FlxTiledSprite;
 import StringTools;
 import funkin.util.HapticUtil;
 import funkin.graphics.shaders.GaussianBlurShader;
+import flixel.util.FlxGradient;
 
 class PhillyBlazinStage extends Stage
 {
@@ -143,8 +144,8 @@ class PhillyBlazinStage extends Stage
     // rainShader.lightMap = frameBufferMan.getFrameBuffer("lightmap");
 
     rainShaderFilter = new ShaderFilter(rainShader);
+    //newFilter = new openfl.filters.BlurFilter(16,16);
     FlxG.camera.filters = [rainShaderFilter];
-    FlxG.camera.setFilters([new openfl.filters.BlurFilter(16,16)]);
 
     resetCar(true, true);
     resetStageValues();
@@ -235,6 +236,15 @@ class PhillyBlazinStage extends Stage
   override function buildStage()
   {
     super.buildStage();
+
+    var bgDarken:FlxSprite = FlxGradient.createGradientFlxSprite(3102, 2000, [0xFF5B5B5B], 90, true);
+    bgDarken.zIndex = 100;
+    bgDarken.x = FlxG.width/2 - bgDarken.width/2;
+    bgDarken.y = FlxG.height/2 - bgDarken.height/2;
+    bgDarken.cameras = [PlayState.instance.camGame];
+    bgDarken.blend = 9;
+    bgDarken.alpha = 0.25;
+    PlayState.instance.currentStage.add(bgDarken);
 
     scrollingSky = new FlxTiledSprite(Paths.image('phillyStreets/phillySkybox'), 2922, 718, true, false);
     scrollingSky.setPosition(-650, -375);

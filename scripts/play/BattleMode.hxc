@@ -156,7 +156,7 @@ class BattleMode extends Module
 				case 'darnell':
 					opponentDrain = -0.115;
 				case 'darnell-blazin':
-					opponentDrain = -0.125;
+					opponentDrain = -0.0;
 				case 'bf-pixel':
 					opponentDrain = -0.15;
 									
@@ -166,7 +166,7 @@ class BattleMode extends Module
 			opponentDrain = opponentDrain*opponentCurve * difficultyMultiplier;
 			if (PlayState.instance.health + opponentDrain > Constants.HEALTH_MIN) PlayState.instance.health += opponentDrain;
 		}
-		else
+		else if (PlayState.instance.currentSong.id != 'blazin')
 		{
 			switch (event.judgement)
 			{
@@ -223,6 +223,8 @@ class BattleMode extends Module
           },
           startDelay: Conductor.instance.beatLengthMs * 0.002
         });		
+
+		if (PlayState.instance.currentSong.id == 'blazin') event.healthChange = 0;
 	}
 
 	function calculateCombo(event:HitNoteScriptEvent):Void
@@ -266,31 +268,34 @@ class BattleMode extends Module
 		multiplier = (grade / total) / 4 + 1;
 		multiplier += multiplier*difficultyMultiplier/4;
 
-    	if (grade == Constants.RANK_PERFECT_THRESHOLD)
-    	{
-      		judgement = 'sick';
-			PlayState.instance.health += killer*multiplier;
-			PlayState.instance.currentStage.getBoyfriend().playAnimation('hey', true, true);
-    	}
-    	else if (grade >= Constants.RANK_EXCELLENT_THRESHOLD)
+		if (PlayState.instance.currentSong.id != 'blazin')
 		{
-			judgement = 'sick';
-			PlayState.instance.health += sick*multiplier;
-		}
-		else if (grade >= Constants.RANK_GREAT_THRESHOLD)
-		{
-			judgement = 'good';
-			PlayState.instance.health += good*multiplier;
-		}
-		else if (grade >= Constants.RANK_GOOD_THRESHOLD)
-		{
-			judgement = 'bad';
-			PlayState.instance.health += bad*multiplier;
-		}
-		else
-		{
-			judgement = 'shit';
-			PlayState.instance.health += shit*multiplier;
+			if (grade == Constants.RANK_PERFECT_THRESHOLD)
+			{
+				judgement = 'sick';
+				PlayState.instance.health += killer*multiplier;
+				PlayState.instance.currentStage.getBoyfriend().playAnimation('hey', true, true);
+			}
+			else if (grade >= Constants.RANK_EXCELLENT_THRESHOLD)
+			{
+				judgement = 'sick';
+				PlayState.instance.health += sick*multiplier;
+			}
+			else if (grade >= Constants.RANK_GREAT_THRESHOLD)
+			{
+				judgement = 'good';
+				PlayState.instance.health += good*multiplier;
+			}
+			else if (grade >= Constants.RANK_GOOD_THRESHOLD)
+			{
+				judgement = 'bad';
+				PlayState.instance.health += bad*multiplier;
+			}
+			else
+			{
+				judgement = 'shit';
+				PlayState.instance.health += shit*multiplier;
+			}
 		}
 
 		if (Preferences.downscroll == true || FlxG.onMobile)

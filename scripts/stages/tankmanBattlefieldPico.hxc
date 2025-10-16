@@ -65,7 +65,7 @@ class TankmanBattlefieldPicoStage extends Stage
 
     var rim = new DropShadowShader();
     rim.setAdjustColor(-46, -38, -25, -20);
-    rim.color = 0xFFDFEF3C;
+    rim.color = 0xFF949E29;
     character.shader = rim;
     rim.strength = 1.0;
     rim.attachedSprite = character;

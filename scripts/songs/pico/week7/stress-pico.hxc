@@ -260,7 +260,7 @@ class StressPicoMixSong extends Song
     screenspaceRimlight.baseHue = -38;
     screenspaceRimlight.baseContrast = -25;
     screenspaceRimlight.baseSaturation = -20;
-
+    screenspaceRimlight.color = 0xFF949E29;
     screenspaceRimlight.angle = 45;
     screenspaceRimlight.threshold = 0.3;
 

@@ -40,6 +40,8 @@ class PicoBlazinCharacter extends AnimateAtlasCharacter
   {
     holdTimer = 0;
 
+    event.healthChange = 0.0;
+
     if (!StringTools.startsWith(event?.note?.kind ?? '', 'weekend-1-')) return;
 
     // SPECIAL CASE: If Pico hits a poor note at low health (at 30% chance),
@@ -68,26 +70,33 @@ class PicoBlazinCharacter extends AnimateAtlasCharacter
         playPunchLowAnim();
       case "weekend-1-punchlowblocked":
         playPunchLowAnim();
+        event.healthChange = -0.005;
       case "weekend-1-punchlowdodged":
         playPunchLowAnim();
       case "weekend-1-punchlowspin":
         playPunchLowAnim();
+        event.healthChange = -0.01;
 
       case "weekend-1-punchhigh":
         playPunchHighAnim();
       case "weekend-1-punchhighblocked":
         playPunchHighAnim();
+        event.healthChange = -0.005;
       case "weekend-1-punchhighdodged":
         playPunchHighAnim();
       case "weekend-1-punchhighspin":
         playPunchHighAnim();
+        event.healthChange = -0.01;
 
       case "weekend-1-blockhigh":
         playBlockAnim(event.judgement);
+        event.healthChange = -0.005;
       case "weekend-1-blocklow":
         playBlockAnim(event.judgement);
+        event.healthChange = -0.005;
       case "weekend-1-blockspin":
         playBlockAnim(event.judgement);
+        event.healthChange = -0.005;
 
       case "weekend-1-dodgehigh":
         playDodgeAnim();
@@ -99,10 +108,13 @@ class PicoBlazinCharacter extends AnimateAtlasCharacter
       // Pico ALWAYS gets punched.
       case "weekend-1-hithigh":
         playHitHighAnim();
+        event.healthChange = -0.01;
       case "weekend-1-hitlow":
         playHitLowAnim();
+        event.healthChange = -0.01;
       case "weekend-1-hitspin":
         playHitSpinAnim();
+        event.healthChange = -0.01;
 
       case "weekend-1-picouppercutprep":
         playUppercutPrepAnim();
@@ -113,6 +125,7 @@ class PicoBlazinCharacter extends AnimateAtlasCharacter
         playIdleAnim();
       case "weekend-1-darnelluppercut":
         playUppercutHitAnim();
+        event.healthChange = -0.025;
 
       case "weekend-1-idle":
         playIdleAnim();
@@ -190,6 +203,7 @@ class PicoBlazinCharacter extends AnimateAtlasCharacter
   function onNoteMiss(event:NoteScriptEvent)
   {
     holdTimer = 0;
+    event.healthChange = 0.0;
 
     // SPECIAL CASE: Darnell prepared to uppercut last time and Pico missed! FINISH HIM!
     if (isDarnellInUppercut())
@@ -216,46 +230,63 @@ class PicoBlazinCharacter extends AnimateAtlasCharacter
       // Pico fails to punch, and instead gets hit!
       case "weekend-1-punchlow":
         playHitLowAnim();
+        event.healthChange = -0.01;
       case "weekend-1-punchlowblocked":
         playHitLowAnim();
+        event.healthChange = -0.01;
       case "weekend-1-punchlowdodged":
         playHitLowAnim();
+        event.healthChange = -0.01;
       case "weekend-1-punchlowspin":
         playHitSpinAnim();
+        event.healthChange = -0.01;
 
       // Pico fails to punch, and instead gets hit!
       case "weekend-1-punchhigh":
         playHitHighAnim();
+        event.healthChange = -0.01;
       case "weekend-1-punchhighblocked":
         playHitHighAnim();
+        event.healthChange = -0.01;
       case "weekend-1-punchhighdodged":
         playHitHighAnim();
+        event.healthChange = -0.01;
       case "weekend-1-punchhighspin":
         playHitSpinAnim();
+        event.healthChange = -0.01;
 
       // Pico fails to block, and instead gets hit!
       case "weekend-1-blockhigh":
         playHitHighAnim();
+        event.healthChange = -0.01;
       case "weekend-1-blocklow":
         playHitLowAnim();
+        event.healthChange = -0.01;
       case "weekend-1-blockspin":
         playHitSpinAnim();
+        event.healthChange = -0.01;
 
       // Pico fails to dodge, and instead gets hit!
       case "weekend-1-dodgehigh":
         playHitHighAnim();
+        event.healthChange = -0.01;
       case "weekend-1-dodgelow":
         playHitLowAnim();
+        event.healthChange = -0.01;
       case "weekend-1-dodgespin":
         playHitSpinAnim();
+        event.healthChange = -0.01;
 
       // Pico ALWAYS gets punched.
       case "weekend-1-hithigh":
         playHitHighAnim();
+        event.healthChange = -0.01;
       case "weekend-1-hitlow":
         playHitLowAnim();
+        event.healthChange = -0.01;
       case "weekend-1-hitspin":
         playHitSpinAnim();
+        event.healthChange = -0.01;
 
       // Fail to dodge the uppercut.
       case "weekend-1-picouppercutprep":
@@ -263,6 +294,7 @@ class PicoBlazinCharacter extends AnimateAtlasCharacter
         cantUppercut = true;
       case "weekend-1-picouppercut":
         playUppercutAnim(false);
+        event.healthChange = -0.1;
 
       // Darnell's attempt to uppercut, Pico dodges or gets hit.
       case "weekend-1-darnelluppercutprep":
@@ -384,9 +416,15 @@ class PicoBlazinCharacter extends AnimateAtlasCharacter
         {
       
       		if (blendAnims[blendMode] != 10)
+          {
       			this.color = 0xFF0000FF;
+            this.alpha = 0.5;
+          }
       		else
+          {
       			this.color = 0xFFFFFFFF;
+            this.alpha = 1;
+          }
       
       		this.blend = blendAnims[blendMode];
       	});

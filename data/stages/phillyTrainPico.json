@@ -135,8 +135,8 @@
     {
       "danceEvery": 0,
       "zIndex": 700,
-      "position": [-38, -479],
-      "scale": [1, 1],
+      "position": [-238, -479],
+      "scale": [2, 1],
       "animType": "sparrow",
       "name": "shading",
       "isPixel": false,
@@ -146,7 +146,7 @@
       "animations": []
     }
   ],
-  "cameraZoom": 0.955,
+  "cameraZoom": 0.9,
   "version": "1.0.0",
   "characters": {
     "bf": {

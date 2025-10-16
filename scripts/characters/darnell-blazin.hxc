@@ -39,6 +39,7 @@ class DarnellBlazinCharacter extends AnimateAtlasCharacter
     if (cantUppercut)
     {
       playPunchHighAnim();
+      
       return;
     }
 
@@ -66,18 +67,24 @@ class DarnellBlazinCharacter extends AnimateAtlasCharacter
       // Attempt to punch, Pico dodges or gets hit.
       case "weekend-1-blockhigh":
         playPunchHighAnim();
+        
       case "weekend-1-blocklow":
         playPunchLowAnim();
+        
       case "weekend-1-blockspin":
         playPunchHighAnim();
+        
 
       // Attempt to punch, Pico dodges or gets hit.
       case "weekend-1-dodgehigh":
         playPunchHighAnim();
+        
       case "weekend-1-dodgelow":
         playPunchLowAnim();
+        
       case "weekend-1-dodgespin":
         playPunchHighAnim();
+        
 
       // Attempt to punch, Pico ALWAYS gets hit.
       case "weekend-1-hithigh":

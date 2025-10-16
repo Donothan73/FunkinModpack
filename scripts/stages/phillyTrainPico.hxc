@@ -27,6 +27,11 @@ import funkin.graphics.shaders.RuntimeRainShader;
 import funkin.modding.base.ScriptedFlxRuntimeShader;
 import openfl.filters.ShaderFilter;
 import flixel.math.FlxMath;
+import funkin.graphics.shaders.DropShadowShader;
+import funkin.play.character.CharacterType;
+import funkin.graphics.shaders.DropShadowScreenspace;
+import flixel.FlxCamera;
+import flixel.math.FlxPoint;
 
 class PhillyTrainPicoStage extends Stage
 {
@@ -134,6 +139,9 @@ class PhillyTrainPicoStage extends Stage
 
   var cutsceneTimerManager:FlxTimerManager;
 
+  var screenspaceRimlight:DropShadowScreenspace = new DropShadowScreenspace();
+  var rimlightCamera:FlxCamera;
+
   function doppleGangerCutscene()
   {
     // Disable player input during cutscene, so you can't get a gameover during cutscene
@@ -155,6 +163,23 @@ class PhillyTrainPicoStage extends Stage
     skipText.cameras = [PlayState.instance.camCutscene];
 
     cutsceneTimerManager = new FlxTimerManager();
+
+    rimlightCamera = new FlxCamera();
+    FlxG.cameras.insert(rimlightCamera, (FlxG.onMobile) ? -4 : -2, false);
+    rimlightCamera.bgColor = 0x00FFFFFF; // Show the game scene behind the camera.
+
+    screenspaceRimlight.baseBrightness = -49;
+    screenspaceRimlight.baseHue = -33;
+    screenspaceRimlight.baseContrast = -48;
+    screenspaceRimlight.baseSaturation = -7;
+    screenspaceRimlight.color = 0xFF995C3D;
+    screenspaceRimlight.angle = 90;
+    screenspaceRimlight.distance = 13;
+    screenspaceRimlight.threshold = 0.3;
+
+    var rimlightFilter:ShaderFilter = new ShaderFilter(screenspaceRimlight);
+
+    rimlightCamera.filters = [rimlightFilter];
 
     cutsceneConductor = new Conductor();
     var songMusicData:Null<SongMusicData> = SongRegistry.instance.parseMusicData('cutscene');
@@ -246,9 +271,13 @@ class PhillyTrainPicoStage extends Stage
     PlayState.instance.currentStage.add(bloodPool);
     PlayState.instance.currentStage.refresh();
 
-    picoPlayer.shader = shader;
-    picoOpponent.shader = shader;
+    //picoPlayer.shader = shader;
+    //picoOpponent.shader = shader;
     bloodPool.shader = shader;
+    cigarette.shader = shader;
+
+    picoPlayer.cameras = [rimlightCamera];
+    picoOpponent.cameras = [rimlightCamera];
 
     PlayState.instance.currentStage.getBoyfriend().visible = false;
     PlayState.instance.currentStage.getDad().visible = false;
@@ -450,6 +479,16 @@ class PhillyTrainPicoStage extends Stage
     var shaderInput:Float = (Conductor.instance.beatLengthMs / 1000) * event.elapsed * 1.5*2;
     lightShader.scriptCall('update', [shaderInput]);
 
+    if (PlayState.instance.isInCutscene)
+    {
+      if (rimlightCamera != null)
+      {
+        rimlightCamera.focusOn(new FlxPoint(PlayState.instance.camGame.viewLeft + PlayState.instance.camGame.viewWidth / 2,
+          PlayState.instance.camGame.viewTop + PlayState.instance.camGame.viewHeight / 2));
+        rimlightCamera.zoom = PlayState.instance.camGame.zoom;
+      }
+    }
+
     if (FlxG.sound.music != null)
     {
       var remappedIntensityValue:Float = FlxMath.remapToRange(Conductor.instance.songPosition, 0, FlxG.sound.music.length, rainShaderStartIntensity,
@@ -525,6 +564,49 @@ class PhillyTrainPicoStage extends Stage
     shader.brightness = -49;
 
     character.shader = shader;
+
+    var rim = new DropShadowShader();
+    rim.setAdjustColor(-49, -33, -48, -7);	//brightness -> hue -> contrast -> saturation
+    rim.color = 0xFF995C3D;
+    character.shader = rim;
+    rim.strength = 1.00;
+    rim.attachedSprite = character;
+
+    switch (charType)
+    {
+      case CharacterType.BF:
+        rim.angle = 90;
+
+        character.animation.onFrameChange.add(function() {
+          if (getBoyfriend() != null)
+          {
+            rim.updateFrameInfo(getBoyfriend().frame);
+          }
+        });
+
+      case CharacterType.GF:
+        rim.angle = 90;
+
+
+        if (getGirlfriend().characterId == 'nene') getGirlfriend().scriptGet('abotViz').shader = shader;
+        if (getGirlfriend().characterId == 'nene') getGirlfriend().scriptGet('stereoBG').shader = shader;
+        if (getGirlfriend().characterId == 'nene') getGirlfriend().scriptGet('abot').shader = shader;
+        if (getGirlfriend().characterId == 'nene') getGirlfriend().scriptGet('eyeWhites').shader = shader;
+        if (getGirlfriend().characterId == 'nene') getGirlfriend().scriptGet('pupil').shader = shader;
+
+        character.animation.onFrameChange.add(function() {
+          rim.updateFrameInfo(getGirlfriend().frame);
+        });
+
+      case CharacterType.DAD:
+        rim.angle = 90;
+        rim.threshold = 0.3;
+
+        character.animation.onFrameChange.add(function() {
+          rim.updateFrameInfo(getDad().frame);
+        });
+      default:
+    }
   }
 
   function onBeatHit(event:SongTimeScriptEvent):Void

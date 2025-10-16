@@ -9,6 +9,7 @@ import funkin.save.Save;
 import funkin.data.story.level.LevelRegistry;
 import funkin.play.notes.Strumline;
 import funkin.play.notes.ScriptedStrumline;
+import funkin.util.Constants;
 
 /**
  * Apply middlescroll to the song.
@@ -64,6 +65,22 @@ class BlazinSong extends Song
 
     this.hasHidden = false;
     this.hasPlayedCutscene = false;
+
+    PlayState.instance.health = Constants.HEALTH_MAX + 2;
+  }
+
+  public override function onCountdownStart(event:CountdownScriptEvent):Void
+  {
+    super.onCountdownStart(event);
+
+    PlayState.instance.health = Constants.HEALTH_MAX + 2;
+  }
+
+  override function onSongRetry(event:ScriptEvent):Void
+  {
+    super.onSongRetry(event);
+
+    PlayState.instance.health = Constants.HEALTH_MAX + 2;
   }
 
   function onDestroy(event:ScriptEvent):Void
@@ -71,11 +88,6 @@ class BlazinSong extends Song
     super.onDestroy(event);
 
     this.hasHidden = false;
-  }
-
-  function onNoteHit(event:HitNoteScriptEvent):Void
-  {
-    super.onNoteHit(event);
   }
 
   var hasHidden = false;

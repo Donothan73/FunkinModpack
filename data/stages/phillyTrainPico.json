@@ -3,12 +3,12 @@
     {
       "danceEvery": 0,
       "zIndex": 10,
-      "position": [-100, 0],
+      "position": [-388, -149],
       "scale": [1, 1],
       "animType": "sparrow",
       "name": "sky",
       "isPixel": false,
-      "assetPath": "philly/erect/sky",
+      "assetPath": "philly/erect/pico/sky",
       "scroll": [0.1, 0.1],
       "animations": []
     },
@@ -20,7 +20,7 @@
       "animType": "sparrow",
       "name": "city",
       "isPixel": false,
-      "assetPath": "philly/erect/city",
+      "assetPath": "philly/erect/pico/city",
       "scroll": [0.3, 0.3],
       "animations": []
     },
@@ -32,7 +32,7 @@
       "animType": "sparrow",
       "name": "lights0",
       "isPixel": false,
-      "assetPath": "philly/erect/win0",
+      "assetPath": "philly/erect/pico/win0",
       "scroll": [0.3, 0.3],
       "animations": []
     },
@@ -44,7 +44,7 @@
       "animType": "sparrow",
       "name": "lights1",
       "isPixel": false,
-      "assetPath": "philly/erect/win1",
+      "assetPath": "philly/erect/pico/win1",
       "scroll": [0.3, 0.3],
       "animations": []
     },
@@ -56,7 +56,7 @@
       "animType": "sparrow",
       "name": "lights2",
       "isPixel": false,
-      "assetPath": "philly/erect/win2",
+      "assetPath": "philly/erect/pico/win2",
       "scroll": [0.3, 0.3],
       "animations": []
     },
@@ -68,7 +68,7 @@
       "animType": "sparrow",
       "name": "lights3",
       "isPixel": false,
-      "assetPath": "philly/erect/win3",
+      "assetPath": "philly/erect/pico/win3",
       "scroll": [0.3, 0.3],
       "animations": []
     },
@@ -80,7 +80,7 @@
       "animType": "sparrow",
       "name": "lights4",
       "isPixel": false,
-      "assetPath": "philly/erect/win4",
+      "assetPath": "philly/erect/pico/win4",
       "scroll": [0.3, 0.3],
       "animations": []
     },
@@ -119,15 +119,40 @@
       "assetPath": "philly/erect/street",
       "scroll": [1, 1],
       "animations": []
+    },
+    {
+      "danceEvery": 0,
+      "zIndex": 301,
+      "position": [-10, 895],
+      "scale": [1, 1],
+      "animType": "sparrow",
+      "name": "hatch",
+      "isPixel": false,
+      "assetPath": "philly/erect/hatch",
+      "scroll": [1.25, 1.25],
+      "animations": []
+    },
+    {
+      "danceEvery": 0,
+      "zIndex": 700,
+      "position": [-38, -479],
+      "scale": [1, 1],
+      "animType": "sparrow",
+      "name": "shading",
+      "isPixel": false,
+      "assetPath": "philly/erect/pico/shading",
+      "scroll": [1, 1.5],
+      "alpha": 0.9,
+      "animations": []
     }
   ],
-  "cameraZoom": 1.1,
+  "cameraZoom": 0.955,
   "version": "1.0.0",
   "characters": {
     "bf": {
       "zIndex": 300,
-      "position": [1020.5, 885],
-      "cameraOffsets": [-200, -100]
+      "position": [1120.5, 885],
+      "cameraOffsets": [-300, -100]
     },
     "dad": {
       "zIndex": 200,

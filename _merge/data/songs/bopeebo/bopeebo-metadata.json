@@ -1,4 +1,0 @@
-[
-    { "op": "replace", "path": "/playData/characters/girlfriend", "value": "nene-tankmen" },
-    { "op": "replace", "path": "/playData/characters/opponent", "value": "nene-tankmen" }
-]

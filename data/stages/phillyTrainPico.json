@@ -122,7 +122,7 @@
     },
     {
       "danceEvery": 0,
-      "zIndex": 301,
+      "zIndex": 5001,
       "position": [-10, 895],
       "scale": [1, 1],
       "animType": "sparrow",

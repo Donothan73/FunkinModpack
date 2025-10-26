@@ -278,6 +278,7 @@ class PhillyTrainPicoStage extends Stage
 
     picoPlayer.cameras = [rimlightCamera];
     picoOpponent.cameras = [rimlightCamera];
+    //getNamedProp('hatch').cameras = [rimlightCamera];
 
     PlayState.instance.currentStage.getBoyfriend().visible = false;
     PlayState.instance.currentStage.getDad().visible = false;
@@ -440,12 +441,12 @@ class PhillyTrainPicoStage extends Stage
     colorShader.hue = 45;
     colorShader.saturation = -48;
     colorShader.contrast = -9;
-    colorShader.brightness = -15;
+    colorShader.brightness = -7;
     getNamedProp('train').shader = colorShader;
     getNamedProp('city').shader = colorShader;
     getNamedProp('street').shader = colorShader;
     getNamedProp('behindTrain').shader = colorShader;
-    getNamedProp('hatch').shader = colorShader;
+    //getNamedProp('hatch').shader = colorShader;
     getNamedProp('shading').blend = 12;
 
     FlxG.sound.list.add(trainSound);

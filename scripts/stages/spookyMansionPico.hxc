@@ -35,7 +35,7 @@ class SpookyMansionPicoStage extends Stage
 
     // adjust this value so that the rain looks nice
     rainShader.scale = FlxG.height / 200 * 2;
-    rainShader.intensity = 0.8;
+    rainShader.intensity = 1;
     rainShader.spriteMode = true;
 
     rainShaderTarget = getNamedProp('bgTrees');

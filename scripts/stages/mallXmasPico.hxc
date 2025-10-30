@@ -1,0 +1,118 @@
+import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.addons.display.FlxRuntimeShader;
+import flixel.sound.FlxSound;
+import funkin.Conductor;
+import funkin.modding.base.ScriptedFlxRuntimeShader;
+import funkin.graphics.shaders.AdjustColorShader;
+import funkin.play.PlayState;
+import funkin.play.stage.Stage;
+import funkin.graphics.adobeanimate.FlxAtlasSprite;
+import funkin.modding.base.ScriptedFlxAtlasSprite;
+import flixel.FlxG;
+
+import funkin.graphics.shaders.DropShadowShader;
+import funkin.graphics.shaders.DropShadowScreenspace;
+import funkin.play.character.CharacterType;
+import funkin.play.character.BaseCharacter;
+import openfl.display.BitmapData;
+import flixel.graphics.FlxGraphic;
+import flixel.math.FlxAngle;
+import flixel.util.FlxGradient;
+
+class MallXmasPicoStage extends Stage
+{
+	function new()
+	{
+		super('mallXmasPico');
+	}
+
+	var colorShader:AdjustColorShader;
+
+	override function buildStage()
+	{
+		super.buildStage();
+
+		var bg:FlxSprite = FlxGradient.createGradientFlxSprite(3102, 825, [0xFF239FAA, 0xFF0084A3], 90, true);
+        bg.zIndex = -10;
+        bg.x = -630 - 300;
+        bg.y = -492;
+		bg.scale.set(1, 0.8);
+        bg.cameras = [PlayState.instance.camGame];
+        PlayState.instance.currentStage.add(bg);
+
+		switch(PlayState.instance.currentVariation) 
+		{
+    	  default:
+
+			// Create a single color shader and reuse it.
+			colorShader = new AdjustColorShader();
+			colorShader.hue = 15;
+			colorShader.saturation = 20;
+
+			getNamedProp('santa').shader = colorShader;
+
+    	  case 'pico':
+
+			// Create a single color shader and reuse it.
+			colorShader = new AdjustColorShader();
+			colorShader.hue = -15;
+			colorShader.saturation = -20;
+			colorShader.brightness = -15;
+			colorShader.contrast = 20;
+
+			getNamedProp('santa').shader = colorShader;
+			getNamedProp('bottomBoppers').shader = colorShader;
+			getNamedProp('upperBoppers').shader = colorShader;
+
+
+		}
+	}
+
+	override function addCharacter(character:BaseCharacter, charType:CharacterType):Void 
+	{
+		super.addCharacter(character, charType);
+
+		switch(PlayState.instance.currentVariation) 
+		{
+    		default:
+			switch(charType)
+			{
+				case CharacterType.BF:
+					CharacterBf = character;
+					character.shader = colorShader;
+
+				case CharacterType.GF:
+					CharacterGf = character;
+					character.shader = colorShader;
+
+				case CharacterType.DAD:
+					CharacterDad = character;
+					character.shader = colorShader;
+
+				default:
+
+			}
+    		case 'pico':
+
+			switch(charType)
+			{
+				case CharacterType.BF:
+					CharacterBf = character;
+					character.shader = colorShader;
+
+				case CharacterType.GF:
+					CharacterGf = character;
+					character.shader = colorShader;
+					if (character.characterId == 'nene-christmas') character.abot.shader = colorShader;
+
+				case CharacterType.DAD:
+					CharacterDad = character;
+					character.shader = colorShader;
+
+				default:
+			}
+
+		}
+	}
+}

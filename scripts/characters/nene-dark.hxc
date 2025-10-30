@@ -17,6 +17,12 @@ import openfl.display.BitmapData;
 import funkin.util.FlxColorUtil;
 import funkin.graphics.shaders.AdjustColorShader;
 
+import flixel.text.FlxText;
+import funkin.Paths;
+import flixel.graphics.frames.FlxAtlasFrames;
+import funkin.ui.FullScreenScaleMode;
+import funkin.graphics.shaders.PureColor;
+
 class NeneDarkCharacter extends SparrowCharacter
 {
   function new()
@@ -31,11 +37,15 @@ class NeneDarkCharacter extends SparrowCharacter
 
   public var abot:FlxAtlasSprite;
   public var abotViz:ABotVis;
+  public var aBotVizFake:ABotVis;
   public var stereoBG:FlxSprite;
   public var eyeWhites:FlxSprite;
   public var pupil:FlxAtlasSprite;
 
   var testShader:TextureSwap;
+  var vizShader:TextureSwap;
+  var filePath:String = null;
+  var colorSwapShader:PureColor;
 
   var normalChar:BaseCharacter;
 
@@ -76,10 +86,36 @@ class NeneDarkCharacter extends SparrowCharacter
     abot.zIndex = this.zIndex - 1;
     abot.shader = testShader;
 
+    filePath = Paths.image('characters/abot/dark/aBotVizDark'); //this won't load it???
+    filePath = null;
+    filePath = Paths.image('characters/abot/stereoBG');
+    pathText = new FlxText(Math.max(FullScreenScaleMode.gameNotchSize.x, 10), 36, 0, filePath.split(":")[1], 16);
+    //PlayState.instance.currentStage.add(pathText);
+    pathText.cameras = [PlayState.instance.camHUD];
+
+    colorSwapShader = new PureColor(0xFF0A1C2F);
+    colorSwapShader.colorSet = true;
+
+
+    vizShader = new TextureSwap();
+    vizShader.loadSwapImage(filePath.split(":")[1]);
     abotViz = new ABotVis(FlxG.sound.music, false);
     abotViz.x = this.x;
     abotViz.y = this.y;
     abotViz.zIndex = abot.zIndex + 1;
+
+    aBotVizFake = new ABotVis(FlxG.sound.music, false);
+    aBotVizFake.x = this.x;
+    aBotVizFake.y = this.y;
+    aBotVizFake.zIndex = abotViz.zIndex + 1;
+    aBotVizFake.alpha = 0;
+
+    for (spr in abotViz.members)
+    {
+      spr.shader = colorSwapShader;
+      spr.blend = 0;
+      spr.alpha = 1;
+    }
 
     vizAdjustColor = new AdjustColorShader();
 
@@ -90,7 +126,8 @@ class NeneDarkCharacter extends SparrowCharacter
 
     for (spr in abotViz.members)
     {
-      spr.shader = vizAdjustColor;
+      //spr.shader = vizAdjustColor;
+      //spr.alpha = 1;
     }
 
     normalChar = CharacterDataParser.fetchCharacter('nene');
@@ -304,6 +341,14 @@ class NeneDarkCharacter extends SparrowCharacter
     eyeWhites.visible = this.visible;
     stereoBG.visible = this.visible;
 
+    if (aBotVizFake != null && normalChar != null)
+    {
+      for (spr in aBotVizFake.members)
+      {
+        spr.alpha = normalChar.alpha;
+      }
+    }
+
     if (pupil?.anim?.isPlaying)
     {
       switch (pupilState)
@@ -340,6 +385,11 @@ class NeneDarkCharacter extends SparrowCharacter
       abotViz.zIndex = abot.zIndex - 1;
       PlayState.instance.currentStage.add(abotViz);
 
+      aBotVizFake.x = abot.x + 200;
+      aBotVizFake.y = abot.y + 84;
+      aBotVizFake.zIndex = abot.zIndex - 2;
+      PlayState.instance.currentStage.add(aBotVizFake);
+
       eyeWhites.x = abot.x + 40;
       eyeWhites.y = abot.y + 250;
       eyeWhites.zIndex = abot.zIndex - 10;
@@ -374,17 +424,22 @@ class NeneDarkCharacter extends SparrowCharacter
   {
     abotViz.snd = FlxG.sound.music;
     abotViz.initAnalyzer();
+
+    aBotVizFake.snd = FlxG.sound.music;
+    aBotVizFake.initAnalyzer();
   }
 
   /*override function onSongRetry(event:ScriptEvent)
     {
       super.onSongRetry();
       abotViz.dumpSound();
+      aBotVizFake.dumpSound();
   }*/
   override function onSongEnd(event:ScriptEvent)
   {
     super.onSongEnd();
     abotViz.dumpSound();
+    aBotVizFake.dumpSound();
   }
 
   var animationFinished:Bool = false;

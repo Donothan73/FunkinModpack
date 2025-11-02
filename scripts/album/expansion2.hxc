@@ -1,0 +1,32 @@
+import funkin.ui.freeplay.Album;
+import funkin.data.freeplay.album.AlbumRegistry;
+import funkin.data.IRegistryEntry;
+import flixel.FlxG;
+
+class Expansion2Album extends Album
+{
+    var path:String;
+
+    function new(id:String)
+    {
+        super('expansion2');
+
+        //Do this here so it doesnt change on each capsule switch
+        if (FlxG.random.float(0, 100) > 75) //25% chance for the old cover!
+        {
+            path = ('freeplay/albumRoll/expansion2-alt');
+        }
+        else
+        {
+            path =  _data?.albumArtAsset ?? 'freeplay/albumRoll/expansion2"';
+        }
+        
+    }
+
+    function getAlbumArtAssetKey():String
+    {
+        //super.getAlbumArtAssetKey();
+
+        return path;
+    }
+}

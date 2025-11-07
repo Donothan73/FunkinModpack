@@ -253,7 +253,7 @@ class LimoRideStage extends Stage
 		{
 			var remappedMph:Float = FlxMath.remapToRange(Conductor.instance.songPosition, 0, FlxG.sound.music.length, initMph, finalMph);
 			mph = remappedMph;
-			getDad().visible = false;
+			//getDad().visible = false;
 		}
 
 		if (movingLimo == true)

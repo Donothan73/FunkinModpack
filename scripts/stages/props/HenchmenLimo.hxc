@@ -1,23 +1,41 @@
-import flixel.group.FlxTypedSpriteGroup;
-import funkin.audio.FunkinSound;
-import flixel.FlxG;
+import funkin.graphics.adobeanimate.FlxAtlasSprite;
+import flixel.math.FlxPoint;
 import flixel.FlxSprite;
-import funkin.play.PlayState;
-import funkin.play.stage.Stage;
-import funkin.play.stage.Bopper;
 import funkin.graphics.FunkinSprite;
-import funkin.Paths;
-import funkin.play.character.SparrowCharacter;
-import funkin.play.character.BaseCharacter;
+import funkin.play.PlayState;
+import flixel.FlxG;
 
-class HenchmenLimo extends FlxTypedSpriteGroup
+// a unique object for santa getting KILLED //HENCHMEN
+
+class HenchmenLimo extends FlxAtlasSprite
 {
 
-    var hechman1:BaseCharacter;
-
-    public function new(variation:String)
+  public function new(x:Float, y:Float)
   {
-    super(variation);
+    super(x, y, Paths.animateAtlas("limo/henchmen", "week4"), {
+      FrameRate: 24.0,
+      Reversed: false,
+      // ?OnComplete:Void -> Void,
+      ShowPivot: true,
+      Antialiasing: true,
+      ScrollFactor: new FlxPoint(0.4, 0.4),
+    });
 
+   // onAnimationFinish.add(finishCanAnimation);
+  }
+
+  var anims = ['henchHitAnim1','henchHitAnim2','henchHitAnim3', 'henchHitAnim4'];
+
+  public function playCutscene():Void {
+    //this.visible = true;
+    //this.playAnimation(("henchHitAnim" + FlxG.random.int(1, 4)), false, false, false, 0);
+    this.playAnimation((anims[FlxG.random.int(1, 4)]), true, true, true, 0);
+    this.onAnimationComplete.add(onFinishAnim);
+
+  }
+
+  function onFinishAnim():Void
+  {
+    this.anim.pause();
   }
 }

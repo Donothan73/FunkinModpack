@@ -57,6 +57,8 @@ import funkin.PlayerSettings;
 import funkin.modding.base.ScriptedMusicBeatSubState;
 import funkin.modding.base.ScriptedFlxRuntimeShader;
 import funkin.modding.base.ScriptedMusicBeatState;
+import funkin.ui.transition.LoadingState;
+import funkin.data.song.SongRegistry;
 
 class MobileDebugMenuSubState extends MusicBeatSubState
 {
@@ -90,7 +92,7 @@ class MobileDebugMenuSubState extends MusicBeatSubState
     // Create the green background.
     var menuBG = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
     menuBG.color = 0xFF4CAF50;
-    menuBG.setGraphicSize(Std.int(menuBG.width * 1.1));
+    menuBG.setGraphicSize(Std.int(FlxG.width/menuBG.width));
     menuBG.updateHitbox();
     menuBG.screenCenter();
     menuBG.scrollFactor.set(0, 0);
@@ -126,6 +128,13 @@ class MobileDebugMenuSubState extends MusicBeatSubState
       //FlxG.state.openSubState(ScriptedMusicBeatSubState.init('LevelUnlockDebug'));
     });
 
+    createItem("MILF DODGE DEBUG", function() 
+    {
+      milf = SongRegistry.instance.fetchEntry('milf');
+      piss = new PlayState({targetSong: milf, isBotPlayMode: true});
+      FlxG.switchState(piss);
+    });
+
     createItem("CHARACTER UNLOCK", function() 
     {
       switch(FlxG.random.int(0,1))
@@ -142,7 +151,7 @@ class MobileDebugMenuSubState extends MusicBeatSubState
       FlxG.switchState(() -> new funkin.ui.charSelect.CharSelectSubState());
     });
 
-    createItem("(!)STICKER TEST(!)", function() 
+    createItem("STICKER TEST", function() 
     {
       openSubState(new funkin.ui.transition.stickers.StickerSubState({}));
     });
@@ -166,25 +175,26 @@ class MobileDebugMenuSubState extends MusicBeatSubState
         items.busy = true;
         goingBack = true;
         backButton.active = true;
+        exitDebugMenu();
     });
     add(backButton);
     #end
 
 
     var spacing = 110;
-    var top = (FlxG.height - (spacing * (items.length - 1))) / 2;
+    var top = 50 +(FlxG.height - (spacing * (items.length - 1))) / 2;
 		for (i in 0...items.length)
     	{
       		var menuItem = items.members[i];
-      		menuItem.x = (FlxG.with * 0) + (menuItem.getGraphicMidpoint().x /2);
+      		menuItem.x = (FlxG.width/2) - menuItem.width/2 - (menuItem.getGraphicMidpoint().x*0);
       		menuItem.y = top + spacing * i;
       		menuItem.scrollFactor.x = #if !mobile 0.0 #else 0.4 #end; // we want a lil scroll on mobile, for the cute gyro effect
       		// This one affects how much the menu items move when you scroll between them.
-      		menuItem.scrollFactor.y = 0.4;
+      		menuItem.scrollFactor.y = 0.5;
 
       		if (i == 1)
       		{
-        		camFocusPoint.setPosition(menuItem.getGraphicMidpoint().x, menuItem.getGraphicMidpoint().y);
+        		camFocusPoint.setPosition(menuItem.getGraphicMidpoint().x/2, menuItem.getGraphicMidpoint().y-10);
       		}
     	}
     // Create an object for the camera to track.
@@ -193,7 +203,7 @@ class MobileDebugMenuSubState extends MusicBeatSubState
 
     // Follow the camera focus as we scroll.
     FlxG.camera.follow(camFocusPoint, null, 0.085);
-    FlxG.camera.deadzone.set(0, CAMERA_MARGIN / 2, FlxG.camera.width, FlxG.camera.height - CAMERA_MARGIN + 40);
+    FlxG.camera.deadzone.set(0, CAMERA_MARGIN / 2, FlxG.camera.width, FlxG.camera.height - CAMERA_MARGIN + 20);
     FlxG.camera.minScrollY = -CAMERA_MARGIN / 2;
 
     // Move the camera when the menu is scrolled.
@@ -202,7 +212,7 @@ class MobileDebugMenuSubState extends MusicBeatSubState
     onMenuItemChange(items.members[0]);
 
     #if FEATURE_TOUCH_CONTROLS
-    FlxG.touches.swipeThreshold.y = 100;
+    FlxG.touches.swipeThreshold.y = 25;
     #end
   }
 

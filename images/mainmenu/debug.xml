@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
 <TextureAtlas imagePath="debug.png">
-<SubTexture name="debug selected0000" x="0" y="0" width="469" height="189" frameX="-40" frameY="-1" frameWidth="572" frameHeight="191" />
-<SubTexture name="debug idle0000" x="0" y="189" width="451" height="171" frameX="-23" frameY="-2" frameWidth="520" frameHeight="174" />
+<SubTexture name="debug idle0000" x="0" y="0" width="469" height="189" frameX="-40" frameY="-1" frameWidth="572" frameHeight="191" />
+<SubTexture name="debug selected0000" x="0" y="189" width="451" height="171" frameX="-23" frameY="-2" frameWidth="520" frameHeight="174" />
 </TextureAtlas>

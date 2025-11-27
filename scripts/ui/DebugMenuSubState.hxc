@@ -212,7 +212,7 @@ class MobileDebugMenuSubState extends MusicBeatSubState
     onMenuItemChange(items.members[0]);
 
     #if FEATURE_TOUCH_CONTROLS
-    FlxG.touches.swipeThreshold.y = 25;
+    FlxG.touches.swipeThreshold.y = 100;
     #end
   }
 

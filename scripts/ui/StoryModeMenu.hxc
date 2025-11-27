@@ -366,6 +366,7 @@ class StoryModeMenu extends MusicBeatSubState
     {
       if (controls.active)
       {
+        //Change Difficulty or Week
         if (controls.UI_UP_P && weeksSelected == true|| SwipeUtil.swipeUp && weeksSelected == true)
         {
           weeksSelected = false;
@@ -378,6 +379,39 @@ class StoryModeMenu extends MusicBeatSubState
           FunkinSound.playOnce(Paths.sound('scrollMenu'), 0.4);
         }
 
+        //Change Selection to Right
+        if (controls.UI_RIGHT)
+        {
+          if (weeksSelected != true) rightDifficultyArrow.animation.play('press');
+          if (weeksSelected == true) rightLevelArrow.animation.play('press');
+          changeSelection(1);
+        }
+        else if (TouchUtil.overlaps(rightDifficultyArrow) || TouchUtil.overlaps(rightLevelArrow))
+        {
+          #if FEATURE_TOUCH_CONTROLS
+          if (weeksSelected != true) rightDifficultyArrow.animation.play('idle');
+          if (weeksSelected == true) rightLevelArrow.animation.play('idle');
+          changeSelection(1);
+          #end
+        }
+
+        //Change Selection to Left
+        if (controls.UI_LEFT)
+        {
+          if (weeksSelected != true) leftDifficultyArrow.animation.play('press');
+          if (weeksSelected == true) leftLevelArrow.animation.play('press');
+          changeSelection(-1);
+        }
+        else if (TouchUtil.overlaps(leftDifficultyArrow) || TouchUtil.overlaps(leftLevelArrow))
+        {
+          #if FEATURE_TOUCH_CONTROLS
+          if (weeksSelected != true) leftDifficultyArrow.animation.play('idle');
+          if (weeksSelected == true) leftLevelArrow.animation.play('idle');
+          changeSelection(-1);
+          #end
+        }
+
+        //DEBUG
         if(FlxG.keys.justPressed.F1)
         {
           levelDebugText.visible = !levelDebugText.visible;
@@ -391,91 +425,9 @@ class StoryModeMenu extends MusicBeatSubState
 
         if (controls.FREEPLAY_CHAR_SELECT #if FEATURE_TOUCH_CONTROLS || TouchUtil.overlaps(ostName) #end)
         {
-          changePlayers();
-        }
-
-        #if !html5
-        if (FlxG.mouse.wheel != 0)
-        {
-          changeSelection(-Math.round(FlxG.mouse.wheel));
-        }
-        #else
-        if (FlxG.mouse.wheel < 0)
-        {
-          changeSelection(-Math.round(FlxG.mouse.wheel / 8));
-        }
-        else if (FlxG.mouse.wheel > 0)
-        {
-          changeSelection(-Math.round(FlxG.mouse.wheel / 8));
-        }
-        #end
-
-        if (controls.UI_RIGHT_P #if FEATURE_TOUCH_CONTROLS
-          || (SwipeUtil.swipeRight && TouchUtil.touch != null && TouchUtil.touch.deltaViewY < 10 && TouchUtil.touch.deltaViewY > -10)
-          || (TouchUtil.pressAction(rightDifficultyArrow, null, false)) #end)
-        {
-          #if FEATURE_TOUCH_CONTROLS
-          @:privateAccess
-          if (TouchUtil.touch != null
-            && !TouchUtil.pressAction(rightDifficultyArrow, null, false)) TouchUtil.touch._startY = TouchUtil.touch.viewY;
-          #end
-          changeSelection(1);
-        }
-
-        if (controls.UI_LEFT_P #if FEATURE_TOUCH_CONTROLS
-          || (SwipeUtil.swipeLeft && TouchUtil.touch != null && TouchUtil.touch.deltaViewY < 10 && TouchUtil.touch.deltaViewY > -10)
-          || (TouchUtil.pressAction(leftDifficultyArrow, null, false)) #end)
-        {
-          #if FEATURE_TOUCH_CONTROLS
-          @:privateAccess
-          if (TouchUtil.touch != null
-            && !TouchUtil.pressAction(leftDifficultyArrow, null, false)) TouchUtil.touch._startY = TouchUtil.touch.viewY;
-          #end
-          changeSelection(-1);
-        }
-
-        if (controls.UI_RIGHT #if FEATURE_TOUCH_CONTROLS || TouchUtil.overlaps(rightDifficultyArrow) #end)
-        {
-          if (weeksSelected != true) rightDifficultyArrow.animation.play('press');
-          if (weeksSelected == true) rightLevelArrow.animation.play('press');
-        }
-        else
-        {
-          if (weeksSelected != true) rightDifficultyArrow.animation.play('idle');
-          if (weeksSelected == true) rightLevelArrow.animation.play('idle');
-        }
-
-        if (controls.UI_LEFT #if FEATURE_TOUCH_CONTROLS || TouchUtil.overlaps(leftDifficultyArrow) #end)
-        {
-          if (weeksSelected != true) leftDifficultyArrow.animation.play('press');
-          if (weeksSelected == true) leftLevelArrow.animation.play('press');
-        }
-        else
-        {
-          if (weeksSelected != true) leftDifficultyArrow.animation.play('idle');
-          if (weeksSelected == true) leftLevelArrow.animation.play('idle');
+          //changePlayers();
         }
       }
-
-      if (controls.ACCEPT #if FEATURE_TOUCH_CONTROLS || TouchUtil.overlaps(levelTitles.members[levelList.indexOf(currentLevelId)]) #end)
-      {
-        selectLevel();
-      }
-
-      #if FEATURE_TOUCH_CONTROLS
-      if (TouchUtil.justReleased && !TouchUtil.overlaps(leftDifficultyArrow) && !SwipeUtil.justSwipedAny)
-      {
-        for (i in 0...levelTitles.members.length)
-        {
-          final item = levelTitles.members[i];
-          final selectedItem = levelTitles.members[levelList.indexOf(currentLevelId)];
-
-          if (!TouchUtil.pressAction(item, null, false)) continue;
-
-          (item == selectedItem) ? selectLevel() : changeLevel(i - levelList.indexOf(currentLevelId));
-        }
-      }
-      #end
     }
 
     if (controls.BACK && controls.active #if FEATURE_TOUCH_CONTROLS || TouchUtil.overlaps(backButton) && controls.active #end) returnToMainMenu();

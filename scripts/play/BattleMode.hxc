@@ -14,6 +14,7 @@ import funkin.play.song.Song;
 import funkin.graphics.FunkinSprite;
 import flixel.tweens.FlxTween;
 import funkin.util.EaseUtil;
+var scoreText:FlxText;
 
 class BattleMode extends Module 
 {
@@ -46,6 +47,8 @@ class BattleMode extends Module
 	var comboSprite:FunkinSprite;
 	var comboJudgement:FunkinSprite;
 	var judgement:String;
+	var multiplier:Int = 1;
+	var currentCombo:Int = 0;
 
 	//Judgement counts
 	var killers:Int = 0;
@@ -192,6 +195,9 @@ class BattleMode extends Module
 
 			calculateCombo(event);
 			curvePlayer();
+			calculateMultiplier();
+			currentCombo++;
+			event.score = event.score*multiplier;
 			event.healthChange = event.healthChange*playerCurve;
 		}
 
@@ -216,6 +222,8 @@ class BattleMode extends Module
 		missSprite.acceleration.y = 550;
     	missSprite.velocity.y -= FlxG.random.int(140, 175);
     	missSprite.velocity.x -= FlxG.random.int(0, 10);
+		multiplier = 1;
+		currentCombo = 0;
 		FlxTween.tween(missSprite, {alpha: 0}, 0.2,
         {
           onComplete: function(tween:FlxTween) {
@@ -254,6 +262,27 @@ class BattleMode extends Module
             holdnoteendtime = 0;
         }
     }
+
+	function calculateMultiplier():Void
+	{
+		switch (currentCombo)
+		{
+		case 50:
+			multiplier = 2;
+		case 100:
+			multiplier = 3;
+		case 150:
+			multiplier = 4;
+		case 200:
+			multiplier = 5;
+		case 300:
+			multiplier = 6;
+		case 400:
+			multiplier = 7;
+		case 500:
+			multiplier = 8;
+		}
+	}
 
 	function displayCombo():Void
     {

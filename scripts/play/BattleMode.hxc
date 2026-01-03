@@ -67,6 +67,21 @@ class BattleMode extends Module
 	        super("BattleMode");
 	}
 
+	override function onSongLoaded(event:SongLoadScriptEvent)
+	{
+		scoreText = new FlxText(0, 0, 0, '', 20);
+		scoreText.x = PlayState.instance.healthBarBG.x + 0.5*190;
+		scoreText.y = PlayState.instance.healthBarBG.y + 30;
+		scoreText.setFormat(Paths.font('vcr.ttf'), 16, FlxColor.WHITE, 1, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+    	scoreText.scrollFactor.set();
+    	scoreText.zIndex = 802;
+		PlayState.instance.add(scoreText);
+		scoreText.cameras = [PlayState.instance.camHUD];
+		scoreText.text = ('Multiplier: ' + multiplier + 'X');
+		multiplier = 1;
+		currentCombo = 0;
+	}
+
 
 	override function onSongStart(event:ScriptEvent)
   	{
@@ -112,16 +127,6 @@ class BattleMode extends Module
 
 		FunkinSprite.cacheTexture("combo.png");
         FunkinSprite.cacheTexture("combo-pixel.png");
-
-		scoreText = new FlxText(0, 0, 0, '', 20);
-		scoreText.x = PlayState.instance.healthBarBG.x + 0.5*190;
-		scoreText.y = PlayState.instance.healthBarBG.y + 30;
-		scoreText.setFormat(Paths.font('vcr.ttf'), 16, FlxColor.WHITE, 1, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-    	scoreText.scrollFactor.set();
-    	scoreText.zIndex = 802;
-		PlayState.instance.add(scoreText);
-		scoreText.cameras = [PlayState.instance.camHUD];
-		scoreText.text = ('Multiplier: ' + multiplier + 'X');
   	}
 
 	function onNoteHit(event:HitNoteScriptEvent)
@@ -198,12 +203,18 @@ class BattleMode extends Module
 				case 'bad':
 					event.healthChange = bad;
 					bads++;
+					multiplier = 1;
+					currentCombo = 0;
 				case 'shit':
 					event.healthChange = shit;
 					shits++;
+					multiplier = 1;
+					currentCombo = 0;
 				case 'miss':
 					event.healthChange = miss;
 					misses++;
+					multiplier = 1;
+					currentCombo = 0;
 			}
 
 			calculateCombo(event);
@@ -217,13 +228,30 @@ class BattleMode extends Module
 		super.onNoteHit(event);
 	}
 
+	function onNoteGhostMiss(event:GhostMissNoteScriptEvent)
+	{
+		multiplier = 1;
+		currentCombo = 0;
+	}
+
+	function onNoteHoldDrop(event:HoldNoteScriptEvent)
+	{
+		multiplier = 1;
+		currentCombo = 0;
+	}
+
 	function onNoteMiss(event:NoteScriptEvent)
 	{
+		var fadeEase = null;
+		if (noteStyleId = 'pixel') fadeEase = EaseUtil.stepped(2);
+
 		event.healthChange = miss;
 		misses++;
 		//PlayState.instance.comboPopUps.displayRating('miss');
 		missSprite = new FunkinSprite(PlayState.instance.comboPopUps.x, PlayState.instance.comboPopUps.y);
 		missSprite.loadGraphic(Paths.image('ui/popup/' + noteStyleId + '/miss'));
+		if (noteStyleId == 'pixel') missSprite.antialiasing = false;
+		if (noteStyleId == 'pixel') missSprite.scale.set(4.2, 4.2);
 		missSprite.x = (FlxG.width * 0.474);
     	missSprite.x -= missSprite.width / 2;
     	missSprite.y = (FlxG.camera.height * 0.45 - 60);
@@ -242,7 +270,8 @@ class BattleMode extends Module
           onComplete: function(tween:FlxTween) {
             missSprite.destroy();
           },
-          startDelay: Conductor.instance.beatLengthMs * 0.002
+          startDelay: Conductor.instance.beatLengthMs * 0.002,
+		  ease: fadeEase
         });		
 
 		if (PlayState.instance.currentSong.id == 'blazin') event.healthChange = 0;
@@ -301,6 +330,8 @@ class BattleMode extends Module
     {
 		var healthBar = PlayState.instance.healthBar;
 		var comboY:Float;
+		var fadeEase = null;
+		if (noteStyleId = 'pixel') fadeEase = EaseUtil.stepped(2);
 
 		total = killers + sicks + goods + bads + shits + misses;
 
@@ -389,7 +420,8 @@ class BattleMode extends Module
           onComplete: function(tween:FlxTween) {
             comboJudgement.destroy();
           },
-          startDelay: Conductor.instance.beatLengthMs * 0.002
+          startDelay: Conductor.instance.beatLengthMs * 0.002,
+		  ease: fadeEase
         });
 
 		 FlxTween.tween(comboSprite, {alpha: 0}, 0.2,
@@ -397,7 +429,8 @@ class BattleMode extends Module
           onComplete: function(tween:FlxTween) {
             comboSprite.destroy();
           },
-          startDelay: Conductor.instance.beatLengthMs * 0.002
+          startDelay: Conductor.instance.beatLengthMs * 0.002,
+		  ease: fadeEase
         });
 
 		killers = 0;
@@ -413,6 +446,11 @@ class BattleMode extends Module
         if (PlayState.instance != null)
         {
 
+			if (scoreText != null)
+			{
+			scoreText.text = ('Multiplier: ' + multiplier + 'X');
+			}
+
 			PlayState.instance.comboPopUps.offsets = comboOffsets;
 
             if (Conductor.instance.currentStep >= (notehittime + holdnoteend) && hashitnote && !playedcombo)
@@ -422,11 +460,6 @@ class BattleMode extends Module
                 {
                     displayCombo();
                 }
-
-				if (scoreText =! null)
-				{
-				scoreText.text = ('Multiplier: ' + multiplier + 'X');
-				}
             }
         }
 

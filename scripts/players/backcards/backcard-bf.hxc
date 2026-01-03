@@ -76,6 +76,12 @@ class BoyfriendCard extends BackingCard
         speed: 0.8,
         wait: 0.1
       });
+    
+    exitMovers.set([diffText],
+      {
+        x: FlxG.width * 2,
+        speed: 0.4,
+      });
   }
 
   public override function enterCharSel():Void
@@ -282,5 +288,6 @@ class BoyfriendCard extends BackingCard
     funnyScroll3.visible = false;
     glowDark.visible = false;
     glow.visible = false;
+    diffText.visible = false;
   }
 }

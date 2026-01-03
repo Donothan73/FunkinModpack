@@ -14,7 +14,9 @@ import funkin.play.song.Song;
 import funkin.graphics.FunkinSprite;
 import flixel.tweens.FlxTween;
 import funkin.util.EaseUtil;
-var scoreText:FlxText;
+import flixel.text.FlxText;
+import flixel.util.FlxColor;
+import flixel.text.FlxTextBorderStyle;
 
 class BattleMode extends Module 
 {
@@ -49,6 +51,7 @@ class BattleMode extends Module
 	var judgement:String;
 	var multiplier:Int = 1;
 	var currentCombo:Int = 0;
+	var scoreText:FlxText;
 
 	//Judgement counts
 	var killers:Int = 0;
@@ -109,6 +112,16 @@ class BattleMode extends Module
 
 		FunkinSprite.cacheTexture("combo.png");
         FunkinSprite.cacheTexture("combo-pixel.png");
+
+		scoreText = new FlxText(0, 0, 0, '', 20);
+		scoreText.x = PlayState.instance.healthBarBG.x + 0.5*190;
+		scoreText.y = PlayState.instance.healthBarBG.y + 30;
+		scoreText.setFormat(Paths.font('vcr.ttf'), 16, FlxColor.WHITE, 1, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+    	scoreText.scrollFactor.set();
+    	scoreText.zIndex = 802;
+		PlayState.instance.add(scoreText);
+		scoreText.cameras = [PlayState.instance.camHUD];
+		scoreText.text = ('Multiplier: ' + multiplier + 'X');
   	}
 
 	function onNoteHit(event:HitNoteScriptEvent)
@@ -409,6 +422,11 @@ class BattleMode extends Module
                 {
                     displayCombo();
                 }
+
+				if (scoreText =! null)
+				{
+				scoreText.text = ('Multiplier: ' + multiplier + 'X');
+				}
             }
         }
 

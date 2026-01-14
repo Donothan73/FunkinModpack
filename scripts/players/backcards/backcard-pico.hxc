@@ -326,6 +326,7 @@ class PicoCard extends BackingCard
     scrollMiddle.visible = false;
     glowDark.visible = false;
     glow.visible = false;
+    diffText.visible = false;
 
     cardGlow.visible = true;
     cardGlow.alpha = 1;
@@ -340,7 +341,7 @@ class PicoCard extends BackingCard
     var scrollProgress:Float = Math.abs(scrollTop.x % (scrollTop.frameWidth + 20));
 
     if (scrollTop.animation.curAnim.finished == true)
-    {
+    { 
       if (FlxMath.inBounds(scrollProgress, 500, 700) && scrollTop.animation.curAnim.name != 'sniper')
       {
         scrollTop.animation.play('sniper', true, false);
